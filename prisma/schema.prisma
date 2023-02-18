@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "postgres"
+    provider = "sqlite"
     url      = env("DATABASE_URL")
 }
 
@@ -33,12 +33,6 @@ model Comment {
     authorId String
 }
 
-enum FollowStatus {
-    PENDING
-    ACCEPTED
-    DENIED
-}
-
 model Follows {
     follower    User @relation("follower", fields: [followerId], references: [id])
     followerId  String
@@ -47,7 +41,7 @@ model Follows {
 
     @@id([followerId, followingId])
 
-    status FollowStatus
+    status String
 }
 
 model User {
