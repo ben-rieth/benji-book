@@ -18,17 +18,17 @@ import { prisma } from "./db";
  **/
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: {
-      id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+    user: User
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+    interface User {
+      id: string
+      email?: string
+      firstName?: string
+      lastName?: string
+      image?: string
+      hasData: boolean
+    }
 }
 
 /**
@@ -42,7 +42,11 @@ export const authOptions: NextAuthOptions = {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
-        // session.user.role = user.role; <-- put other properties on the session here
+        session.user.email = user.email;
+        session.user.firstName = user.firstName;
+        session.user.lastName = user.lastName;
+        session.user.image = user.image;
+        session.user.hasData = user.hasData;
       }
       return session;
     },

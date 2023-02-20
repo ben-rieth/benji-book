@@ -18,6 +18,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
         withNormalizeCSS
         theme={{
           colorScheme: 'light',
+          breakpoints: {
+            'xs': 640,
+            'sm': 768,
+            'md': 1024,
+            'lg': 1280,
+            'xl': 1536,
+          }
         }}
       >
         <Component {...pageProps} />

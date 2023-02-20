@@ -76,7 +76,7 @@ model User {
     gender        String?
     image         String?
 
-    firstTime     Boolean   @default(true)
+    setData       Boolean @default(false)
 
     posts         Post[]    @relation("createdPosts")
     comments      Comment[]

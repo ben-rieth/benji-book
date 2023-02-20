@@ -1,9 +1,15 @@
-import { type NextPage } from "next";
+import { Grid, Center } from "@mantine/core";
+import { useViewportSize } from "@mantine/hooks";
+import type { GetServerSideProps, NextPage } from "next";
+import { getServerSession } from "next-auth";
 import Head from "next/head";
-import AboutYouForm from "../components/AboutYouForm/AboutYourForm";
+import Logo from "../components/Logo/Logo";
 import SignIn from "../components/SignIn/SignIn";
+import { authOptions } from "../server/auth";
 
 const Home: NextPage = () => {
+
+  const { height, width } = useViewportSize();
 
   return (
     <>
@@ -13,9 +19,54 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <AboutYouForm />
+      <Center
+        w={width}
+        h={height}
+      >
+        <Grid
+          w={1000}
+          columns={2}
+          align="center"
+          justify="center"
+          gutter="md"
+        >
+            <Grid.Col sm={1}>
+              <Logo />
+            </Grid.Col>
+            <Grid.Col sm={1}>
+              <SignIn />
+            </Grid.Col>
+            
+        </Grid>
+      </Center>
     </>
   );
 };
+
+export const getServerSideProps : GetServerSideProps = async ({ req, res}) => {
+  const session = await getServerSession(req, res, authOptions);
+
+  if (session && session.user.hasData) {
+    return {
+      redirect: {
+        destination: '/posts',
+        permanent: false
+      }
+    };
+
+  } else if (session && !session.user.hasData) {
+    return {
+      redirect: {
+        destination: '/onboarding',
+        permanent: false,
+      }
+    }
+
+  }
+
+  return {
+    props: {}
+  };
+}
 
 export default Home;
