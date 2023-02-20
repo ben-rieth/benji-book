@@ -2,6 +2,7 @@ import { Button, Center, TextInput, Stack, Divider } from "@mantine/core";
 import { useForm, isEmail } from "@mantine/form";
 
 import { FcGoogle } from 'react-icons/fc';
+import { RiFacebookFill } from 'react-icons/ri';
 
 const SignIn = () => {
 
@@ -42,7 +43,13 @@ const SignIn = () => {
                     variant="outline"
                     leftIcon={<FcGoogle />}
                 >
-                    Sign In With Google
+                    Sign In with Google
+                </Button>
+                <Button
+                    variant="outline"
+                    leftIcon={<RiFacebookFill />}
+                >
+                    Sign In with Facebook
                 </Button>
             </Stack>
         </Center>
