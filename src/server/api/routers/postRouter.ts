@@ -2,9 +2,36 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 
 const postRouter = createTRPCRouter({
-    getAllPosts: protectedProcedure.query(() => {
-        return "all posts";
-    }),
+    getAllPosts: protectedProcedure
+        .query(({ ctx }) => {
+            return ctx.prisma.follows.findMany({
+                where: {
+                    followerId: ctx.session.user.id,
+                    status: 'accepted',
+                },
+                // get from the user's relationships
+                select: {
+                    following: {
+                        // users that they follow
+                        select: {
+                            id: true,
+                            name: true,
+                            image: true,
+                            // and their posts
+                            posts: {
+                                select: {
+                                    id: true,
+                                    text: true,
+                                    image: true,
+                                    createdAt: true,
+                                    comments: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        }),
 
     createNewPost: protectedProcedure
         .input(z.object({
