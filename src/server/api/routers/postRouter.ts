@@ -103,8 +103,23 @@ const postRouter = createTRPCRouter({
         .input(z.object({ 
             postId: z.string().cuid(), 
         }))
-        .query(({ input }) => {
-            return 'like post'
+        .query( async ({ input, ctx }) => {
+            await ctx.prisma.likes.upsert({
+                where: {
+                    userId_postId: {
+                        userId: ctx.session.user.id,
+                        postId: input.postId
+                    }
+                },
+                update: {
+                    unliked: false,
+                },
+                create: {
+                    userId: ctx.session.user.id,
+                    postId: input.postId,
+                    unliked: false,
+                }
+            })
         }
     ),
 
@@ -112,8 +127,18 @@ const postRouter = createTRPCRouter({
         .input(z.object({
             postId: z.string().cuid(),
         }))
-        .query(({ input }) => {
-            return 'unlike post'
+        .query(async ({ input, ctx }) => {
+            await ctx.prisma.likes.update({
+                where: {
+                    userId_postId: {
+                        userId: ctx.session.user.id,
+                        postId: input.postId,
+                    }
+                },
+                data: {
+                    unliked: true,
+                }
+            })
         }
     ),
 

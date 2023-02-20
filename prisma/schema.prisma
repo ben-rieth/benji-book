@@ -52,13 +52,14 @@ model Follows {
 }
 
 model Likes {
-    id      String  @id @default(cuid())
-    user    User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId  String?
+    user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId  String
     post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId  String
 
     unliked Boolean @default(false)
+
+    @@id([userId, postId])
 }
 
 model User {
