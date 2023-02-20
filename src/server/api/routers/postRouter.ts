@@ -37,8 +37,13 @@ const postRouter = createTRPCRouter({
         .input(z.object({
             postText: z.string(),
         }))
-        .query(() => {
-            return "create";
+        .query(async ({ input, ctx }) => {
+            await ctx.prisma.post.create({
+                data: {
+                    authorId: ctx.session.user.id,
+                    text: input.postText,
+                }
+            });
         }
     ),
 
