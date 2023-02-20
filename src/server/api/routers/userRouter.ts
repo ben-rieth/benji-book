@@ -132,6 +132,20 @@ const userRouter = createTRPCRouter({
         }
     ),
 
+    updateName: protectedProcedure
+        .input(z.object({
+            newName: z.string(),
+        }))
+        .query(async ({ input, ctx}) => {
+            await ctx.prisma.user.update({
+                where: { id: ctx.session.user.id },
+                data: {
+                    name: input.newName,
+                }
+            })
+        }
+    ),
+
 
 });
 
