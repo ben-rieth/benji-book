@@ -21,8 +21,14 @@ const userRouter = createTRPCRouter({
     ),
 
     getAllUsers: protectedProcedure
-        .query(() => {
-            return 'get all users'
+        .query(({ ctx }) => {
+            return ctx.prisma.user.findMany({
+                select: {
+                    id: true,
+                    name: true,
+                    image: true,
+                }
+            });
         }
     ),
 
@@ -30,8 +36,46 @@ const userRouter = createTRPCRouter({
         .input(z.object({
             userId: z.string().cuid(),
         }))
-        .query(({ input }) => {
-            return 'get user'
+        .query(async ({ input, ctx }) => {
+            // if not following, just return id, name, image
+            // if following, all info
+            const relationship = await ctx.prisma.follows.findFirst({
+                where: { 
+                    followerId: ctx.session.user.id,
+                    followingId: input.userId
+                },
+                select: {
+                    status: true,
+                }
+            });
+
+            let user;
+            if (relationship?.status && relationship.status === 'accepted') {
+                user = await ctx.prisma.user.findUnique({
+                    where: { id: input.userId },
+                    include: {
+                        posts: true,
+                        followedBy: true,
+                        following: true,
+                    }
+                });
+            } else {
+                user = await ctx.prisma.user.findUnique({
+                    where: {
+                        id: input.userId,
+                    },
+                    select: {
+                        id: true,
+                        name: true,
+                        image: true,
+                    }
+                });
+            }
+
+            return {
+                status: relationship?.status,
+                user,
+            };
         }
     ),
     
