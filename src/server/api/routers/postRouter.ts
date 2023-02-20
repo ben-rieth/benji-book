@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 const postRouter = createTRPCRouter({
     getAllPosts: protectedProcedure
@@ -51,15 +52,38 @@ const postRouter = createTRPCRouter({
         .input(z.object({ 
             postId: z.string().cuid() 
         }))
-        .query(({ input, ctx }) => {
+        .query(async ({ input, ctx }) => {
             
-            return ctx.prisma.post.findUnique({
+            const post = await ctx.prisma.post.findUnique({
                 where: { id: input.postId },
                 include: {
+                    author: true,
                     comments: true,
                     likedBy: true,
                 }
             });
+
+            if (!post) {
+                throw new TRPCError({ code: "NOT_FOUND" });
+            }
+
+            const relationship = await ctx.prisma.follows.findUnique({
+                where: {
+                    followerId_followingId: {
+                        followerId: ctx.session.user.id,
+                        followingId: post?.authorId,
+                    },
+                },
+                select: {
+                    status: true,
+                }
+            });
+
+            if (!relationship?.status || relationship.status !== 'accepted') {
+                throw new TRPCError({ code: 'FORBIDDEN' })
+            }
+
+            return post;
         }
     ),
 
@@ -99,11 +123,12 @@ const postRouter = createTRPCRouter({
         }
     ),
 
-    likePost: protectedProcedure
-        .input(z.object({ 
-            postId: z.string().cuid(), 
+    toggleLike: protectedProcedure
+        .input(z.object({
+            postId: z.string().cuid(),
+            liked: z.boolean(),
         }))
-        .query( async ({ input, ctx }) => {
+        .query(async ({ input, ctx }) => {
             await ctx.prisma.likes.upsert({
                 where: {
                     userId_postId: {
@@ -112,36 +137,16 @@ const postRouter = createTRPCRouter({
                     }
                 },
                 update: {
-                    unliked: false,
+                    unliked: !input.liked,
                 },
                 create: {
                     userId: ctx.session.user.id,
                     postId: input.postId,
-                    unliked: false,
+                    unliked: !input.liked,
                 }
             })
         }
     ),
-
-    unlikePost: protectedProcedure
-        .input(z.object({
-            postId: z.string().cuid(),
-        }))
-        .query(async ({ input, ctx }) => {
-            await ctx.prisma.likes.update({
-                where: {
-                    userId_postId: {
-                        userId: ctx.session.user.id,
-                        postId: input.postId,
-                    }
-                },
-                data: {
-                    unliked: true,
-                }
-            })
-        }
-    ),
-
 });
 
 export default postRouter;
