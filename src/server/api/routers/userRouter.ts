@@ -2,24 +2,6 @@ import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 const userRouter = createTRPCRouter({
-    getFollowers: protectedProcedure
-        .input(z.object({
-            userId: z.string().cuid(),
-        }))
-        .query(({ input }) => {
-            return 'get user followers'
-        }
-    ),
-
-    getFollowing: protectedProcedure
-        .input(z.object({
-            userId: z.string().cuid(),
-        }))
-        .query(({ input }) => {
-            return 'get people that user follows'
-        }
-    ),
-
     getAllUsers: protectedProcedure
         .query(({ ctx }) => {
             return ctx.prisma.user.findMany({
@@ -54,10 +36,12 @@ const userRouter = createTRPCRouter({
             }
 
             // otherwise find relationship of two people
-            const relationship = await ctx.prisma.follows.findFirst({
+            const relationship = await ctx.prisma.follows.findUnique({
                 where: { 
-                    followerId: ctx.session.user.id,
-                    followingId: input.userId
+                    followerId_followingId: {
+                        followerId: ctx.session.user.id,
+                        followingId: input.userId
+                    }
                 },
                 select: {
                     status: true,
@@ -102,8 +86,14 @@ const userRouter = createTRPCRouter({
             followerId: z.string().cuid(),
             followingId: z.string().cuid(),
         }))
-        .query(({ input }) => {
-            return 'send follow request'
+        .query(async ({ input, ctx }) => {
+            await ctx.prisma.follows.create({
+                data: {
+                    followerId: input.followerId,
+                    followingId: input.followingId,
+                    status: 'pending',
+                }
+            });
         }
     ),
 
@@ -113,8 +103,24 @@ const userRouter = createTRPCRouter({
             followingId: z.string().cuid(),
             newStatus: z.enum(['accepted', 'denied'])
         }))
-        .query(({ input }) => {
-            return 'accept request'
+        .query(async ({ input, ctx }) => {
+            
+            if (input.followingId !== ctx.session.user.id) {
+                return;
+            }
+
+            await ctx.prisma.follows.update({
+                where: {
+                    followerId_followingId: {
+                        followerId: input.followerId,
+                        followingId: input.followingId,
+                    }
+                },
+                data: {
+                    status: input.newStatus,
+                }
+            })
+
         }
     ),
 
