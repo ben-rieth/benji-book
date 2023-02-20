@@ -51,8 +51,15 @@ const postRouter = createTRPCRouter({
         .input(z.object({ 
             postId: z.string().cuid() 
         }))
-        .query(({ input}) => {
-            return "get post";
+        .query(({ input, ctx }) => {
+            
+            return ctx.prisma.post.findUnique({
+                where: { id: input.postId },
+                include: {
+                    comments: true,
+                    likedBy: true,
+                }
+            });
         }
     ),
 
@@ -61,8 +68,18 @@ const postRouter = createTRPCRouter({
             postId: z.string().cuid(),
             newText: z.string(), 
         }))
-        .query(({ input }) => {
-            return "update post";
+        .query( async ({ input, ctx }) => {
+            await ctx.prisma.post.update({
+                where: {
+                    id_authorId: {
+                        id: input.postId,
+                        authorId: ctx.session.user.id,
+                    }
+                },
+                data: {
+                    text: input.newText,
+                }
+            })
         }
     ),
 
@@ -70,8 +87,15 @@ const postRouter = createTRPCRouter({
         .input(z.object({ 
             postId: z.string().cuid() 
         }))
-        .query(({ input}) => {
-            return "delete post";
+        .query(async ({ input, ctx }) => {
+            await ctx.prisma.post.delete({
+                where: {
+                    id_authorId: {
+                        id: input.postId,
+                        authorId: ctx.session.user.id
+                    }
+                }
+            })
         }
     ),
 

@@ -23,6 +23,8 @@ model Post {
     likedBy   Likes[]
 
     comments Comment[]
+
+    @@unique([id, authorId])
 }
 
 model Comment {
