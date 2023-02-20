@@ -124,6 +124,14 @@ const userRouter = createTRPCRouter({
         }
     ),
 
+    deleteAccount: protectedProcedure
+        .query(async ({ ctx }) => {
+            await ctx.prisma.user.delete({
+                where: { id: ctx.session.user.id }
+            });
+        }
+    ),
+
 
 });
 
