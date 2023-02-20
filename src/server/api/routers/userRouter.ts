@@ -37,8 +37,23 @@ const userRouter = createTRPCRouter({
             userId: z.string().cuid(),
         }))
         .query(async ({ input, ctx }) => {
-            // if not following, just return id, name, image
-            // if following, all info
+            
+            // if user is getting their own info
+            if (input.userId === ctx.session.user.id) {
+                return {
+                    status: 'self',
+                    user: ctx.prisma.user.findUnique({
+                        where: { id: input.userId },
+                        include: {
+                            posts: true,
+                            followedBy: true,
+                            following: true,
+                        }
+                    })
+                }
+            }
+
+            // otherwise find relationship of two people
             const relationship = await ctx.prisma.follows.findFirst({
                 where: { 
                     followerId: ctx.session.user.id,
@@ -49,7 +64,9 @@ const userRouter = createTRPCRouter({
                 }
             });
 
+
             let user;
+            // return all info if the session user is following the searched for user
             if (relationship?.status && relationship.status === 'accepted') {
                 user = await ctx.prisma.user.findUnique({
                     where: { id: input.userId },
@@ -60,6 +77,7 @@ const userRouter = createTRPCRouter({
                     }
                 });
             } else {
+                // return limited info if users don't follow
                 user = await ctx.prisma.user.findUnique({
                     where: {
                         id: input.userId,
