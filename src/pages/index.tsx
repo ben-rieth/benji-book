@@ -1,6 +1,6 @@
-import { Stepper } from "@mantine/core";
 import { type NextPage } from "next";
 import Head from "next/head";
+import SignIn from "../components/auth/SignIn/SignIn";
 
 const Home: NextPage = () => {
 
@@ -12,20 +12,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Stepper active={0}>
-        <Stepper.Step label="Step 1">
-          The first step
-        </Stepper.Step>
-        <Stepper.Step label="Step 2">
-          The second step
-        </Stepper.Step>
-        <Stepper.Step label="Step 3">
-          The third step
-        </Stepper.Step>
-        <Stepper.Completed>
-          Completed, click back button to get to previous step
-        </Stepper.Completed>
-      </Stepper>
+      <SignIn />
     </>
   );
 };
