@@ -2,15 +2,15 @@ import classNames from "classnames";
 import type { ChangeEvent, FocusEvent, FC, } from "react";
 
 type TextInputProps = {
-    type: 'text' | 'email';
+    type?: 'text' | 'email';
     label: string;
     id: string;
     name: string;
     placeholder?: string;
     required?: boolean;
     value: string;
-    error?: string;
-    touched?: boolean;
+    error: string | undefined;
+    touched: boolean | undefined;
     disabled?: boolean;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     onBlur: (e: FocusEvent<HTMLInputElement, Element>) => void;
@@ -19,7 +19,7 @@ type TextInputProps = {
 }
 
 const TextInput: FC<TextInputProps> = ({ 
-    type, 
+    type="text", 
     label, 
     id, 
     placeholder='', 
@@ -35,7 +35,7 @@ const TextInput: FC<TextInputProps> = ({
 }) => {
 
     const inputClasses = classNames(
-        "outline-none",
+        "outline-none w-full",
         {
             "bg-slate-300": disabled
         }
