@@ -4,6 +4,8 @@ import Button from "../buttons/Button";
 import { Form, Formik } from 'formik';
 import { MdOutlineMail } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
+import { FcGoogle } from 'react-icons/fc';
+import { FaFacebookF } from 'react-icons/fa';
 
 const SignInForm = () => {
     return (
@@ -44,6 +46,23 @@ const SignInForm = () => {
                         ) : (
                             "Sign In"
                         )}
+                    </Button>
+
+                    <hr />
+
+                    <Button 
+                        variant="outline"
+                        type="button"
+                    >
+                        <FcGoogle />
+                        Sign in with Google
+                    </Button>
+                    <Button 
+                        variant='outline'
+                        type="button"
+                    >
+                        <FaFacebookF />
+                        Sign in with Facebook
                     </Button>
                 </Form>
             )}

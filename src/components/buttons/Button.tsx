@@ -13,7 +13,7 @@ const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="
     
     const buttonClasses = classNames(
         "py-2 px-10 w-full mx-auto",
-        "flex flex-row items-center justify-center",
+        "flex flex-row items-center justify-center gap-2",
         "rounded-lg",
         {
             "bg-sky-500 text-white": variant === 'filled',
