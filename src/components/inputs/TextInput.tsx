@@ -10,7 +10,8 @@ type TextInputProps = {
     required?: boolean;
     value: string;
     error?: string;
-    touched?: boolean
+    touched?: boolean;
+    disabled?: boolean;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     onBlur: (e: FocusEvent<HTMLInputElement, Element>) => void;
     leftIcon?: JSX.Element;
@@ -23,6 +24,7 @@ const TextInput: FC<TextInputProps> = ({
     id, 
     placeholder='', 
     required,
+    disabled,
     onChange,
     onBlur,
     value,
@@ -34,20 +36,24 @@ const TextInput: FC<TextInputProps> = ({
 
     const inputClasses = classNames(
         "outline-none",
+        {
+            "bg-slate-300": disabled
+        }
     )
 
     const containerClasses = classNames(
         "flex flex-row items-center gap-2",
         "border-2 px-2 py-1 outline-none",
-        "w-fit text-lg rounded-lg",
+        "text-lg rounded-lg",
         {
-            "focus:border-sky-500" : !error || !touched,
-            "border-red-500": error && touched
+            "focus:border-sky-500" : !error || !touched && !disabled,
+            "border-red-500": error && touched && !disabled,
+            "bg-slate-300": disabled
         }
     )
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col mx-auto w-full">
             <label htmlFor={id} className="ml-2">
                 {label}
                 {required && <span className="text-red-500 text-lg">*</span>}
@@ -62,10 +68,11 @@ const TextInput: FC<TextInputProps> = ({
                     onChange={onChange}
                     onBlur={onBlur}
                     value={value}
+                    disabled={disabled}
                 />
                 {!!rightIcon && rightIcon}
             </div>
-            {error && touched && <p className="ml-2 text-red-500 text-sm">{error}</p>}
+            {error && touched && !disabled && <p className="ml-2 text-red-500 text-sm">{error}</p>}
         </div>
     )
 

@@ -3,6 +3,7 @@ import TextInput from "../inputs/TextInput";
 import Button from "../buttons/Button";
 import { Form, Formik } from 'formik';
 import { MdOutlineMail } from 'react-icons/md';
+import { AiOutlineLoading } from 'react-icons/ai';
 
 const SignInForm = () => {
     return (
@@ -38,7 +39,11 @@ const SignInForm = () => {
                         }
                     />
                     <Button type="submit" variant="filled">
-                        Sign In
+                        {props.isSubmitting ? (
+                            <AiOutlineLoading className="animate-spin" />     
+                        ) : (
+                            "Sign In"
+                        )}
                     </Button>
                 </Form>
             )}
