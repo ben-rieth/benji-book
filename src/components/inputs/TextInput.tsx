@@ -1,17 +1,20 @@
-import type { FC, Ref, RefObject } from "react";
-import type { ChangeHandler } from "react-hook-form";
+import classNames from "classnames";
+import type { ChangeEvent, FocusEvent, FC, } from "react";
 
 type TextInputProps = {
     type: 'text' | 'email';
     label: string;
     id: string;
+    name: string;
     placeholder?: string;
     required?: boolean;
-    error: string | undefined;
-    onChange: ChangeHandler | (() => void);
-    onBlur: ChangeHandler | (() => void);
-    name: string;
-    ref?: Ref<HTMLElement>
+    value: string;
+    error?: string;
+    touched?: boolean
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    onBlur: (e: FocusEvent<HTMLInputElement, Element>) => void;
+    leftIcon?: JSX.Element;
+    rightIcon?: JSX.Element;
 }
 
 const TextInput: FC<TextInputProps> = ({ 
@@ -19,31 +22,50 @@ const TextInput: FC<TextInputProps> = ({
     label, 
     id, 
     placeholder='', 
-    onChange, 
-    onBlur, 
-    name, 
-    ref,
+    required,
+    onChange,
+    onBlur,
+    value,
     error,
-    required
+    touched,
+    leftIcon,
+    rightIcon
 }) => {
+
+    const inputClasses = classNames(
+        "outline-none",
+    )
+
+    const containerClasses = classNames(
+        "flex flex-row items-center gap-2",
+        "border-2 px-2 py-1 outline-none",
+        "w-fit text-lg rounded-lg",
+        {
+            "focus:border-sky-500" : !error || !touched,
+            "border-red-500": error && touched
+        }
+    )
 
     return (
         <div className="flex flex-col">
-            <label htmlFor={id}>
+            <label htmlFor={id} className="ml-2">
                 {label}
-                {!required && <span className="text-red-500 text-lg">*</span>}
+                {required && <span className="text-red-500 text-lg">*</span>}
             </label>
-            <input 
-                className="border-2 w-fit px-2 py-1 text-lg rounded outline-none focus:ring focus:ring-sky-500"
-                type={type} 
-                id={id} 
-                placeholder={placeholder}
-                onChange={onChange}
-                onBlur={onBlur}
-                name={name}
-                ref={ref as RefObject<HTMLInputElement>}
-            />
-            <p>{error}</p>
+            <div className={containerClasses}>
+                {!!leftIcon && leftIcon}
+                <input 
+                    className={inputClasses}
+                    type={type} 
+                    id={id} 
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                />
+                {!!rightIcon && rightIcon}
+            </div>
+            {error && touched && <p className="ml-2 text-red-500 text-sm">{error}</p>}
         </div>
     )
 
