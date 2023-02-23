@@ -6,6 +6,7 @@ import { MdOutlineMail } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebookF } from 'react-icons/fa';
+import WhyNoPassword from './WhyNoPassword';
 
 const SignInForm = () => {
     return (
@@ -22,7 +23,8 @@ const SignInForm = () => {
             validateOnBlur
         >
             {props => (
-                <Form className="flex flex-col gap-4">
+                <Form className="flex flex-col gap-4 bg-white p-8 rounded-xl">
+                    <h1 className="text-center text-sky-500 text-2xl font-semibold">Sign In</h1>
                     <TextInput 
                         id="email"
                         name="email"
@@ -47,6 +49,8 @@ const SignInForm = () => {
                             "Sign In"
                         )}
                     </Button>
+
+                    <WhyNoPassword />
 
                     <hr />
 

@@ -44,7 +44,7 @@ const TextInput: FC<TextInputProps> = ({
     const containerClasses = classNames(
         "flex flex-row items-center gap-2",
         "border-2 px-2 py-1 outline-none",
-        "text-lg rounded-lg",
+        "text-lg rounded-lg bg-white",
         {
             "focus:border-sky-500" : !error || !touched && !disabled,
             "border-red-500": error && touched && !disabled,

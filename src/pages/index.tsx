@@ -15,8 +15,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center h-screen">
-        <Logo />
+      <main className="flex flex-col items-center justify-center gap-4 h-screen max-w-screen-xl mx-auto md:flex-row md:justify-around bg-slate-100">
+        <div className="flex flex-col items-center md:items-start">
+          <Logo />
+          <p className="w-60 text-center md:text-left text-sm">Disclaimer: This is a dummy app. Please do not actually use it.</p>
+        </div>
         <SignInForm />
       </main>
     </>

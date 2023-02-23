@@ -16,7 +16,7 @@ const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="
         "flex flex-row items-center justify-center gap-2",
         "rounded-lg",
         {
-            "bg-sky-500 text-white": variant === 'filled',
+            "bg-sky-500 text-white font-semibold": variant === 'filled',
             'text-sky-500 border-2 border-sky-500': variant === 'outline',
             'text-sky-500' : variant === 'minimal',
             'opacity-50': disabled,
