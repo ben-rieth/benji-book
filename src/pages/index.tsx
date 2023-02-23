@@ -2,6 +2,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession } from "next-auth";
 import Head from "next/head";
 import SignInForm from "../components/auth/SignInForm";
+import Logo from "../components/logo/Logo";
 import { authOptions } from "../server/auth";
 
 const Home: NextPage = () => {
@@ -14,6 +15,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Logo />
       <SignInForm />
     </>
   );
