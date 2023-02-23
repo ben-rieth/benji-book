@@ -20,7 +20,7 @@ const SignInForm = () => {
             validateOnBlur
         >
             {props => (
-                <Form>
+                <Form className="flex flex-col gap-4">
                     <TextInput 
                         id="email"
                         name="email"
