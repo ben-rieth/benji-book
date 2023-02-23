@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import TextInput from "../inputs/TextInput";
+import Button from "../buttons/Button";
 
 const SignInForm = () => {
 
@@ -23,6 +24,9 @@ const SignInForm = () => {
                 type="email"
                 {...register("email")}
             />
+            <Button onClick={() => console.log("Click")}>
+                Sign In
+            </Button>
         </form>
     )
 }
