@@ -6,25 +6,35 @@ import Button from "../buttons/Button";
 
 const SignInForm = () => {
 
-    const { register } = useForm({
+    const { 
+        register,
+        formState: { errors },
+        handleSubmit
+    } = useForm({
         defaultValues: {
             email: ''
         },
         resolver: zodResolver(z.object({
-            email: z.string().email(),
-        }))
+            email: z.string().email({ message: "Not a valid email"}),
+        })),
+        reValidateMode: 'onBlur'
     });
 
+    const submitToServer = () => {
+        console.log("submit")
+    }
+
     return (
-        <form>
+        <form onSubmit={handleSubmit(submitToServer)}>
             <TextInput 
                 id="email"
                 placeholder="email@example.com"
                 label="Email"
                 type="email"
-                {...register("email")}
+                error={errors.email?.message}
+                {...register("email", { required: "Email is required"})}
             />
-            <Button onClick={() => console.log("Click")}>
+            <Button type="submit">
                 Sign In
             </Button>
         </form>
