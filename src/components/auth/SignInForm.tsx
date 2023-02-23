@@ -37,7 +37,7 @@ const SignInForm = () => {
                                 className={props.errors.email && props.touched.email ? "fill-red-500" : "fill-black"} />
                         }
                     />
-                    <Button type="submit">
+                    <Button type="submit" variant="filled">
                         Sign In
                     </Button>
                 </Form>
