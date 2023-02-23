@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import TextInput from "../inputs/TextInput";
-import Button from "../buttons/Button";
+import Button from "../general/Button";
 import { Form, Formik } from 'formik';
 import { MdOutlineMail } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
