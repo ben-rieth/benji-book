@@ -3,6 +3,9 @@ import * as yup from 'yup';
 import TextInput from "../inputs/TextInput";
 import Button from "../general/Button";
 import SelectInput from "../inputs/SelectInput";
+import DatePicker from 'react-datepicker';
+import 'node_modules/react-datepicker/dist/react-datepicker.min.css'
+import DateInput from "../inputs/DateInput";
 
 const AboutYouForm = () => {
 
@@ -15,7 +18,9 @@ const AboutYouForm = () => {
                 firstName: '',
                 lastName: '',
                 username: '',
-                birthday: '',
+                birthYear: '',
+                birthMonth: '',
+                birthDay: '',
                 gender: '',
             }}
             validationSchema={yup.object().shape({
@@ -29,8 +34,9 @@ const AboutYouForm = () => {
                     .min(6, "Username must be at least 6 characters long")
                     .max(20, "Username cannot be more than 20 characters")
                     .matches(/^[a-z0-9-_]+$/, "Username can only contain lowercase letters, numbers, dashes( - ), and underscores( _ )"),
-                birthday: yup.date()
-                    .max(thirteenYearsAgo, "Must be at least 13 years old to use app."),
+                birthYear: yup.number(),
+                birthMonth: yup.number(),
+                birthDay: yup.number(),
                 gender: yup.string()
             })}
             onSubmit={(values) => console.log(values)}
@@ -93,7 +99,43 @@ const AboutYouForm = () => {
                         ]}
                     />
 
-                        
+                    <DateInput />
+
+                    {/* <div className="flex flex-row">
+                        <TextInput 
+                            label="Day"
+                            placeholder="DD"
+                            name="birthDay"
+                            id="birth-day"
+                            value={props.values.birthDay}
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            error={props.errors.birthDay}
+                            touched={props.touched.birthDay}
+                        />
+                        <TextInput 
+                            label="Month"
+                            placeholder="MM"
+                            name="birthDay"
+                            id="birth-day"
+                            value={props.values.birthMonth}
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            error={props.errors.birthMonth}
+                            touched={props.touched.birthMonth}
+                        />
+                        <TextInput 
+                            label="Year"
+                            placeholder="YYYY"
+                            name="birthYear"
+                            id="birth-year"
+                            value={props.values.birthYear}
+                            onChange={props.handleChange}
+                            onBlur={props.handleBlur}
+                            error={props.errors.birthYear}
+                            touched={props.touched.birthYear}
+                        />
+                    </div> */}
 
                     <Button variant="filled" type="submit">
                         Submit
