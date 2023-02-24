@@ -1,6 +1,8 @@
 import { Form, Formik } from "formik";
 import * as yup from 'yup';
 import TextInput from "../inputs/TextInput";
+import Button from "../general/Button";
+import SelectInput from "../inputs/SelectInput";
 
 const AboutYouForm = () => {
 
@@ -14,7 +16,7 @@ const AboutYouForm = () => {
                 lastName: '',
                 username: '',
                 birthday: '',
-                gender: ''
+                gender: '',
             }}
             validationSchema={yup.object().shape({
                 firstName: yup.string()
@@ -29,14 +31,14 @@ const AboutYouForm = () => {
                     .matches(/^[a-z0-9-_]+$/, "Username can only contain lowercase letters, numbers, dashes( - ), and underscores( _ )"),
                 birthday: yup.date()
                     .max(thirteenYearsAgo, "Must be at least 13 years old to use app."),
-                gender: yup.string().matches(/(male|female|non-binary|transgender|agender|other)/, { excludeEmptyString: true })
+                gender: yup.string()
             })}
             onSubmit={(values) => console.log(values)}
         >
             {props => (
-                <Form>
+                <Form className="flex flex-col gap-2">
                     <h1 className="text-center text-sky-500 text-2xl font-semibold">Tell Us About You</h1>
-                    <div className="flex flex-row gap-3">
+                    <div className="flex flex-col md:flex-row gap-2">
                         <TextInput 
                             label="First Name"
                             id='firstName'
@@ -74,6 +76,29 @@ const AboutYouForm = () => {
                         touched={props.touched.username}
                         required
                     />
+
+                    <SelectInput 
+                        label="Gender"
+                        placeholder="Gender"
+                        name="gender"
+                        value={props.values.gender}
+                        onChange={(value) => props.setFieldValue("gender", value)}
+                        items={[
+                            { value: "male", text: "Male" },
+                            { value: "female", text: "Female" },
+                            { value: "transgender", text: "Transgender" },
+                            { value: "non-binary", text: "Non-Binary" },
+                            { value: "agender", text: "Agender" },
+                            { value: 'other', text: 'Other' }
+                        ]}
+                    />
+
+                        
+
+                    <Button variant="filled" type="submit">
+                        Submit
+                    </Button>
+
                 </Form>
             )}
         </Formik>
