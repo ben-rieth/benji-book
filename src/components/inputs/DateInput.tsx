@@ -1,12 +1,19 @@
 import classNames from "classnames";
-import type { ChangeEventHandler } from "react";
+import type { ChangeEventHandler, FC} from "react";
 import { useState } from "react";
+import { set } from 'date-fns';
 
-const DateInput = () => {
+type DateInputProps = {
+    onChange: (newDate: Date) => void;
+    dateValue: Date;
+}
+
+const DateInput:FC<DateInputProps> = ({ onChange, dateValue }) => {
 
     const [day, setDay] = useState<string>('');
     const [month, setMonth] = useState<string>('');
     const [year, setYear] = useState<string>('');
+    // const [date, setDate] = useState<Date>(new Date());
 
     const inputClasses = classNames(
         "border-2 px-2 py-1 outline-none",
@@ -19,17 +26,22 @@ const DateInput = () => {
         "text-sm ml-2"
     );
 
-    const handleChange : ChangeEventHandler<HTMLInputElement>= (e) => {
-        if (!/[0-9]+/.test(e.currentTarget.value) && e.currentTarget.value !== '') {
+    const handleChange : ChangeEventHandler<HTMLInputElement> = (e) => {
+        const value = e.currentTarget.value;
+        
+        if (!/[0-9]+/.test(value) && value !== '') {
             return;
         }
-        
+
         if (e.currentTarget.id === 'month') {
-            setMonth(e.currentTarget.value);
+            setMonth(value);
+            onChange(set(dateValue, {month: Number(value)}))
         } else if (e.currentTarget.id === 'day') {
             setDay(e.currentTarget.value);
+            onChange(set(dateValue, {date: Number(value)}))
         } else if (e.currentTarget.id === 'year') {
             setYear(e.currentTarget.value);
+            onChange(set(dateValue, {year: Number(value)}))
         }
 
         if (e.currentTarget.id === 'month' && e.currentTarget.value.length === 2) {
@@ -42,8 +54,9 @@ const DateInput = () => {
     return (
         <div className="flex flex-col w-full border-2 p-1 relative rounded-lg">
             <p className="ml-2">Birthday</p>
+            <p>{dateValue.toISOString()}</p>
             <div className="flex flex-row gap-2">
-                <div className="flex flex-col shrink">
+                <div className="flex flex-col flex-1">
                     <label htmlFor="month" className={labelClasses}>Month</label>
                     <input 
                         id="month"
@@ -55,7 +68,7 @@ const DateInput = () => {
                         maxLength={2}
                     />
                 </div>
-                <div className="flex flex-col shrink">
+                <div className="flex flex-col flex-1">
                     <label htmlFor="day" className={labelClasses}>Day</label>
                     <input 
                         id="day"
@@ -67,7 +80,7 @@ const DateInput = () => {
                         maxLength={2}
                     />
                 </div>
-                <div className="flex flex-col shrink">
+                <div className="flex flex-col flex-1">
                     <label htmlFor="year" className={labelClasses}>Year</label>
                     <input 
                         id="year"

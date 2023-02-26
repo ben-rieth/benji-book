@@ -17,9 +17,7 @@ const AboutYouForm = () => {
                 firstName: '',
                 lastName: '',
                 username: '',
-                birthYear: '',
-                birthMonth: '',
-                birthDay: '',
+                birthday: new Date(),
                 gender: '',
             }}
             validationSchema={yup.object().shape({
@@ -33,9 +31,7 @@ const AboutYouForm = () => {
                     .min(6, "Username must be at least 6 characters long")
                     .max(20, "Username cannot be more than 20 characters")
                     .matches(/^[a-z0-9-_]+$/, "Username can only contain lowercase letters, numbers, dashes( - ), and underscores( _ )"),
-                birthYear: yup.number(),
-                birthMonth: yup.number(),
-                birthDay: yup.number(),
+                birthday: yup.date(),
                 gender: yup.string()
             })}
             onSubmit={(values) => console.log(values)}
@@ -98,7 +94,7 @@ const AboutYouForm = () => {
                         ]}
                     />
 
-                    <DateInput />
+                    <DateInput onChange={(value) => props.setFieldValue('birthday', value)} dateValue={props.values.birthday}/>
 
                     <Button variant="filled" type="submit">
                         Submit
