@@ -1,3 +1,4 @@
+import type { FormikProps} from "formik";
 import { Form, Formik } from "formik";
 import * as yup from 'yup';
 import TextInput from "../inputs/TextInput";
@@ -5,11 +6,26 @@ import Button from "../general/Button";
 import SelectInput from "../inputs/SelectInput";
 import 'node_modules/react-datepicker/dist/react-datepicker.min.css'
 import DateInput from "../inputs/DateInput";
+import { rand, randUser, randPastDate } from "@ngneat/falso";
+
+type FormValues = {
+    firstName: string;
+    lastName: string;
+    username: string;
+    birthday: Date;
+    gender: string;
+}
 
 const AboutYouForm = () => {
+    const generateRandomData = (props: FormikProps<FormValues>) => {
+        const fakeUser = randUser();
 
-    const thirteenYearsAgo = new Date();
-    thirteenYearsAgo.setFullYear(2001);
+        props.setFieldValue('firstName', fakeUser.firstName);
+        props.setFieldValue('lastName', fakeUser.lastName);
+        props.setFieldValue('username', fakeUser.username.toLowerCase());
+        props.setFieldValue('gender', rand(['male', 'female', 'transgender', 'non-binary', 'agender', 'other']));
+        props.setFieldValue('birthday', randPastDate({ years: 10 }))
+    }
 
     return (
         <Formik
@@ -30,7 +46,7 @@ const AboutYouForm = () => {
                     .matches(/^[a-z0-9]/, "Username must start with a letter or number")
                     .min(6, "Username must be at least 6 characters long")
                     .max(20, "Username cannot be more than 20 characters")
-                    .matches(/^[a-z0-9-_]+$/, "Username can only contain lowercase letters, numbers, dashes( - ), and underscores( _ )"),
+                    .matches(/^[a-z0-9-_.]+$/, "Username can only contain lowercase letters, numbers, dashes( - ), and underscores( _ )"),
                 birthday: yup.date(),
                 gender: yup.string()
             })}
@@ -94,10 +110,19 @@ const AboutYouForm = () => {
                         ]}
                     />
 
-                    <DateInput onChange={(value) => props.setFieldValue('birthday', value)} dateValue={props.values.birthday}/>
+                    <DateInput 
+                        onChange={(value) => props.setFieldValue('birthday', value)} 
+                        dateValue={props.values.birthday}
+                    />
 
                     <Button variant="filled" type="submit">
                         Submit
+                    </Button>
+
+                    <hr />
+
+                    <Button type="button" variant="minimal" onClick={() => generateRandomData(props)}>
+                        Populate Account with Fake Data
                     </Button>
 
                 </Form>

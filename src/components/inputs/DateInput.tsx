@@ -1,7 +1,8 @@
 import classNames from "classnames";
 import type { ChangeEventHandler, FC} from "react";
+import { useEffect} from "react";
 import { useState } from "react";
-import { set } from 'date-fns';
+import { getDate, getMonth, getYear, isThisYear,  set } from 'date-fns';
 
 type DateInputProps = {
     onChange: (newDate: Date) => void;
@@ -13,7 +14,8 @@ const DateInput:FC<DateInputProps> = ({ onChange, dateValue }) => {
     const [day, setDay] = useState<string>('');
     const [month, setMonth] = useState<string>('');
     const [year, setYear] = useState<string>('');
-    // const [date, setDate] = useState<Date>(new Date());
+
+    const [touched, setTouched] = useState<boolean>(false);
 
     const inputClasses = classNames(
         "border-2 px-2 py-1 outline-none",
@@ -26,7 +28,20 @@ const DateInput:FC<DateInputProps> = ({ onChange, dateValue }) => {
         "text-sm ml-2"
     );
 
+    useEffect(() => {
+        if (isThisYear(dateValue) || touched) {
+            return;
+        }
+
+        setDay(getDate(dateValue).toString());
+        setMonth((getMonth(dateValue)).toString());
+        setYear(getYear(dateValue).toString());
+
+    }, [dateValue, touched])
+
     const handleChange : ChangeEventHandler<HTMLInputElement> = (e) => {
+        if (!touched) setTouched(true);
+        
         const value = e.currentTarget.value;
         
         if (!/[0-9]+/.test(value) && value !== '') {
