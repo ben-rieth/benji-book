@@ -37,7 +37,7 @@ const AboutYouForm = () => {
             onSubmit={(values) => console.log(values)}
         >
             {props => (
-                <Form className="flex flex-col gap-2">
+                <Form className="flex flex-col gap-4 bg-white p-8 rounded-xl mx-6 max-w-screen-sm">
                     <h1 className="text-center text-sky-500 text-2xl font-semibold">Tell Us About You</h1>
                     <div className="flex flex-col md:flex-row gap-2">
                         <TextInput 

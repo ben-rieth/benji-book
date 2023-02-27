@@ -52,9 +52,8 @@ const DateInput:FC<DateInputProps> = ({ onChange, dateValue }) => {
     }
 
     return (
-        <div className="flex flex-col w-full border-2 p-1 relative rounded-lg">
-            <p className="ml-2">Birthday</p>
-            <p>{dateValue.toISOString()}</p>
+        <div className="flex flex-col w-full p-1 relative rounded-lg">
+            <p className="ml-1">Birthday</p>
             <div className="flex flex-row gap-2">
                 <div className="flex flex-col flex-1">
                     <label htmlFor="month" className={labelClasses}>Month</label>

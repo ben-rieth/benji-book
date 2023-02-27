@@ -46,7 +46,7 @@ const TextInput: FC<TextInputProps> = ({
         "border-2 px-2 py-1 outline-none",
         "text-lg rounded-lg bg-white",
         {
-            "focus:border-sky-500" : !error || !touched && !disabled,
+            "focus:border-sky-500" : !error && !disabled,
             "border-red-500": error && touched && !disabled,
             "bg-slate-300": disabled
         }
