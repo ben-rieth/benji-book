@@ -71,7 +71,7 @@ model User {
 
     firstName     String?
     lastName      String?
-    handle        String?
+    username      String?
     birthday      DateTime?
     gender        String?
     image         String?

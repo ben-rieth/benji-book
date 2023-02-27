@@ -7,7 +7,8 @@ const userRouter = createTRPCRouter({
             return ctx.prisma.user.findMany({
                 select: {
                     id: true,
-                    name: true,
+                    firstName: true,
+                    lastName: true,
                     image: true,
                 }
             });
@@ -68,7 +69,8 @@ const userRouter = createTRPCRouter({
                     },
                     select: {
                         id: true,
-                        name: true,
+                        firstName: true,
+                        lastName: true,
                         image: true,
                     }
                 });
@@ -134,17 +136,41 @@ const userRouter = createTRPCRouter({
 
     updateName: protectedProcedure
         .input(z.object({
-            newName: z.string(),
+            newFirst: z.string(),
+            newLast: z.string(),
         }))
         .query(async ({ input, ctx}) => {
             await ctx.prisma.user.update({
                 where: { id: ctx.session.user.id },
                 data: {
-                    name: input.newName,
+                    firstName: input.newFirst,
+                    lastName: input.newLast,
                 }
             })
         }
     ),
+
+    setUpAccount: protectedProcedure
+        .input(z.object({
+            firstName: z.string(),
+            lastName: z.string(),
+            username: z.string(),
+            gender: z.enum(['male', 'female', 'transgender', 'non-binary', 'agender', 'other']).optional(),
+            birthday: z.date().optional(),
+        }))
+        .query(async ({ input, ctx }) => {
+            await ctx.prisma.user.update({
+                where: { id: ctx.session.user.id },
+                data: {
+                    firstName: input.firstName,
+                    lastName: input.lastName,
+                    username: input.username,
+                    gender: input.gender,
+                    birthday: input.birthday,
+                    setData: true,
+                }
+            });
+        })
 
 
 });
