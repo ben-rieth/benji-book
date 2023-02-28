@@ -8,7 +8,7 @@ type SelectInputProps = {
     placeholder: string;
     items: { value: string, text: string}[]
     name: string;
-    value: string;
+    value: string | undefined;
     onChange: (text: string) => void;
 }
 
@@ -66,22 +66,6 @@ const SelectInput:FC<SelectInputProps> = ({ label, placeholder, items, name, val
                 </Select.Portal>
             </Select.Root>
         </div>
-    )
-}
-
-type SelectItemProps = {
-    value: string;
-    text: string;
-}
-
-export const SelectItem : FC<SelectItemProps> = ({ value, text }) => {
-    return (
-        <Select.Item value={value} className="relative rounded flex items-center px-12">
-            <Select.ItemText>{text}</Select.ItemText>
-            <Select.ItemIndicator className="absolute left-0 inline-flex items-center justify-center">
-                <BsCheck />
-            </Select.ItemIndicator>
-        </Select.Item>
     )
 }
 

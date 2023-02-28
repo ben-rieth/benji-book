@@ -2,7 +2,6 @@ import type { GetServerSidePropsContext } from "next";
 import {
   getServerSession,
   type NextAuthOptions,
-  type DefaultSession,
 } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -17,18 +16,20 @@ import { prisma } from "./db";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  **/
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: User
+  interface Session {
+    user?: User
+    expires: string;
   }
 
-    interface User {
-      id: string
-      email?: string
-      firstName?: string
-      lastName?: string
-      image?: string
-      hasData: boolean
-    }
+  interface User {
+    id: string
+    email?: string
+    firstName?: string
+    lastName?: string
+    image?: string
+    username?: string
+    setData: boolean
+  }
 }
 
 /**
@@ -46,7 +47,9 @@ export const authOptions: NextAuthOptions = {
         session.user.firstName = user.firstName;
         session.user.lastName = user.lastName;
         session.user.image = user.image;
-        session.user.hasData = user.hasData;
+        session.user.username = user.username;
+        session.user.setData = user.setData;
+        delete session.user.name
       }
       return session;
     },

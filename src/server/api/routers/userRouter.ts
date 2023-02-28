@@ -158,8 +158,8 @@ const userRouter = createTRPCRouter({
             gender: z.enum(['male', 'female', 'transgender', 'non-binary', 'agender', 'other']).optional(),
             birthday: z.date().optional(),
         }))
-        .query(async ({ input, ctx }) => {
-            await ctx.prisma.user.update({
+        .mutation(({ input, ctx }) => {
+            return ctx.prisma.user.update({
                 where: { id: ctx.session.user.id },
                 data: {
                     firstName: input.firstName,
@@ -170,6 +170,7 @@ const userRouter = createTRPCRouter({
                     setData: true,
                 }
             });
+
         })
 
 

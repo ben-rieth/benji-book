@@ -5,7 +5,7 @@ import AuthLayout from "../components/layouts/AuthLayout";
 import Logo from "../components/logo/Logo";
 import { authOptions } from "../server/auth";
 
-const OnboardingPage = () => {
+const OnboardingPage: NextPage = () => {
     return (
         <AuthLayout description="Tell us about yourself so we can setup your Benji Book account!">
             <Logo />
@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res}) => {
         }
     }
 
-    if (session.user.hasData) {
+    if (session?.user?.setData) {
         return {
             redirect: {
                 destination: '/posts',

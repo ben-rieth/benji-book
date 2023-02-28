@@ -7,13 +7,15 @@ import SelectInput from "../inputs/SelectInput";
 import 'node_modules/react-datepicker/dist/react-datepicker.min.css'
 import DateInput from "../inputs/DateInput";
 import { rand, randUser, randPastDate } from "@ngneat/falso";
+import { api } from "../../utils/api";
+import { useRouter } from "next/router";
 
 type FormValues = {
     firstName: string;
     lastName: string;
     username: string;
     birthday: Date;
-    gender: string;
+    gender: 'male' | 'female' | 'transgender' | 'agender' | 'non-binary' | 'other' | undefined;
 }
 
 const AboutYouForm = () => {
@@ -27,15 +29,20 @@ const AboutYouForm = () => {
         props.setFieldValue('birthday', randPastDate({ years: 10 }))
     }
 
+    const { mutateAsync: setUpAccount } = api.users.setUpAccount.useMutation();
+    const router = useRouter();
+
+    const initialValues: FormValues = {
+        firstName: '',
+        lastName: '',
+        username: '',
+        birthday: new Date(),
+        gender: undefined,
+    }
+
     return (
         <Formik
-            initialValues={{
-                firstName: '',
-                lastName: '',
-                username: '',
-                birthday: new Date(),
-                gender: '',
-            }}
+            initialValues={initialValues}
             validationSchema={yup.object().shape({
                 firstName: yup.string()
                     .required("First Name must be provided"),
@@ -48,9 +55,23 @@ const AboutYouForm = () => {
                     .max(20, "Username cannot be more than 20 characters")
                     .matches(/^[a-z0-9-_.]+$/, "Username can only contain lowercase letters, numbers, dashes( - ), and underscores( _ )"),
                 birthday: yup.date(),
-                gender: yup.string()
+                gender: yup.mixed().oneOf(['male', 'female', 'transgender', 'agender', 'non-binary', 'other', undefined]),
             })}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={async (values) => { 
+                try {
+                    await setUpAccount({ 
+                        firstName: values.firstName, 
+                        lastName: values.lastName, 
+                        username: values.username,
+                        birthday: values.birthday,
+                        gender: values.gender
+                    });
+
+                    await router.push('/posts');
+                } catch (err) {
+                    console.log('error');
+                }
+            }}
         >
             {props => (
                 <Form className="flex flex-col gap-4 bg-white p-8 rounded-xl mx-6 max-w-screen-sm">

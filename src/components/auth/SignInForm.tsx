@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import TextInput from "../inputs/TextInput";
 import Button from "../general/Button";
-import { Form, Formik, validateYupSchema } from 'formik';
+import { Form, Formik } from 'formik';
 import { MdOutlineMail } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
