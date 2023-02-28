@@ -65,6 +65,12 @@ export const authOptions: NextAuthOptions = {
       from: env.EMAIL_FROM,
     })
   ],
+  pages: {
+    signIn: '/',
+    error: '/',
+    newUser: '/onboarding',
+    verifyRequest: '/',
+  }
 };
 
 /**
