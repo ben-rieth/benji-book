@@ -5,12 +5,15 @@ async function seed() {
     await prisma.user.deleteMany({});
 
     for (let i = 0; i <5; i++) {
+
+        const [first, last] = [randFirstName(), randLastName()]
+
         await prisma.user.create({
             data: {
                 setData: true,
-                firstName: randFirstName(),
-                lastName: randLastName(),
-                username: randUserName().toLowerCase(),
+                firstName: first,
+                lastName: last,
+                username: randUserName({ firstName: first, lastName: last }).toLowerCase(),
                 image: randAvatar(),
                 gender: rand(['male', 'female', 'transgender', 'non-binary', 'agender', 'other']),
                 birthday: randPastDate({ years: 60 }),
