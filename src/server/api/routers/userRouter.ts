@@ -5,10 +5,12 @@ const userRouter = createTRPCRouter({
     getAllUsers: protectedProcedure
         .query(({ ctx }) => {
             return ctx.prisma.user.findMany({
+                where: { id: { not: ctx.session.user.id } },
                 select: {
                     id: true,
                     firstName: true,
                     lastName: true,
+                    username: true,
                     image: true,
                 }
             });
