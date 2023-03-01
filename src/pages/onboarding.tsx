@@ -31,7 +31,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res}) => {
     if (session?.user?.setData) {
         return {
             redirect: {
-                destination: '/posts',
+                destination: '/feed',
                 permanent: false,
             }
         }

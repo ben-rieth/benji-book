@@ -67,7 +67,7 @@ const AboutYouForm = () => {
                         gender: values.gender
                     });
 
-                    await router.push('/posts');
+                    await router.push('/feed');
                 } catch (err) {
                     console.log('error');
                 }
