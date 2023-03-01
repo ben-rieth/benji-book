@@ -1,16 +1,21 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { type User, getServerSession } from "next-auth";
 import { authOptions } from "../server/auth";
+import { api } from "../utils/api";
 
 type FeedPageProps = {
     user: User;
 }
 
 const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
+    const { data } = api.posts.getAllPosts.useQuery();
+
     return (
-        <div>
+        <main>
             {JSON.stringify(user)}
-        </div>
+            <p>Posts</p>
+            {JSON.stringify(data)}
+        </main>
     );
 }
 
@@ -35,7 +40,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         }
     }
 
-    
+
 
     return {
         props: {

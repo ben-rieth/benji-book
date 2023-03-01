@@ -16,7 +16,8 @@ const postRouter = createTRPCRouter({
                         // users that they follow
                         select: {
                             id: true,
-                            name: true,
+                            firstName: true,
+                            lastName: true,
                             image: true,
                             // and their posts
                             posts: {
