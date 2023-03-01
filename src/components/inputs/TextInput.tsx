@@ -2,8 +2,9 @@ import classNames from "classnames";
 import type { ChangeEvent, FocusEvent, FC, } from "react";
 
 type TextInputProps = {
-    type?: 'text' | 'email';
+    type?: 'text' | 'email' | 'search' | 'password';
     label: string;
+    showLabel?: boolean
     id: string;
     name: string;
     placeholder?: string;
@@ -13,14 +14,15 @@ type TextInputProps = {
     touched: boolean | undefined;
     disabled?: boolean;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: FocusEvent<HTMLInputElement, Element>) => void;
+    onBlur?: (e: FocusEvent<HTMLInputElement, Element>) => void;
     leftIcon?: JSX.Element;
     rightIcon?: JSX.Element;
 }
 
 const TextInput: FC<TextInputProps> = ({ 
     type="text", 
-    label, 
+    label,
+    showLabel=true, 
     id, 
     placeholder='', 
     required,
@@ -54,10 +56,12 @@ const TextInput: FC<TextInputProps> = ({
 
     return (
         <div className="flex flex-col mx-auto w-full">
-            <label htmlFor={id} className="ml-2">
-                {label}
-                {required && <span className="text-red-500 text-lg">*</span>}
-            </label>
+            {showLabel && (
+                <label htmlFor={id} className="ml-2">
+                    {label}
+                    {required && <span className="text-red-500 text-lg">*</span>}
+                </label>
+            )}
             <div className={containerClasses}>
                 {!!leftIcon && leftIcon}
                 <input 
