@@ -6,15 +6,20 @@ import UserCard from "../../components/users/UserCard";
 import { authOptions } from "../../server/auth";
 import { api } from "../../utils/api";
 import { BiSearchAlt } from 'react-icons/bi';
+import useDebounce from "../../hooks/useDebounce";
+import { AiOutlineLoading } from "react-icons/ai";
+import ErrorBox from "../../components/error/ErrorBox";
 
 const SearchUsersPage: NextPage = () => {
 
-    const { data, isSuccess } = api.users.getAllUsers.useQuery();
-
     const [query, setQuery] = useState<string>('');
- 
+    const debouncedQuery = useDebounce<string>(query, 350);
+
+
+    const { data, isSuccess, isLoading, isError } = api.users.getAllUsers.useQuery({ query: debouncedQuery });
+
     return (
-        <main className="bg-neutral-100 h-screen flex flex-col gap-4">
+        <main className="bg-neutral-100 h-screen flex flex-col gap-4 items-center">
             <TextInput 
                 id="search"
                 name="search"
@@ -35,6 +40,12 @@ const SearchUsersPage: NextPage = () => {
                         <UserCard user={user} key={user.id} />
                     ))}
                 </section>
+            )}
+            {isLoading && (
+                <AiOutlineLoading className="animate-spin w-14 h-14" />   
+            )}
+            {isError && (
+                <ErrorBox message="Cannot search due to server error. Try again later." />
             )}
         </main>
     )

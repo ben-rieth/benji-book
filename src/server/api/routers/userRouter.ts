@@ -3,9 +3,21 @@ import { createTRPCRouter, protectedProcedure } from '../trpc';
 
 const userRouter = createTRPCRouter({
     getAllUsers: protectedProcedure
-        .query(({ ctx }) => {
+        .input(z.object({
+            query: z.string(),
+        }))
+        .query(({ ctx, input }) => {
+            if (input.query === '') return [];
+
             return ctx.prisma.user.findMany({
-                where: { id: { not: ctx.session.user.id } },
+                where: { 
+                    id: { not: ctx.session.user.id },
+                    OR: [
+                        { firstName: { contains: input.query }},
+                        { lastName: { contains: input.query }},
+                        { username: { contains: input.query }}
+                    ],
+                },
                 select: {
                     id: true,
                     firstName: true,
