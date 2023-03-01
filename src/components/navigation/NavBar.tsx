@@ -1,23 +1,28 @@
 import Logo from "../logo/Logo";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { AiOutlineMenu } from 'react-icons/ai';
 import classNames from "classnames";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import Button from "../general/Button";
  
 const NavBar = () => {
 
     const itemClasses = classNames(
         "my-1 hover:text-sky-500",
-    )
+    );
+
+    const { data } = useSession();
 
     return (
-        <nav className="flex justify-between bg-white px-5 py-2">
-            <Logo size='sm' />
-            <DropdownMenu.Root>
+        <nav className="flex justify-between items-center bg-white px-5 py-2">
+            <Logo />
 
+            {/* trigger is only visible between md screen size */}
+            <DropdownMenu.Root>
                 <DropdownMenu.Trigger>
-                    <AiOutlineMenu className="w-7 h-7" />
+                    <AiOutlineMenu className="w-7 h-7 md:hidden" />
                 </DropdownMenu.Trigger>
 
                 <DropdownMenu.Portal>
@@ -50,6 +55,29 @@ const NavBar = () => {
                     </DropdownMenu.Content>
                 </DropdownMenu.Portal>
             </DropdownMenu.Root>
+
+            {/* visible on md size screens and above */}
+            <NavigationMenu.Root className="hidden md:flex md:flex-row">
+                <NavigationMenu.List className="flex items-center gap-8">
+
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild>
+                            <Link href="/feed">
+                                <Button variant="minimal">Feed</Button>
+                            </Link>
+                        </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild>
+                            <Link href={`/users/${data?.user?.id ?? ''}`}>
+                                <Button variant="minimal">Account</Button>
+                            </Link>
+                        </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+
+                </NavigationMenu.List>
+            </NavigationMenu.Root>
         </nav>
     );
 }

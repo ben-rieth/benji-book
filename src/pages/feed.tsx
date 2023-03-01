@@ -13,9 +13,7 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
 
     return (
         <MainLayout title="Feed" description="Posts from the people that you follow!">
-            {JSON.stringify(user)}
-            <p>Posts</p>
-            {JSON.stringify(data)}
+            <p>Feed</p>
         </MainLayout>
     );
 }
