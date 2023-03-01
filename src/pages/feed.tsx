@@ -1,5 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { type User, getServerSession } from "next-auth";
+import MainLayout from "../components/layouts/MainLayout";
 import { authOptions } from "../server/auth";
 import { api } from "../utils/api";
 
@@ -11,11 +12,11 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
     const { data } = api.posts.getAllPosts.useQuery();
 
     return (
-        <main>
+        <MainLayout title="Feed" description="Posts from the people that you follow!">
             {JSON.stringify(user)}
             <p>Posts</p>
             {JSON.stringify(data)}
-        </main>
+        </MainLayout>
     );
 }
 
