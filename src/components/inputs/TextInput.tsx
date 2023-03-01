@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import type { ChangeEvent, FocusEvent, FC, } from "react";
+import type { ChangeEvent, FocusEvent, FC} from "react";
 
 type TextInputProps = {
     type?: 'text' | 'email' | 'search' | 'password';
@@ -46,9 +46,9 @@ const TextInput: FC<TextInputProps> = ({
     const containerClasses = classNames(
         "flex flex-row items-center gap-2",
         "border-2 px-2 py-1 outline-none",
-        "text-lg rounded-lg bg-white",
+        "text-lg rounded-lg bg-white group",
         {
-            "focus:border-sky-500" : !error && !disabled,
+            "focus-within:border-sky-500": !error && !disabled,
             "border-red-500": error && touched && !disabled,
             "bg-slate-300": disabled
         }
@@ -62,7 +62,7 @@ const TextInput: FC<TextInputProps> = ({
                     {required && <span className="text-red-500 text-lg">*</span>}
                 </label>
             )}
-            <div className={containerClasses}>
+            <div className={containerClasses} id={`${id}-container`}>
                 {!!leftIcon && leftIcon}
                 <input 
                     className={inputClasses}
