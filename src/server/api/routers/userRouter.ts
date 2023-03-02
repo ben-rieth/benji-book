@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { type User } from '@prisma/client';
+import type { FullUser } from '../../../types/User';
 
 const userRouter = createTRPCRouter({
     getAllUsers: protectedProcedure
@@ -63,7 +65,7 @@ const userRouter = createTRPCRouter({
                 }
             });
 
-            let user;
+            let user : Partial<FullUser>  | null;
             // return all info if the session user is following the searched for user
             if (relationship?.status && relationship.status === 'accepted') {
                 user = await ctx.prisma.user.findUnique({
