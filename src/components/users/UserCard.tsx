@@ -14,7 +14,7 @@ type UserCardProps = {
 const UserCard:FC<UserCardProps> = ({ user }) => {
     return (
         <article className="group bg-white shadow-md rounded-lg p-3 flex flex-row gap-4 w-full items-center">
-            <Avatar url={user.image} />
+            <Avatar url={user.image} className="w-16 h-16" />
             <div className="flex flex-col">
                 <p className="text-lg group-hover:text-sky-500">{user.firstName} {user.lastName}</p>
                 <p className="text-sm text-slate-300">@{user.username}</p>

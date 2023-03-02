@@ -39,7 +39,7 @@ const userRouter = createTRPCRouter({
             if (input.userId === ctx.session.user.id) {
                 return {
                     status: 'self',
-                    user: ctx.prisma.user.findUnique({
+                    user: await ctx.prisma.user.findUnique({
                         where: { id: input.userId },
                         include: {
                             posts: true,
@@ -52,7 +52,7 @@ const userRouter = createTRPCRouter({
 
             // otherwise find relationship of two people
             const relationship = await ctx.prisma.follows.findUnique({
-                where: { 
+                where: {
                     followerId_followingId: {
                         followerId: ctx.session.user.id,
                         followingId: input.userId
@@ -62,7 +62,6 @@ const userRouter = createTRPCRouter({
                     status: true,
                 }
             });
-
 
             let user;
             // return all info if the session user is following the searched for user

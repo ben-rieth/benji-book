@@ -10,6 +10,7 @@ import useDebounce from "../../hooks/useDebounce";
 import { AiOutlineLoading } from "react-icons/ai";
 import ErrorBox from "../../components/error/ErrorBox";
 import MainLayout from "../../components/layouts/MainLayout";
+import Link from "next/link";
 
 const SearchUsersPage: NextPage = () => {
 
@@ -39,7 +40,9 @@ const SearchUsersPage: NextPage = () => {
                 {isSuccess && data.length > 0 && (
                     <section className="flex flex-col gap-5 items-center w-full">
                         {data.map(user => (
-                            <UserCard user={user} key={user.id} />
+                            <Link href={`/users/${user.id}`} key={user.id}>
+                                <UserCard user={user} />
+                            </Link>
                         ))}
                     </section>
                 )}
