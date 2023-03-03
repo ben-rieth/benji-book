@@ -11,15 +11,21 @@ const AccountPage: NextPage = () => {
 
     const { data, isSuccess } = api.users.getOneUser.useQuery({ userId: id as string })
 
+    if (!data) {
+        return (
+            <p>User does not exist</p>
+        )
+    }
+
     return (
         <MainLayout title="Benji Book" description="A user page">
             {isSuccess && (
                 <div className="flex flex-col items-center">
                     <header className="bg-white rounded-lg w-10/12 mt-10 flex flex-col p-5">
                         <div className="flex">
-                            <Avatar url={data?.user?.image} className="w-16 h-16" />
+                            <Avatar url={data.image} className="w-16 h-16" />
                         </div>
-                        <h1 className="font-semibold text-3xl">{data.user?.firstName} {data.user?.lastName}</h1>
+                        <h1 className="font-semibold text-3xl">{data.firstName} {data.lastName}</h1>
                         <p>This is a bio</p>
                     </header>
 

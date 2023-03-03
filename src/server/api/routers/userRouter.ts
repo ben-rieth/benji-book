@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
-import { type User } from '@prisma/client';
-import type { FullUser } from '../../../types/User';
+import type { FullUser, PrivateUser } from '../../../types/User';
 
 const userRouter = createTRPCRouter({
     getAllUsers: protectedProcedure
@@ -35,24 +34,21 @@ const userRouter = createTRPCRouter({
         .input(z.object({
             userId: z.string().cuid(),
         }))
-        .query(async ({ input, ctx }) => {
-            
+        .query(async ({ input, ctx }) : Promise<FullUser | PrivateUser | null> => {
             // if user is getting their own info
             if (input.userId === ctx.session.user.id) {
-                return {
-                    status: 'self',
-                    user: await ctx.prisma.user.findUnique({
+                const user = await ctx.prisma.user.findUnique({
                         where: { id: input.userId },
                         include: {
                             posts: true,
                             followedBy: true,
                             following: true,
                         }
-                    })
-                }
-            }
+                });
 
-            // otherwise find relationship of two people
+                return user ? { ...user, status: 'self' } : null;
+            }
+                // otherwise find relationship of two people
             const relationship = await ctx.prisma.follows.findUnique({
                 where: {
                     followerId_followingId: {
@@ -65,10 +61,9 @@ const userRouter = createTRPCRouter({
                 }
             });
 
-            let user : Partial<FullUser>  | null;
             // return all info if the session user is following the searched for user
             if (relationship?.status && relationship.status === 'accepted') {
-                user = await ctx.prisma.user.findUnique({
+                const user = await ctx.prisma.user.findUnique({
                     where: { id: input.userId },
                     include: {
                         posts: true,
@@ -76,25 +71,27 @@ const userRouter = createTRPCRouter({
                         following: true,
                     }
                 });
-            } else {
-                // return limited info if users don't follow
-                user = await ctx.prisma.user.findUnique({
-                    where: {
-                        id: input.userId,
-                    },
-                    select: {
-                        id: true,
-                        firstName: true,
-                        lastName: true,
-                        image: true,
-                    }
-                });
+
+                return user ? { ...user, status: 'accepted' } : null;
             }
 
-            return {
-                status: relationship?.status,
-                user,
-            };
+            // return limited info if users don't follow
+            const user = await ctx.prisma.user.findUnique({
+                where: {
+                    id: input.userId,
+                },
+                select: {
+                    id: true,
+                    firstName: true,
+                    lastName: true,
+                    image: true,
+                }
+            });
+
+            if (relationship?.status === 'pending') return user ? { ...user, status: 'pending' } : null;
+            if (relationship?.status === 'denied') return user ? { ...user, status: 'denied' } : null;
+            
+            return user ? { ...user, status: null } : null;
         }
     ),
     
