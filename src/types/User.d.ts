@@ -14,6 +14,7 @@ type PrivateUser = {
     firstName?: string | null;
     lastName?: string | null;
     image?: string | null;
+    bio?: string | null;
 }
 
 export { FullUser, PrivateUser }

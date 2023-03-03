@@ -26,7 +26,7 @@ const AccountPage: NextPage = () => {
                             <Avatar url={data.image} className="w-16 h-16" />
                         </div>
                         <h1 className="font-semibold text-3xl">{data.firstName} {data.lastName}</h1>
-                        <p>This is a bio</p>
+                        {data.bio && <p>{data.bio}</p>}
                     </header>
 
                     <div>
