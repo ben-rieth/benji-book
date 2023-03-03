@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
+import { AiFillEdit } from "react-icons/ai";
 import Button from "../../../components/general/Button";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Avatar from "../../../components/users/Avatar";
@@ -57,7 +58,7 @@ const AccountPage: NextPage = () => {
                 <div className="flex flex-col items-center gap-5">
                     <header 
                         className={classNames(
-                            "bg-white rounded-b-lg w-full flex flex-col items-center px-5 py-3 h-fit max-w-screen-lg shadow-lg",
+                            "bg-white rounded-b-lg w-full flex flex-col items-center p-5 h-fit max-w-screen-lg shadow-lg relative",
                             "md:rounded-lg md:w-10/12 md:mt-10 md:flex-row md:gap-5"
                         )}
                     >
@@ -67,6 +68,12 @@ const AccountPage: NextPage = () => {
                             <h1 className="font-semibold text-4xl mb-2">{data.firstName} {data.lastName}</h1>
                             {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 md:text-sm lg:text-base">{data.bio}</p>}
                         </div>
+                        <AiFillEdit 
+                            className={classNames(
+                                "absolute top-5 right-5 fill-sky-500 w-7 h-7 cursor-pointer hover:scale-110 hover:fill-sky-600", {
+                                    "hidden": data.status !== 'self'
+                                }
+                            )} />
                     </header>
 
                     <div>
@@ -78,7 +85,7 @@ const AccountPage: NextPage = () => {
                                 </Button>
                             </div>
                         )}
-                        {data.status === 'accepted' && <p>There will be posts here</p>}
+                        {data.status === 'accepted' || data.status === 'self' && <p>There will be posts here</p>}
                         {data.status === 'pending' && <p>Your follow request is pending.</p>}
                         {data.status === 'denied' && <p>Your follow request was denied.</p>}
                     </div>

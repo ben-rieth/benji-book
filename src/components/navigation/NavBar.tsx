@@ -47,7 +47,9 @@ const NavBar = () => {
                         </DropdownMenu.Item>
 
                         <DropdownMenu.Item className={itemClasses} asChild>
-                            Settings
+                            <Link href={`/users/${data?.user?.id ?? ''}/settings`}>
+                                Settings
+                            </Link>
                         </DropdownMenu.Item>
 
                         <DropdownMenu.Separator className="bg-slate-200 h-px" />
@@ -88,6 +90,14 @@ const NavBar = () => {
                         <NavigationMenu.Link asChild>
                             <Link href={`/users/${data?.user?.id ?? ''}`}>
                                 <Button variant="minimal">Account</Button>
+                            </Link>
+                        </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild>
+                            <Link href={`/users/${data?.user?.id ?? ''}/settings`}>
+                                <Button variant="minimal">Settings</Button>
                             </Link>
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
