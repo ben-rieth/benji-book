@@ -26,19 +26,27 @@ const NavBar = () => {
                 </DropdownMenu.Trigger>
 
                 <DropdownMenu.Portal>
-                    <DropdownMenu.Content sideOffset={10} className="bg-white p-2 w-[50vw] rounded-lg shadow-xl ">
+                    <DropdownMenu.Content sideOffset={10} className="bg-white py-2 px-5 w-[50vw] rounded-lg shadow-xl flex flex-col">
                     <DropdownMenu.Arrow className="fill-white" />
-                        <DropdownMenu.Item className={itemClasses}>
+                        <DropdownMenu.Item className={itemClasses} asChild>
                             <Link href="/feed">
                                 Feed
                             </Link>
                         </DropdownMenu.Item>
 
-                        <DropdownMenu.Item className={itemClasses}>
-                            Account
+                        <DropdownMenu.Item className={itemClasses} asChild>
+                            <Link href='/users'>
+                                Search Users
+                            </Link>
                         </DropdownMenu.Item>
 
-                        <DropdownMenu.Item className={itemClasses}>
+                        <DropdownMenu.Item className={itemClasses} asChild>
+                            <Link href={`/users/${data?.user?.id ?? ''}`}>
+                                Account
+                            </Link>
+                        </DropdownMenu.Item>
+
+                        <DropdownMenu.Item className={itemClasses} asChild>
                             Settings
                         </DropdownMenu.Item>
 
@@ -46,7 +54,7 @@ const NavBar = () => {
 
                         <DropdownMenu.Item asChild>
                             <button 
-                                className="my-1 text-red-500"
+                                className="my-1 text-red-500 self-start"
                                 onClick={() => signOut()}
                             >
                                 Log Out
@@ -64,6 +72,14 @@ const NavBar = () => {
                         <NavigationMenu.Link asChild>
                             <Link href="/feed">
                                 <Button variant="minimal">Feed</Button>
+                            </Link>
+                        </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild>
+                            <Link href={`/users/`}>
+                                <Button variant="minimal">Search Users</Button>
                             </Link>
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>

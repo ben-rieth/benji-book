@@ -75,6 +75,7 @@ model User {
     birthday      DateTime?
     gender        String?
     image         String?
+    bio           String?
 
     setData       Boolean @default(false)
 
