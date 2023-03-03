@@ -99,13 +99,12 @@ const userRouter = createTRPCRouter({
     
     sendFollowRequest: protectedProcedure
         .input(z.object({
-            followerId: z.string().cuid(),
             followingId: z.string().cuid(),
         }))
-        .query(async ({ input, ctx }) => {
+        .mutation(async ({ input, ctx }) => {
             await ctx.prisma.follows.create({
                 data: {
-                    followerId: input.followerId,
+                    followerId: ctx.session.user.id,
                     followingId: input.followingId,
                     status: 'pending',
                 }

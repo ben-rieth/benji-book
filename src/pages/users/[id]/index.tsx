@@ -11,7 +11,35 @@ const AccountPage: NextPage = () => {
     const router = useRouter();
     const { id } = router.query;
 
+    const apiUtils = api.useContext();
     const { data, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: id as string })
+
+    const { mutateAsync: sendFollowRequest } = api.users.sendFollowRequest.useMutation({ 
+        onMutate: async () => {
+            await apiUtils.users.getOneUser.cancel();
+            apiUtils.users.getOneUser.setData(
+                { userId: id as string }, 
+                prev => {
+                    if (!prev) return;
+                    return {...prev, status: 'pending'}
+                }
+            );
+        },
+
+        onError: () => {
+            apiUtils.users.getOneUser.setData(
+                {userId: id as string },
+                prev => {
+                    if (!prev) return;
+                    return { ...prev, status: null }
+                }
+            )
+        },
+
+        onSettled: async () => {
+            await apiUtils.users.getOneUser.invalidate({ userId: id as string })
+        }
+    });
 
     if (!data && isSuccess) {
         return (
@@ -44,7 +72,7 @@ const AccountPage: NextPage = () => {
                         {!data.status && (
                             <div className="flex flex-col gap-3">
                                 <p className="text-lg">You don&apos;t follow this person yet!</p>
-                                <Button variant="filled" onClick={() => console.log("Follow request")}>
+                                <Button variant="filled" onClick={() => sendFollowRequest({ followingId: data.id })}>
                                     Send Follow Request
                                 </Button>
                             </div>
