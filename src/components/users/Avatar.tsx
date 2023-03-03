@@ -10,14 +10,14 @@ const Avatar:FC<AvatarProps> = ({ url, className="" }) => {
     
     if (url) {
         return (
-            <div className={classNames("relative", className)}>
+            <div className={classNames("relative aspect-square", className)}>
                 <Image src={url} fill alt="profile pic" className="object-contain rounded-full" />
             </div>
         )
     }
 
     return (
-        <div className={classNames("rounded-full bg-slate-500", className)}></div>
+        <div className={classNames("rounded-full bg-slate-500 aspect-square", className)}></div>
     )
 };
 

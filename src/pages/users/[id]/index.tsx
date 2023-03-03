@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
+import Button from "../../../components/general/Button";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Avatar from "../../../components/users/Avatar";
 import { api } from "../../../utils/api";
@@ -24,10 +25,10 @@ const AccountPage: NextPage = () => {
                 <p>Loading</p>
             )}
             {data && isSuccess && (
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center gap-5">
                     <header 
                         className={classNames(
-                            "bg-white rounded-b-lg w-full flex flex-col items-center px-5 py-3 h-fit max-w-screen-lg shadow-md",
+                            "bg-white rounded-b-lg w-full flex flex-col items-center px-5 py-3 h-fit max-w-screen-lg shadow-lg",
                             "md:rounded-lg md:w-10/12 md:mt-10 md:flex-row md:gap-5"
                         )}
                     >
@@ -35,15 +36,22 @@ const AccountPage: NextPage = () => {
                         <div className="flex flex-col items-center md:items-start">
                             <p className="text-slate-300 text-base">@{data.username}</p>
                             <h1 className="font-semibold text-4xl">{data.firstName} {data.lastName}</h1>
-                            {data.bio && <p className="text-center md:text-left">{data.bio}</p>}
+                            {data.bio && <p className="text-center md:text-left leading-tight">{data.bio}</p>}
                         </div>
                     </header>
 
                     <div>
-                        {!data.status && <p>You don&apos;t follow this person yet</p>}
+                        {!data.status && (
+                            <div className="flex flex-col gap-3">
+                                <p className="text-lg">You don&apos;t follow this person yet!</p>
+                                <Button variant="filled" onClick={() => console.log("Follow request")}>
+                                    Send Follow Request
+                                </Button>
+                            </div>
+                        )}
                         {data.status === 'accepted' && <p>There will be posts here</p>}
-                        {data.status === 'pending' && <p>Waiting on accepting</p>}
-                        {data.status === 'denied' && <p>Denied</p>}
+                        {data.status === 'pending' && <p>Your follow request is pending.</p>}
+                        {data.status === 'denied' && <p>Your follow request was denied.</p>}
                     </div>
                 </div>
             )}
