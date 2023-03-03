@@ -1,10 +1,16 @@
-import { randAvatar, randFirstName, randLastName, randUserName, rand, randPastDate, randEmail, randRecentDate } from "@ngneat/falso";
+import { randAvatar, randFirstName, randLastName, randUserName, rand, randPastDate, randEmail, randRecentDate, randSentence } from "@ngneat/falso";
 import { prisma } from "./../src/server/db";
 
 async function seed() {
-    await prisma.user.deleteMany({});
+    await prisma.user.deleteMany({
+        where: {
+            NOT: [
+                { id: 'cleq4fpmv0000uh7knb23h18r' }
+            ]
+        }
+    });
 
-    for (let i = 0; i <5; i++) {
+    for (let i = 0; i < 100; i++) {
 
         const [first, last] = [randFirstName(), randLastName()]
 
@@ -19,6 +25,7 @@ async function seed() {
                 birthday: randPastDate({ years: 60 }),
                 email: randEmail(),
                 emailVerified: randRecentDate(),
+                bio: randSentence(),
             }
         })
     }

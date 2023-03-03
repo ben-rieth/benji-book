@@ -9,9 +9,9 @@ const AccountPage: NextPage = () => {
     const router = useRouter();
     const { id } = router.query;
 
-    const { data, isSuccess } = api.users.getOneUser.useQuery({ userId: id as string })
+    const { data, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: id as string })
 
-    if (!data) {
+    if (!data && isSuccess) {
         return (
             <p>User does not exist</p>
         )
@@ -19,9 +19,12 @@ const AccountPage: NextPage = () => {
 
     return (
         <MainLayout title="Benji Book" description="A user page">
-            {isSuccess && (
+            {isLoading && (
+                <p>Loading</p>
+            )}
+            {data && isSuccess && (
                 <div className="flex flex-col items-center">
-                    <header className="bg-white rounded-lg w-10/12 mt-10 flex flex-col p-5">
+                    <header className="bg-white rounded-b-lg md:rounded-lg w-full md:w-10/12 md:mt-10 flex flex-col p-5">
                         <div className="flex">
                             <Avatar url={data.image} className="w-16 h-16" />
                         </div>

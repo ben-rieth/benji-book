@@ -38,12 +38,12 @@ const userRouter = createTRPCRouter({
             // if user is getting their own info
             if (input.userId === ctx.session.user.id) {
                 const user = await ctx.prisma.user.findUnique({
-                        where: { id: input.userId },
-                        include: {
-                            posts: true,
-                            followedBy: true,
-                            following: true,
-                        }
+                    where: { id: input.userId },
+                    include: {
+                        posts: true,
+                        followedBy: true,
+                        following: true,
+                    }
                 });
 
                 return user ? { ...user, status: 'self' } : null;
