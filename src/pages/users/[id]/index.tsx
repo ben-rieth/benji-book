@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import MainLayout from "../../../components/layouts/MainLayout";
@@ -24,12 +25,18 @@ const AccountPage: NextPage = () => {
             )}
             {data && isSuccess && (
                 <div className="flex flex-col items-center">
-                    <header className="bg-white rounded-b-lg md:rounded-lg w-full md:w-10/12 md:mt-10 flex flex-col p-5">
-                        <div className="flex">
-                            <Avatar url={data.image} className="w-16 h-16" />
+                    <header 
+                        className={classNames(
+                            "bg-white rounded-b-lg w-full flex flex-col items-center px-5 py-3 h-fit max-w-screen-lg shadow-md",
+                            "md:rounded-lg md:w-10/12 md:mt-10 md:flex-row md:gap-5"
+                        )}
+                    >
+                        <Avatar url={data.image} className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32" />
+                        <div className="flex flex-col items-center md:items-start">
+                            <p className="text-slate-300 text-base">@{data.username}</p>
+                            <h1 className="font-semibold text-4xl">{data.firstName} {data.lastName}</h1>
+                            {data.bio && <p className="text-center md:text-left">{data.bio}</p>}
                         </div>
-                        <h1 className="font-semibold text-3xl">{data.firstName} {data.lastName}</h1>
-                        {data.bio && <p>{data.bio}</p>}
                     </header>
 
                     <div>

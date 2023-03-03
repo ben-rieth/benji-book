@@ -86,6 +86,7 @@ const userRouter = createTRPCRouter({
                     lastName: true,
                     image: true,
                     bio: true,
+                    username: true,
                 }
             });
 
