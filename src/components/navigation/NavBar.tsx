@@ -34,7 +34,7 @@ const NavBar = () => {
                 </DropdownMenu.Trigger>
 
                 <DropdownMenu.Portal>
-                    <DropdownMenu.Content sideOffset={10} className="bg-white py-2 px-5 min-w-72 rounded-lg shadow-xl flex flex-col">
+                    <DropdownMenu.Content sideOffset={10} className="bg-white py-2 px-5 w-[50vw] sm:w-[30vw] rounded-lg shadow-2xl flex flex-col">
                     <DropdownMenu.Arrow className="fill-white" />
                         <DropdownMenu.Item className={itemClasses} asChild>
                             <Link href="/feed">
@@ -101,18 +101,18 @@ const NavBar = () => {
                                 <BsChevronDown />
                             </Button>
                         </NavigationMenu.Trigger>
-                        <NavigationMenu.Content className="absolute bg-white shadow-lg rounded-lg px-5 py-3 w-1/2 top-14 right-0">
+                        <NavigationMenu.Content className="absolute bg-white shadow-2xl rounded-lg px-5 py-3 w-1/2 top-14 right-0">
                             <ul className="flex flex-col gap-2">
                                 <li>
                                     <NavigationMenu.Link asChild>
-                                        <Link href={`/users/${data?.user?.id ?? ''}`}>
+                                        <Link href={`/users/${data?.user?.id ?? ''}`} className={itemClasses}>
                                             Account Page
                                         </Link>
                                     </NavigationMenu.Link>
                                 </li>
                                 <li>
                                     <NavigationMenu.Link asChild>
-                                        <Link href={`/users/${data?.user?.id ?? ''}/settings`}>
+                                        <Link href={`/users/${data?.user?.id ?? ''}/settings`} className={itemClasses}>
                                             Settings
                                         </Link>
                                     </NavigationMenu.Link>
@@ -123,7 +123,7 @@ const NavBar = () => {
                                 <li>
                                     <NavigationMenu.Link asChild>
                                         <button 
-                                            className="text-red-500 self-start"
+                                            className="text-red-500 self-start hover:text-red-600 hover:underline"
                                             onClick={logOut}
                                         >
                                             Log Out
