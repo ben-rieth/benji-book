@@ -31,13 +31,27 @@ const DateInput:FC<DateInputProps> = ({ onChange, dateValue }) => {
         "text-sm ml-2"
     );
 
+    // if date is not current date (the default), set value of inputs to the given date
     useEffect(() => {
         if (isThisYear(dateValue) || touched) {
             return;
         }
 
-        setDay(getDate(dateValue).toString());
-        setMonth((getMonth(dateValue) - 1).toString());
+        const _day = getDate(dateValue);
+        const _month = getMonth(dateValue) + 1;
+
+        if (_day < 10) {
+            setDay(`0${_day}`);
+        } else {
+            setDay(_day.toString())
+        }
+
+        if (_month < 10) {
+            setMonth(`0${_month}`);
+        } else {
+            setDay(_month.toString())
+        }
+
         setYear(getYear(dateValue).toString());
 
     }, [dateValue, touched])
@@ -53,10 +67,10 @@ const DateInput:FC<DateInputProps> = ({ onChange, dateValue }) => {
 
         if (e.currentTarget.id === `month-${id}`) {
             setMonth(value);
-            onChange(set(dateValue, {month: Number(value) - 1}))
+            onChange(set(dateValue, { date: Number(day), month: Number(value) - 1}))
         } else if (e.currentTarget.id === `day-${id}`) {
             setDay(e.currentTarget.value);
-            onChange(set(dateValue, {date: Number(value)}))
+            onChange(set(dateValue, {date: Number(value), month: Number(month) - 1 }))
         } else if (e.currentTarget.id === `year-${id}`) {
             setYear(e.currentTarget.value);
             onChange(set(dateValue, {year: Number(value)}))
@@ -72,6 +86,7 @@ const DateInput:FC<DateInputProps> = ({ onChange, dateValue }) => {
     return (
         <div className="flex flex-col w-full p-1 relative rounded-lg">
             <p className="ml-1">Birthday</p>
+            <p>{dateValue.toISOString()}</p>
             <div className="flex flex-row gap-2">
                 <div className="flex flex-col flex-1">
                     <label htmlFor={`month-${id}`} className={labelClasses}>Month</label>

@@ -9,6 +9,7 @@ import DateInput from "../inputs/DateInput";
 import { rand, randUser, randPastDate } from "@ngneat/falso";
 import { api } from "../../utils/api";
 import { useRouter } from "next/router";
+import { isToday } from "date-fns";
 
 type FormValues = {
     firstName: string;
@@ -61,12 +62,9 @@ const AboutYouForm = () => {
             onSubmit={async (values) => { 
                 try {
                     console.log(values);
-                    await updateAccount({ 
-                        firstName: values.firstName, 
-                        lastName: values.lastName, 
-                        username: values.username,
-                        birthday: values.birthday,
-                        gender: values.gender
+                    await updateAccount({
+                        ...values,
+                        birthday: isToday(values.birthday) ? undefined : values.birthday,
                     });
 
                     await router.push('/feed');
@@ -134,7 +132,7 @@ const AboutYouForm = () => {
                     />
 
                     <DateInput 
-                        onChange={(value) => props.setFieldValue('birthday', value)} 
+                        onChange={(value) => {props.setFieldValue('birthday', value)}} 
                         dateValue={props.values.birthday}
                     />
 

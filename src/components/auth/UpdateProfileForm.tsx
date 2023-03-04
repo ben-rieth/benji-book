@@ -11,6 +11,7 @@ import * as yup from 'yup';
 import TextArea from '../inputs/TextArea';
 import Button from '../general/Button';
 import { api } from '../../utils/api';
+import { isToday } from 'date-fns';
 
 type UpdateProfileFormProps = {
     user: FullUser;
@@ -97,7 +98,10 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
                         })}
                         onSubmit={(values) => {
                             console.log(values);
-                            updateAccount({...values});
+                            updateAccount({
+                                ...values,
+                                birthday: isToday(values.birthday) ? undefined : values.birthday,
+                            });
                             setOpen(false);
                         }}
                     >
