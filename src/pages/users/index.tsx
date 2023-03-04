@@ -22,7 +22,7 @@ const SearchUsersPage: NextPage = () => {
 
     return (
         <MainLayout title="Benji Book" description="Search for other users!">
-            <div className="flex flex-col gap-4 items-center px-3 py-5">
+            <div className="flex flex-col gap-4 items-center mx-auto px-3 py-5 max-w-screen-sm">
                 <TextInput 
                     id="search"
                     name="search"
@@ -38,9 +38,9 @@ const SearchUsersPage: NextPage = () => {
                     }
                 />
                 {isSuccess && data.length > 0 && (
-                    <section className="flex flex-col gap-5 items-center w-full">
+                    <section className="flex flex-col gap-5 items-center w-full px-10">
                         {data.map(user => (
-                            <Link href={`/users/${user.id}`} key={user.id}>
+                            <Link href={`/users/${user.id}`} key={user.id} className="w-full ">
                                 <UserCard user={user} />
                             </Link>
                         ))}
