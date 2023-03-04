@@ -1,7 +1,8 @@
 import Logo from "../logo/Logo";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
-import { AiOutlineMenu } from 'react-icons/ai';
+import {  AiOutlineMenu } from 'react-icons/ai';
+import { BsChevronDown } from "react-icons/bs";
 import classNames from "classnames";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -26,7 +27,7 @@ const NavBar = () => {
                 </DropdownMenu.Trigger>
 
                 <DropdownMenu.Portal>
-                    <DropdownMenu.Content sideOffset={10} className="bg-white py-2 px-5 w-[50vw] rounded-lg shadow-xl flex flex-col">
+                    <DropdownMenu.Content sideOffset={10} className="bg-white py-2 px-5 min-w-72 rounded-lg shadow-xl flex flex-col">
                     <DropdownMenu.Arrow className="fill-white" />
                         <DropdownMenu.Item className={itemClasses} asChild>
                             <Link href="/feed">
@@ -57,7 +58,7 @@ const NavBar = () => {
                         <DropdownMenu.Item asChild>
                             <button 
                                 className="my-1 text-red-500 self-start"
-                                onClick={() => signOut()}
+                                onClick={() => signOut({ redirect: false, callbackUrl: '/'})}
                             >
                                 Log Out
                             </button>
@@ -87,19 +88,43 @@ const NavBar = () => {
                     </NavigationMenu.Item>
 
                     <NavigationMenu.Item>
-                        <NavigationMenu.Link asChild>
-                            <Link href={`/users/${data?.user?.id ?? ''}`}>
-                                <Button variant="minimal">Account</Button>
-                            </Link>
-                        </NavigationMenu.Link>
-                    </NavigationMenu.Item>
-
-                    <NavigationMenu.Item>
-                        <NavigationMenu.Link asChild>
-                            <Link href={`/users/${data?.user?.id ?? ''}/settings`}>
-                                <Button variant="minimal">Settings</Button>
-                            </Link>
-                        </NavigationMenu.Link>
+                        <NavigationMenu.Trigger asChild>
+                            <Button variant="minimal">
+                                Account
+                                <BsChevronDown />
+                            </Button>
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content className="absolute bg-white shadow-lg rounded-lg px-5 py-3 w-1/2 top-14 right-0">
+                            <ul className="flex flex-col gap-2">
+                                <li>
+                                    <NavigationMenu.Link asChild>
+                                        <Link href={`/users/${data?.user?.id ?? ''}`}>
+                                            Account Page
+                                        </Link>
+                                    </NavigationMenu.Link>
+                                </li>
+                                <li>
+                                    <NavigationMenu.Link asChild>
+                                        <Link href={`/users/${data?.user?.id ?? ''}/settings`}>
+                                            Settings
+                                        </Link>
+                                    </NavigationMenu.Link>
+                                </li>
+                                <li>
+                                    <hr />
+                                </li>
+                                <li>
+                                    <NavigationMenu.Link asChild>
+                                        <button 
+                                            className="text-red-500 self-start"
+                                            onClick={() => signOut({ redirect: false, callbackUrl: '/'})}
+                                        >
+                                            Log Out
+                                        </button>
+                                    </NavigationMenu.Link>
+                                </li>
+                            </ul>
+                        </NavigationMenu.Content>
                     </NavigationMenu.Item>
 
                 </NavigationMenu.List>
