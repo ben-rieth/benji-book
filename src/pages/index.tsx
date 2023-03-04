@@ -21,15 +21,15 @@ const Home: NextPage = () => {
 export const getServerSideProps : GetServerSideProps = async ({ req, res}) => {
   const session = await getServerSession(req, res, authOptions);
 
-  if (session && session.user.hasData) {
+  if (session && session.user?.setData) {
     return {
       redirect: {
-        destination: '/posts',
+        destination: '/feed',
         permanent: false
       }
     };
 
-  } else if (session && !session.user.hasData) {
+  } else if (session && !session.user?.setData) {
     return {
       redirect: {
         destination: '/onboarding',
