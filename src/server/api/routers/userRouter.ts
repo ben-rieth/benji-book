@@ -163,13 +163,14 @@ const userRouter = createTRPCRouter({
         }
     ),
 
-    setUpAccount: protectedProcedure
+    updateAccount: protectedProcedure
         .input(z.object({
             firstName: z.string(),
             lastName: z.string(),
             username: z.string(),
             gender: z.enum(['male', 'female', 'transgender', 'non-binary', 'agender', 'other']).optional(),
             birthday: z.date().optional(),
+            bio: z.string().optional(),
         }))
         .mutation(({ input, ctx }) => {
             return ctx.prisma.user.update({
@@ -180,6 +181,7 @@ const userRouter = createTRPCRouter({
                     username: input.username,
                     gender: input.gender,
                     birthday: input.birthday,
+                    bio: input.bio,
                     setData: true,
                 }
             });

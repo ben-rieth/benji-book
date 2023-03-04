@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
-import { AiFillEdit } from "react-icons/ai";
+import UpdateProfileForm from "../../../components/auth/UpdateProfileForm";
 import Button from "../../../components/general/Button";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Avatar from "../../../components/users/Avatar";
@@ -68,12 +68,7 @@ const AccountPage: NextPage = () => {
                             <h1 className="font-semibold text-4xl mb-2">{data.firstName} {data.lastName}</h1>
                             {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 md:text-sm lg:text-base">{data.bio}</p>}
                         </div>
-                        <AiFillEdit 
-                            className={classNames(
-                                "absolute top-5 right-5 fill-sky-500 w-7 h-7 cursor-pointer hover:scale-110 hover:fill-sky-600", {
-                                    "hidden": data.status !== 'self'
-                                }
-                            )} />
+                        {data.status === 'self' && <UpdateProfileForm user={data} />}
                     </header>
 
                     <div>

@@ -29,7 +29,7 @@ const AboutYouForm = () => {
         props.setFieldValue('birthday', randPastDate({ years: 10 }))
     }
 
-    const { mutateAsync: setUpAccount } = api.users.setUpAccount.useMutation();
+    const { mutateAsync: updateAccount } = api.users.updateAccount.useMutation();
     const router = useRouter();
 
     const initialValues: FormValues = {
@@ -56,10 +56,12 @@ const AboutYouForm = () => {
                     .matches(/^[a-z0-9-_.]+$/, "Username can only contain lowercase letters, numbers, dashes( - ), and underscores( _ )"),
                 birthday: yup.date(),
                 gender: yup.mixed().oneOf(['male', 'female', 'transgender', 'agender', 'non-binary', 'other', undefined]),
+                // bio: yup.string().max(150, "Bio can only be up to 150 characters").optional()
             })}
             onSubmit={async (values) => { 
                 try {
-                    await setUpAccount({ 
+                    console.log(values);
+                    await updateAccount({ 
                         firstName: values.firstName, 
                         lastName: values.lastName, 
                         username: values.username,
