@@ -181,7 +181,7 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
                                 
                                 
                                 <Button variant="filled" type="submit">
-                                    Submit
+                                    Save Changes
                                 </Button>
 
                             </Form>
