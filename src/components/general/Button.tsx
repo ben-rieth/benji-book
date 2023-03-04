@@ -9,7 +9,7 @@ type ButtonProps = {
     variant?: "filled" | "outline" | "minimal"
 }
 
-const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="filled" }) => {
+const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="filled"}) => {
     
     const buttonClasses = classNames(
         "py-2 px-2 w-full mx-auto",
@@ -23,7 +23,7 @@ const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="
             'hover:bg-sky-600 active:ring active:ring-sky-600': variant === 'filled' && !disabled,
             'hover:border-sky-600 hover:text-sky-600' : variant === 'outline' && !disabled,
             'hover:text-sky-600': variant === 'minimal' && !disabled,
-        }
+        },
     );
     
     return (

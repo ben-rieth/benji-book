@@ -7,7 +7,8 @@ import classNames from "classnames";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import Button from "../general/Button";
- 
+import { useRouter } from "next/router";
+
 const NavBar = () => {
 
     const itemClasses = classNames(
@@ -15,6 +16,12 @@ const NavBar = () => {
     );
 
     const { data } = useSession();
+    const router = useRouter();
+
+    const logOut = async () => {
+        const data = await signOut({ redirect: false, callbackUrl: '/' });
+        await router.push(data.url)
+    }
 
     return (
         <nav className="flex justify-between items-center bg-white px-5 py-2">
@@ -58,7 +65,7 @@ const NavBar = () => {
                         <DropdownMenu.Item asChild>
                             <button 
                                 className="my-1 text-red-500 self-start"
-                                onClick={() => signOut({ redirect: false, callbackUrl: '/'})}
+                                onClick={logOut}
                             >
                                 Log Out
                             </button>
@@ -117,7 +124,7 @@ const NavBar = () => {
                                     <NavigationMenu.Link asChild>
                                         <button 
                                             className="text-red-500 self-start"
-                                            onClick={() => signOut({ redirect: false, callbackUrl: '/'})}
+                                            onClick={logOut}
                                         >
                                             Log Out
                                         </button>

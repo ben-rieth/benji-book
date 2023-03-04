@@ -63,19 +63,10 @@ const SearchUsersPage: NextPage = () => {
     )
 };
 
-export const getServerSideProps : GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const session = await getServerSession(req, res, authOptions);
 
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            }
-        }
-    }
-
-    if (!session.user) {
+    if (!session || !session.user) {
         return {
             redirect: {
                 destination: '/',
@@ -86,7 +77,7 @@ export const getServerSideProps : GetServerSideProps = async ({ req, res }) => {
 
     return {
         props: {}
-    };
+    }
 }
 
 export default SearchUsersPage;

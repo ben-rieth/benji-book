@@ -1,10 +1,13 @@
 import classNames from "classnames";
+import type { GetServerSideProps} from "next";
 import { type NextPage } from "next";
+import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import UpdateProfileForm from "../../../components/auth/UpdateProfileForm";
 import Button from "../../../components/general/Button";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Avatar from "../../../components/users/Avatar";
+import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
 
 const AccountPage: NextPage = () => {
@@ -91,3 +94,20 @@ const AccountPage: NextPage = () => {
 };
 
 export default AccountPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session || !session.user) {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
+}
