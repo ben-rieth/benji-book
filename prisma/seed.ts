@@ -1,4 +1,15 @@
-import { randAvatar, randFirstName, randLastName, randUserName, rand, randPastDate, randEmail, randRecentDate, randSentence, randPhrase, randImg } from "@ngneat/falso";
+import { 
+    randAvatar, 
+    randFirstName, 
+    randLastName, 
+    randUserName, 
+    rand, 
+    randPastDate, 
+    randEmail, 
+    randRecentDate, 
+    randSentence, 
+    randImg 
+} from "@ngneat/falso";
 import { prisma } from "./../src/server/db";
 
 function getRandomItem<T>(arr: T[]): T {
@@ -33,16 +44,6 @@ async function seed() {
                 email: randEmail(),
                 emailVerified: randRecentDate(),
                 bio: randSentence(),
-                // posts: {
-                //     create: [
-                //         { text: randPhrase(), image: randImg(), },
-                //         { text: randPhrase(), image: randImg(), },
-                //         { text: randPhrase(), image: randImg(), },
-                //         { text: randPhrase(), image: randImg(), },
-                //         { text: randPhrase(), image: randImg(), },
-                //         { text: randPhrase(), image: randImg(), },
-                //     ]
-                // }
             }
         });
 
@@ -50,25 +51,54 @@ async function seed() {
     }
 
     // add followers
-    for( let i = 0; i < 100; i++) {
+    // await Promise.all(userIds.map(async(user) => {
+    for (const user of userIds) {
         const follows: string[] = [];
 
         for (let j = 0; j < 7; j++) {
             const random = getRandomItem(userIds);
 
-            if (random === userIds[i] || follows.includes(random)) continue;
-
-            follows.push(random);
+            if (random === user || follows.includes(random)) continue;
 
             await prisma.follows.create({
                 data: {
-                    followerId: userIds[i] as string,
+                    followerId: user,
                     followingId: random,
                     status: 'accepted',
                 },
             });
+
+            follows.push(random);
         }
+
+        for (let j = 0; j < 6; j++) {
+            await prisma.post.create({
+                data: {
+                    authorId: user,
+                    text: randSentence(),
+                    image: randImg(),
+                    comments: {
+                        create: [
+                            { text: randSentence(), authorId: getRandomItem(follows) },
+                            { text: randSentence(), authorId: getRandomItem(follows) },
+                            { text: randSentence(), authorId: getRandomItem(follows) },
+                            { text: randSentence(), authorId: getRandomItem(follows) },
+                            { text: randSentence(), authorId: getRandomItem(follows) },
+                            { text: randSentence(), authorId: getRandomItem(follows) },
+                        ]
+                    },
+                    // likes: {
+                    //     create: [
+                    //         { userId: follows[0] as string }
+                    //     ],
+                    // }
+                }
+            });
+        }
+    // }));
     }
+
+        
 
 }
 
