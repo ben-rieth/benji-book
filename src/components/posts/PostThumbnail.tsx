@@ -1,4 +1,4 @@
-import type { Post } from "@prisma/client";
+import type { Likes, Post, Comment } from "@prisma/client";
 import Image from "next/image";
 import { type FC } from "react";
 import * as Dialog from '@radix-ui/react-dialog';
@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { AiOutlineClose, AiOutlineHeart } from "react-icons/ai";
 
 type PostThumbnailProps = {
-    post: Post;
+    post: Post & { comments: Comment[], likedBy: Likes[] };
 }
 
 const PostThumbnail:FC<PostThumbnailProps> = ({ post }) => {
@@ -28,7 +28,7 @@ const PostThumbnail:FC<PostThumbnailProps> = ({ post }) => {
                     className={classNames(
                         "data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[550px] translate-x-[-50%] translate-y-[-50%]",
                         "bg-white rounded-lg shadow-lg focus:outline-none p-7",
-                        "flex flex-col items-center gap-2"
+                        "flex flex-col items-center gap-2 overflow-y-auto"
                     )
                 }>
                     <div className="aspect-square w-11/12 relative mt-6">
@@ -43,6 +43,8 @@ const PostThumbnail:FC<PostThumbnailProps> = ({ post }) => {
                         </div>
                     </div>
                     <p>{post.text}</p>
+
+                    <hr />
 
                     <Dialog.Close asChild>
                         <AiOutlineClose 

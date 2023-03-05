@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
-import type { FullUser, PrivateUser } from '../../../types/User';
+import type { FullUser, PrivateUser, Self } from '../../../types/User';
 
 const userRouter = createTRPCRouter({
     getAllUsers: protectedProcedure
@@ -34,15 +34,21 @@ const userRouter = createTRPCRouter({
         .input(z.object({
             userId: z.string().cuid(),
         }))
-        .query(async ({ input, ctx }) : Promise<FullUser | PrivateUser | null> => {
+        .query(async ({ input, ctx }) : Promise<FullUser | PrivateUser | Self | null> => {
             // if user is getting their own info
             if (input.userId === ctx.session.user.id) {
                 const user = await ctx.prisma.user.findUnique({
                     where: { id: input.userId },
                     include: {
-                        posts: true,
+                        posts: {
+                            include: {
+                                comments: true,
+                                likedBy: true,
+                            }
+                        },
                         followedBy: true,
                         following: true,
+                        likes: true,
                     }
                 });
 
@@ -66,7 +72,12 @@ const userRouter = createTRPCRouter({
                 const user = await ctx.prisma.user.findUnique({
                     where: { id: input.userId },
                     include: {
-                        posts: true,
+                        posts: {
+                            include: {
+                                comments: true,
+                                likedBy: true,
+                            }
+                        },
                         followedBy: true,
                         following: true,
                     }

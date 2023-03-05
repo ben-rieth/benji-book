@@ -1,11 +1,19 @@
-import type { User, Post, Follows } from "@prisma/client";
+import type { User, Post, Follows, Comment, Likes } from "@prisma/client";
 
 type FullUser = User & {
-    status: 'self' | 'accepted';
-    posts: Post[];
+    status: 'accepted';
+    posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
     followedBy: Follows[];
     following: Follows[];
 };
+
+type Self = User & {
+    likes: Likes[];
+    status: 'self';
+    posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
+    followedBy: Follows[];
+    following: Follows[];
+}
 
 type PrivateUser = {
     id: string;
@@ -17,4 +25,4 @@ type PrivateUser = {
     bio?: string | null;
 }
 
-export { FullUser, PrivateUser }
+export { FullUser, PrivateUser, Self }

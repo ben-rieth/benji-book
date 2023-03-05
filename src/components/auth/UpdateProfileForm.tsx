@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { useState, type FC } from 'react';
 import { AiFillEdit, AiOutlineClose } from "react-icons/ai";
-import { type FullUser } from '../../types/User';
+import { type Self } from '../../types/User';
 import DateInput from '../inputs/DateInput';
 import SelectInput from '../inputs/SelectInput';
 import TextInput from '../inputs/TextInput';
@@ -14,7 +14,7 @@ import { api } from '../../utils/api';
 import { isToday } from 'date-fns';
 
 type UpdateProfileFormProps = {
-    user: FullUser;
+    user: Self;
 }
 
 type FormValues = {
