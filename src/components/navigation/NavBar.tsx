@@ -101,7 +101,7 @@ const NavBar = () => {
                                 <BsChevronDown />
                             </Button>
                         </NavigationMenu.Trigger>
-                        <NavigationMenu.Content className="absolute bg-white shadow-2xl rounded-lg px-5 py-3 w-1/2 top-14 right-0">
+                        <NavigationMenu.Content className="absolute z-20 bg-white shadow-2xl rounded-lg px-5 py-3 w-1/2 top-14 right-0">
                             <ul className="flex flex-col gap-2">
                                 <li>
                                     <NavigationMenu.Link asChild>
