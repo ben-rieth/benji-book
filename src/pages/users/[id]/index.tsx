@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import UpdateProfileForm from "../../../components/auth/UpdateProfileForm";
 import Button from "../../../components/general/Button";
 import MainLayout from "../../../components/layouts/MainLayout";
+import PostThumbnail from "../../../components/posts/PostThumbnail";
 import Avatar from "../../../components/users/Avatar";
 import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
@@ -46,6 +47,8 @@ const AccountPage: NextPage = () => {
         }
     });
 
+    console.log(data?.status);
+
     if (!data && isSuccess) {
         return (
             <p>User does not exist</p>
@@ -74,7 +77,7 @@ const AccountPage: NextPage = () => {
                         {data.status === 'self' && <UpdateProfileForm user={data} />}
                     </header>
 
-                    <div>
+                    <div className="w-full px-5 max-w-screen-lg">
                         {!data.status && (
                             <div className="flex flex-col gap-3">
                                 <p className="text-lg">You don&apos;t follow this person yet!</p>
@@ -83,9 +86,19 @@ const AccountPage: NextPage = () => {
                                 </Button>
                             </div>
                         )}
-                        {data.status === 'accepted' || data.status === 'self' && <p>There will be posts here</p>}
-                        {data.status === 'pending' && <p>Your follow request is pending.</p>}
+                        {data.status === 'pending' && (
+                            <Button disabled>
+                                Follow Request Pending
+                            </Button>
+                        )}
                         {data.status === 'denied' && <p>Your follow request was denied.</p>}
+                        {(data.status === 'accepted' || data.status === 'self') && (
+                            <section className="w-full grid grid-cols-3 md:grid-cols-4 auto-rows-auto gap-2">
+                                {data.posts.map(post => (
+                                    <PostThumbnail post={post} key={post.id} />
+                                ))}
+                            </section>
+                        )}
                     </div>
                 </div>
             )}

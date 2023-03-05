@@ -1,5 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { type User, getServerSession } from "next-auth";
+import Button from "../components/general/Button";
 import MainLayout from "../components/layouts/MainLayout";
 import { authOptions } from "../server/auth";
 import { api } from "../utils/api";
@@ -13,7 +14,9 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
 
     return (
         <MainLayout title="Feed" description="Posts from the people that you follow!">
-            <p>Feed</p>
+            <div className="flex flex-col items-center relative">
+                <p>Feed</p>
+            </div>
         </MainLayout>
     );
 }
