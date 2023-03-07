@@ -59,7 +59,11 @@ const postRouter = createTRPCRouter({
                 where: { id: input.postId },
                 include: {
                     author: true,
-                    comments: true,
+                    comments: {
+                        include: {
+                            author: true,
+                        }
+                    },
                     likedBy: true,
                 }
             });
