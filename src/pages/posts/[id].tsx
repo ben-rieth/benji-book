@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
 import { api } from "../../utils/api";
-import Image from 'next/image';
-import { AiOutlineHeart } from "react-icons/ai";
-import Avatar from "../../components/users/Avatar";
 import MainLayout from "../../components/layouts/MainLayout";
 import Post from "../../components/posts/Post";
+import CommentCard from "../../components/posts/CommentCard";
 
 const IndividualPostPage = () => {
     
@@ -16,24 +14,17 @@ const IndividualPostPage = () => {
     if (isSuccess) {
         return (
             <MainLayout title="Benji Book" description="A user's post">
-                <div className="flex flex-col w-[90vw] mx-auto mt-5">
+                <div className="flex flex-col w-11/12 mx-auto mt-5 md:flex-row md:gap-14 md:justify-center">
                     <Post post={post} />
 
-                    <hr className="my-3 h-0.5 w-full bg-slate-300"/>
-                    <p>Comments</p>
-
-                    {post.comments.map((comment) => (
-                        <div key={comment.id} className="p-2 rounded-lg shadow-lg my-3 w-full bg-white">
-                            <div className="flex flex-row gap-2 w-full items-center bg">
-                                <Avatar url={comment.author?.image} className="w-10 h-10" />
-                                <div className="flex flex-col justify-center">
-                                    <p className="text-sm text-slate-300 -mb-1">@{comment.author?.username}</p>
-                                    <p className="text-lg">{comment.author?.firstName} {comment.author?.lastName}</p>
-                                </div>
-                            </div>
-                            <p  className="text-left text-sm">{comment.text}</p>
-                        </div>
-                    ))}
+                    <hr className="my-3 h-0.5 w-full bg-slate-300 md:hidden"/>
+                    
+                    <div className="flex flex-col max-w-lg w-full gap-3">
+                        <p className="md:hidden">Comments</p>
+                        {post.comments.map((comment) => (
+                            <CommentCard comment={comment} key={comment.id} />
+                        ))}
+                    </div>
                 </div>
             </MainLayout>
         )

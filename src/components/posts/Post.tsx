@@ -15,7 +15,7 @@ type PostProps = {
 
 const Post : FC<PostProps> = ({ post }) => {
     return (
-        <article className="w-full">
+        <article className="w-full max-w-xl">
             <div className="flex flex-row gap-2 w-full items-center bg-white rounded-t-lg px-2 py-1">
                 <Avatar url={post.author.image} className="w-10 h-10" />
                 <div className="flex flex-col justify-center">
