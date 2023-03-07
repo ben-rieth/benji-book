@@ -1,10 +1,13 @@
 import type { User, Likes, Comment, Post as PostType } from "@prisma/client";
-import type { FC } from "react";
-import { AiOutlineHeart } from "react-icons/ai";
+import type { FC} from "react";
+import { useMemo } from "react";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { TbHeartBroken } from 'react-icons/tb';
 import Avatar from "../users/Avatar";
 import Image from 'next/image';
 import Link from "next/link";
 import { api } from "../../utils/api";
+import { useSession } from "next-auth/react";
 
 type PostProps = {
     post: PostType & {
@@ -18,7 +21,54 @@ type PostProps = {
 
 const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
     
-    const { mutate: like } = api.posts.toggleLike.useMutation();
+    const { data: session } = useSession();
+
+    const apiUtils = api.useContext();
+    const { mutate } = api.posts.toggleLike.useMutation({
+        onMutate: async (values) => {
+            await apiUtils.posts.getPost.cancel();
+
+            apiUtils.posts.getPost.setData(
+                { postId: values.postId, order: 'oldest' }, 
+                prev => {
+                    if (!prev) return;
+                    return {
+                        ...prev, 
+                        likedBy: [
+                            ...prev.likedBy,
+                            {
+                                postId: values.postId,
+                                userId: session?.user?.id,
+                                unliked: !values.liked,
+                            } as Likes
+                        ]
+                    }
+                }
+            );
+        },
+
+        onSettled: async () => {
+            await apiUtils.posts.getPost.invalidate({ postId: post.id, order: 'oldest' });
+        }
+    });
+
+    const likedStatus: 'none' | 'liked' | 'unliked' = useMemo(() => {
+        const like = post.likedBy.find(like => like.userId === session?.user?.id);
+
+        if (!like) return 'none';
+
+        if (like.unliked) return 'unliked';
+        
+        return 'liked';
+    }, [post.likedBy, session?.user?.id]);
+
+    const likePost = () => {
+        mutate({ postId: post.id, liked: true });
+    }
+
+    const unlikePost = () => {
+        mutate({ postId: post.id, liked: false })
+    }
     
     return (
         <article className={containerClasses}>
@@ -39,7 +89,9 @@ const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
                     className="object-contain"
                 />
                 <div className="absolute bg-white p-3 bottom-0 right-0 rounded-tl-xl">
-                    <AiOutlineHeart className="w-7 h-7 hover:fill-rose-500 hover:cursor-pointer" />
+                    {likedStatus === 'liked' && <BsHeartFill className="w-7 h-7 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" onClick={unlikePost}/> }
+                    {likedStatus === 'unliked' && <TbHeartBroken className="w-7 h-7 scale-125 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" onClick={likePost}/> }
+                    {likedStatus === 'none' && <BsHeart className="w-7 h-7 hover:fill-rose-500 hover:cursor-pointer" onClick={likePost} />}
                 </div>
             </div>
             <p className="p-2 shadow-lg rounded-b-lg bg-white md:text-lg">{post.text}</p>

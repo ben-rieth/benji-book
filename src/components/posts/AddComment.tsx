@@ -22,7 +22,7 @@ const AddComment = () => {
             await apiUtils.posts.getPost.cancel();
 
             apiUtils.posts.getPost.setData(
-                { postId }, 
+                { postId, order: 'oldest' }, 
                 prev => {
                     if (!prev) return;
                     return {
@@ -43,7 +43,7 @@ const AddComment = () => {
 
         onError: () => {
             apiUtils.posts.getPost.setData(
-                { postId },
+                { postId, order: 'oldest' },
                 prev => {
                     if (!prev) return;
                     return {
