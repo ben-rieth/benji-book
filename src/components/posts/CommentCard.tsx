@@ -9,7 +9,7 @@ type CommentCardProps = {
 
 const CommentCard : FC<CommentCardProps> = ({ comment }) => {
     return (
-        <div key={comment.id} className="p-2 rounded-lg shadow-lg w-full bg-white">
+        <div key={comment.id} className="p-2 rounded-lg shadow-lg w-full bg-white" id={comment.id}>
             <Link className="flex flex-row gap-2 w-fit items-center" href={`/users/${comment.authorId as string}`}>
                 <Avatar url={comment.author?.image} className="w-10 h-10" />
                 <div className="flex flex-col justify-center">

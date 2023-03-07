@@ -51,10 +51,11 @@ const postRouter = createTRPCRouter({
 
     getPost: protectedProcedure
         .input(z.object({ 
-            postId: z.string().cuid() 
+            postId: z.string().cuid(),
+            order: z.enum(['newest', 'oldest']),
         }))
         .query(async ({ input, ctx }) => {
-            
+
             const post = await ctx.prisma.post.findUnique({
                 where: { id: input.postId },
                 include: {
@@ -62,7 +63,10 @@ const postRouter = createTRPCRouter({
                     comments: {
                         include: {
                             author: true,
-                        }
+                        },
+                        orderBy: {
+                            updatedAt: input.order === 'newest' ? 'desc' : 'asc',
+                        },
                     },
                     likedBy: true,
                 }

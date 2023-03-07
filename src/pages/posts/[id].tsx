@@ -11,8 +11,8 @@ const IndividualPostPage = () => {
     const router = useRouter();
     const postId = router.query.id as string;
 
-    const { data: post, isLoading, isSuccess } = api.posts.getPost.useQuery({ postId });
-    
+    const { data: post, isLoading, isSuccess } = api.posts.getPost.useQuery({ postId, order: 'oldest' });
+
     if (isSuccess) {
         return (
             <MainLayout title="Benji Book" description="A user's post">

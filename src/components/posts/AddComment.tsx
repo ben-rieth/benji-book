@@ -17,7 +17,7 @@ const AddComment = () => {
 
     const apiUtils = api.useContext();
 
-    const { mutate } = api.comments.leaveComment.useMutation({
+    const { mutateAsync } = api.comments.leaveComment.useMutation({
         onMutate: async (values) => {
             await apiUtils.posts.getPost.cancel();
 
@@ -35,7 +35,7 @@ const AddComment = () => {
                                 authorId: session?.user?.id,
                                 id: 'dummy-id-for-now',
                                 author: { ...session?.user } 
-                            } as Comment & { author: User | null }
+                            } as Comment & { author: User | null },
                         ]}
                 }
             );
@@ -61,8 +61,8 @@ const AddComment = () => {
         }
     });
 
-    const handleSubmit = () => {
-        mutate({ postId, commentText: comment });
+    const handleSubmit = async () => {
+        await mutateAsync({ postId, commentText: comment });
         setComment('');
     }
 
