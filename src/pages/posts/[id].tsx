@@ -14,12 +14,12 @@ const IndividualPostPage = () => {
     if (isSuccess) {
         return (
             <MainLayout title="Benji Book" description="A user's post">
-                <div className="flex flex-col w-11/12 mx-auto mt-5 md:flex-row md:gap-14 md:justify-center">
-                    <Post post={post} />
+                <div className="relative flex flex-col items-center w-11/12 mx-auto mt-5 md:flex-row md:gap-8 md:justify-center md:items-baseline">
+                    <Post post={post} containerClasses="w-full max-w-xl flex-[3_3_0%] sticky top-5" />
 
                     <hr className="my-3 h-0.5 w-full bg-slate-300 md:hidden"/>
                     
-                    <div className="flex flex-col max-w-lg w-full gap-3">
+                    <div className="flex flex-col max-w-lg w-full gap-3 flex-[2_2_0%]">
                         <p className="md:hidden">Comments</p>
                         {post.comments.map((comment) => (
                             <CommentCard comment={comment} key={comment.id} />

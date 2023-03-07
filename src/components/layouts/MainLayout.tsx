@@ -16,7 +16,7 @@ const MainLayout:FC<MainLayoutProps> = ({ children, description, title }) => {
                 <meta name="description" content={description} />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className="bg-slate-100 max-w-screen min-h-screen h-fit">
+            <main className="bg-slate-100 max-w-screen min-h-screen h-fit pb-10">
                 <NavBar />
                 {children}
             </main> 

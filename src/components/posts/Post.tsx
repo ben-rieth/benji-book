@@ -3,6 +3,7 @@ import type { FC } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import Avatar from "../users/Avatar";
 import Image from 'next/image';
+import Link from "next/link";
 
 type PostProps = {
     post: PostType & {
@@ -10,18 +11,21 @@ type PostProps = {
             author: User | null;
         })[];
         author: User;
-        likedBy: Likes[] }
+        likedBy: Likes[] };
+    containerClasses?: string;
 }
 
-const Post : FC<PostProps> = ({ post }) => {
+const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
     return (
-        <article className="w-full max-w-xl">
-            <div className="flex flex-row gap-2 w-full items-center bg-white rounded-t-lg px-2 py-1">
-                <Avatar url={post.author.image} className="w-10 h-10" />
-                <div className="flex flex-col justify-center">
-                    <p className="text-sm text-slate-300 -mb-1">@{post.author.username}</p>
-                    <p className="text-lg">{post.author.firstName} {post.author.lastName}</p>
-                </div>
+        <article className={containerClasses}>
+            <div className="w-full bg-white rounded-t-lg px-2 py-1">
+                <Link href={`/users/${post.authorId}`} className="flex flex-row gap-2 w-fit">
+                    <Avatar url={post.author.image} className="w-10 h-10" />
+                    <div className="flex flex-col justify-center">
+                        <p className="text-sm text-slate-300 -mb-1">@{post.author.username}</p>
+                        <p className="text-lg">{post.author.firstName} {post.author.lastName}</p>
+                    </div>
+                </Link>
             </div>
             <div className="aspect-square w-full relative">
                 <Image 
