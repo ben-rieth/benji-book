@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { AiOutlineHeart } from "react-icons/ai";
 import Avatar from "../../components/users/Avatar";
 import MainLayout from "../../components/layouts/MainLayout";
+import Post from "../../components/posts/Post";
 
 const IndividualPostPage = () => {
     
@@ -15,26 +16,8 @@ const IndividualPostPage = () => {
     if (isSuccess) {
         return (
             <MainLayout title="Benji Book" description="A user's post">
-                <div className="flex flex-col items-center w-[90vw] mx-auto mt-5">
-                    <div className="flex flex-row gap-2 w-full items-center bg-white rounded-t-lg px-2 py-1">
-                        <Avatar url={post.author.image} className="w-10 h-10" />
-                        <div className="flex flex-col justify-center">
-                            <p className="text-sm text-slate-300 -mb-1">@{post.author.username}</p>
-                            <p className="text-lg">{post.author.firstName} {post.author.lastName}</p>
-                        </div>
-                    </div>
-                    <div className="aspect-square w-full relative">
-                        <Image 
-                            src={post.image as string}
-                            alt="Post Image"
-                            fill
-                            className="object-contain"
-                        />
-                        <div className="absolute bg-white p-3 bottom-0 right-0 rounded-tl-xl">
-                            <AiOutlineHeart className="w-7 h-7 hover:fill-rose-500 hover:cursor-pointer" />
-                        </div>
-                    </div>
-                    <p className="p-2 shadow-lg rounded-b-lg bg-white">{post.text}</p>
+                <div className="flex flex-col w-[90vw] mx-auto mt-5">
+                    <Post post={post} />
 
                     <hr className="my-3 h-0.5 w-full bg-slate-300"/>
                     <p>Comments</p>
