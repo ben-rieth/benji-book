@@ -4,6 +4,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import Avatar from "../users/Avatar";
 import Image from 'next/image';
 import Link from "next/link";
+import { api } from "../../utils/api";
 
 type PostProps = {
     post: PostType & {
@@ -16,6 +17,9 @@ type PostProps = {
 }
 
 const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
+    
+    const { mutate: like } = api.posts.toggleLike.useMutation();
+    
     return (
         <article className={containerClasses}>
             <div className="w-full bg-white rounded-t-lg px-2 py-1">

@@ -133,7 +133,7 @@ const postRouter = createTRPCRouter({
             postId: z.string().cuid(),
             liked: z.boolean(),
         }))
-        .query(async ({ input, ctx }) => {
+        .mutation(async ({ input, ctx }) => {
             await ctx.prisma.likes.upsert({
                 where: {
                     userId_postId: {

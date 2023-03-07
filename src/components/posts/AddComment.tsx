@@ -41,6 +41,21 @@ const AddComment = () => {
             );
         },
 
+        onError: () => {
+            apiUtils.posts.getPost.setData(
+                { postId },
+                prev => {
+                    if (!prev) return;
+                    return {
+                        ...prev,
+                        comments: prev.comments.filter((comment) => comment.id !== 'dummy-id-for-now')
+                    }
+                }
+            )
+
+            console.log("Comment error");
+        },
+
         onSettled: async () => {
             await apiUtils.posts.getPost.invalidate({ postId })
         }
