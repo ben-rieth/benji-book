@@ -38,7 +38,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
                     <AiOutlineHeart className="w-7 h-7 hover:fill-rose-500 hover:cursor-pointer" />
                 </div>
             </div>
-            <p className="p-2 shadow-lg rounded-b-lg bg-white">{post.text}</p>
+            <p className="p-2 shadow-lg rounded-b-lg bg-white md:text-lg">{post.text}</p>
         </article>
     )
 };

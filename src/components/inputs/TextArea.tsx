@@ -46,7 +46,7 @@ const TextArea: FC<TextAreaProps> = ({
                 value={value}
                 disabled={disabled}
                 className={classNames(
-                    "border-2 px-2 py-1 outline-none text-lg rounded-lg bg-white resize-none",
+                    "border-2 px-2 py-1 outline-none text-base rounded-lg bg-white resize-none",
                     {
                         "focus:border-sky-500": !error && !disabled,
                         "border-red-500": error && touched && !disabled,

@@ -7,7 +7,7 @@ const commentRouter = createTRPCRouter({
             postId: z.string().cuid(),
             commentText: z.string(),
         }))
-        .query( async ({ input, ctx }) => {
+        .mutation( async ({ input, ctx }) => {
             await ctx.prisma.comment.create({
                 data: {
                     postId: input.postId,
