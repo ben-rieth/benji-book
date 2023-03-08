@@ -83,6 +83,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
                     src={post.image as string}
                     alt="Post Image"
                     fill
+                    priority
                     className="object-contain"
                 />
                 <div className="absolute bg-white p-3 bottom-0 right-0 rounded-tl-xl">

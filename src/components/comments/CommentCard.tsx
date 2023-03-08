@@ -2,14 +2,20 @@ import type { FC } from 'react';
 import type { Comment, User } from '@prisma/client';
 import Avatar from '../users/Avatar';
 import Link from 'next/link';
+import { formatDistanceToNow } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import UpdateComment from './UpdateComment';
 
 type CommentCardProps = {
     comment: Comment & { author: User | null };
 }
 
 const CommentCard : FC<CommentCardProps> = ({ comment }) => {
+
+    const { data: session } = useSession();
+
     return (
-        <div key={comment.id} className="p-2 rounded-lg shadow-lg w-full bg-white" id={comment.id}>
+        <div key={comment.id} className="relative p-2 rounded-lg shadow-lg w-full bg-white" id={comment.id}>
             <Link className="flex flex-row gap-2 w-fit items-center" href={`/users/${comment.authorId as string}`}>
                 <Avatar url={comment.author?.image} className="w-10 h-10" />
                 <div className="flex flex-col justify-center">
@@ -25,6 +31,12 @@ const CommentCard : FC<CommentCardProps> = ({ comment }) => {
                 </div>
             </Link>
             <p  className="text-left text-sm">{comment.text}</p>
+            <p className="text-sm text-slate-400">
+                {formatDistanceToNow(comment.createdAt)} ago
+                {comment.createdAt.toISOString() !== comment.updatedAt.toISOString() && " | Updated"}
+            </p>
+
+            {session?.user?.id === comment.authorId && <UpdateComment comment={comment} />}
         </div>
     )
 }

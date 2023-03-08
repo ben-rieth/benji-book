@@ -27,11 +27,18 @@ const commentRouter = createTRPCRouter({
             commentId: z.string().cuid(),
             newText: z.string(),
         }))
-        .query(async ({ input, ctx }) => {
-            await ctx.prisma.comment.update({
-                where: { id: input.commentId },
+        .mutation(async ({ input, ctx }) => {
+            const { count } = await ctx.prisma.comment.updateMany({
+                where: { 
+                    id: input.commentId,
+                    authorId: ctx.session.user.id,
+                },
                 data: { text: input.newText }
-            })
+            });
+
+            if (count === 0) {
+                throw new TRPCError({ code: 'UNAUTHORIZED' })
+            }
         }
     ),
 

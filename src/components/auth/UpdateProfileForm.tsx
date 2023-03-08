@@ -105,7 +105,6 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
                             bio: yup.string().max(150, "Bio can only be up to 150 characters").optional()
                         })}
                         onSubmit={(values) => {
-                            console.log(values);
                             updateAccount({
                                 ...values,
                                 birthday: isToday(values.birthday) ? undefined : values.birthday,
