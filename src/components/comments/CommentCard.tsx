@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import { useSession } from 'next-auth/react';
 import UpdateComment from './UpdateComment';
+import DeleteComment from './DeleteComment';
 
 type CommentCardProps = {
     comment: Comment & { author: User | null };
@@ -36,7 +37,10 @@ const CommentCard : FC<CommentCardProps> = ({ comment }) => {
                 {comment.createdAt.toISOString() !== comment.updatedAt.toISOString() && " | Updated"}
             </p>
 
-            {session?.user?.id === comment.authorId && <UpdateComment comment={comment} />}
+            <div className="flex gap-3 absolute top-2 right-2">
+                {session?.user?.id === comment.authorId && <UpdateComment comment={comment} />}
+                {(session?.user?.id === comment.authorId) && <DeleteComment comment={comment} />}
+            </div>
         </div>
     )
 }

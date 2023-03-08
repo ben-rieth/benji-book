@@ -42,28 +42,6 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
         onSettled: () => apiUtils.comments.getAllComments.invalidate({ postId: comment.postId }),
     });
 
-    const { mutate: deleteComment } = api.comments.deleteComment.useMutation({
-        onMutate: async () => {
-            await apiUtils.comments.getAllComments.cancel();
-
-            apiUtils.comments.getAllComments.setData(
-                {postId: comment.postId },
-                prev => {
-                    if (!prev) return;
-                    return prev.filter(item => item.id !== comment.postId)
-                }
-            )
-        },
-        onSuccess: () => toast.success("Comment deleted!"),
-        onError: () => toast.error("Could not delete comment."),
-        onSettled: () => apiUtils.comments.getAllComments.invalidate({ postId: comment.postId }),
-    });
-    
-    const handleDelete = () => {
-        deleteComment({ commentId: comment.id });
-        setOpen(false);
-    }
-
     return (
         <Dialog.Root
             open={open} 
@@ -71,7 +49,7 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
         >
             <Dialog.Trigger asChild>
                 <AiFillEdit 
-                    className={"absolute top-2 right-2 fill-sky-500 w-6 h-6 cursor-pointer hover:scale-110 hover:fill-sky-600"} 
+                    className={"fill-sky-500 w-6 h-6 cursor-pointer hover:scale-110 hover:fill-sky-600"} 
                 />
             </Dialog.Trigger>
             <Dialog.Portal>
@@ -83,7 +61,6 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
                     )
                 }>
                     <Dialog.Title className="font-semibold text-xl text-sky-500">Update Comment</Dialog.Title>
-                    <Dialog.Description className="mb-5 text-sm text-slate-500">If you would rather delete this comment, exit the popup and click the delete icon.</Dialog.Description>
 
                     <Formik
                         initialValues={{
@@ -118,12 +95,6 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
 
                                 <Button variant="filled" type="submit">
                                     Update Comment
-                                </Button>
-
-                                <hr />
-
-                                <Button variant="outline" type="button" onClick={handleDelete}>
-                                    Delete Comment
                                 </Button>
                             </Form>
                         )}
