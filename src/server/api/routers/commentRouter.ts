@@ -46,7 +46,7 @@ const commentRouter = createTRPCRouter({
         .input(z.object({
             commentId: z.string().cuid(),
         }))
-        .query(async ({ input, ctx }) => {
+        .mutation(async ({ input, ctx }) => {
             await ctx.prisma.comment.delete({
                 where: {
                     id: input.commentId

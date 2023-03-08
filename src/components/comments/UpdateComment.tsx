@@ -19,7 +19,7 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
     const [open, setOpen] = useState<boolean>(false);
 
     const apiUtils = api.useContext();
-    const { mutate } = api.comments.updateComment.useMutation({
+    const { mutate: updateComment } = api.comments.updateComment.useMutation({
         onMutate: async (values) => {
             await apiUtils.comments.getAllComments.cancel();
 
@@ -37,12 +37,33 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
                 }
             );
         },
-
         onSuccess: () => toast.success("Comment updated!"),
         onError: () => toast.error("Could not update comment."),
         onSettled: () => apiUtils.comments.getAllComments.invalidate({ postId: comment.postId }),
     });
+
+    const { mutate: deleteComment } = api.comments.deleteComment.useMutation({
+        onMutate: async () => {
+            await apiUtils.comments.getAllComments.cancel();
+
+            apiUtils.comments.getAllComments.setData(
+                {postId: comment.postId },
+                prev => {
+                    if (!prev) return;
+                    return prev.filter(item => item.id !== comment.postId)
+                }
+            )
+        },
+        onSuccess: () => toast.success("Comment deleted!"),
+        onError: () => toast.error("Could not delete comment."),
+        onSettled: () => apiUtils.comments.getAllComments.invalidate({ postId: comment.postId }),
+    });
     
+    const handleDelete = () => {
+        deleteComment({ commentId: comment.id });
+        setOpen(false);
+    }
+
     return (
         <Dialog.Root
             open={open} 
@@ -70,7 +91,7 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
                         }}
                         onSubmit={(values) => {
                             console.log("submitting")
-                            mutate({
+                            updateComment({
                                 commentId: comment.id,
                                 newText: values.updatedText,
                             });
@@ -96,7 +117,13 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
                                 />
 
                                 <Button variant="filled" type="submit">
-                                    {props.isSubmitting ? "Submitting" : "Update Comment"}
+                                    Update Comment
+                                </Button>
+
+                                <hr />
+
+                                <Button variant="outline" type="button" onClick={handleDelete}>
+                                    Delete Comment
                                 </Button>
                             </Form>
                         )}
