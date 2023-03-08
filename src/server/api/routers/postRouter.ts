@@ -50,9 +50,45 @@ const postRouter = createTRPCRouter({
     ),
 
     getPost: protectedProcedure
+        .input(z.object({
+            postId: z.string().cuid(),
+        }))
+        .query(async ({ input, ctx }) => {
+            const post = await ctx.prisma.post.findUnique({
+                where: { id: input.postId },
+                include: {
+                    author: true,
+                    likedBy: true,
+                }
+            });
+
+            if (!post) {
+                throw new TRPCError({ code: "NOT_FOUND" });
+            }
+
+            const relationship = await ctx.prisma.follows.findUnique({
+                where: {
+                    followerId_followingId: {
+                        followerId: ctx.session.user.id,
+                        followingId: post?.authorId,
+                    },
+                },
+                select: {
+                    status: true,
+                }
+            });
+
+            if (!relationship?.status || relationship.status !== 'accepted') {
+                throw new TRPCError({ code: 'FORBIDDEN' })
+            }
+
+            return post;
+        }
+    ),
+
+    getPostWithComments: protectedProcedure
         .input(z.object({ 
             postId: z.string().cuid(),
-            order: z.enum(['newest', 'oldest']),
         }))
         .query(async ({ input, ctx }) => {
 
@@ -65,7 +101,7 @@ const postRouter = createTRPCRouter({
                             author: true,
                         },
                         orderBy: {
-                            updatedAt: input.order === 'newest' ? 'desc' : 'asc',
+                            updatedAt: 'desc',
                         },
                     },
                     likedBy: true,

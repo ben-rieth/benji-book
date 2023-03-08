@@ -2,16 +2,15 @@ import { useRouter } from "next/router";
 import { api } from "../../utils/api";
 import MainLayout from "../../components/layouts/MainLayout";
 import Post from "../../components/posts/Post";
-import CommentCard from "../../components/posts/CommentCard";
 import { Breadcrumbs, BreadcrumbsLink } from "../../components/navigation/Breadcrumbs";
-import AddComment from "../../components/posts/AddComment";
+import CommentColumn from './../../components/comments/CommentColumn'
 
 const IndividualPostPage = () => {
     
     const router = useRouter();
     const postId = router.query.id as string;
 
-    const { data: post, isLoading, isSuccess } = api.posts.getPost.useQuery({ postId, order: 'oldest' });
+    const { data: post, isLoading, isSuccess } = api.posts.getPost.useQuery({ postId });
 
     if (isSuccess) {
         return (
@@ -27,13 +26,7 @@ const IndividualPostPage = () => {
 
                     <hr className="my-3 h-0.5 w-full bg-slate-300 md:hidden"/>
                     
-                    <div className="flex flex-col max-w-lg w-full gap-3 flex-[2_2_0%]">
-                        <p className="md:hidden">Comments</p>
-                        <AddComment />
-                        {post.comments.map((comment) => (
-                            <CommentCard comment={comment} key={comment.id} />
-                        ))}
-                    </div>
+                    <CommentColumn postId={post.id} />
                 </div>
             </MainLayout>
         )

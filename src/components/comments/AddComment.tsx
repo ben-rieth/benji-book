@@ -6,7 +6,7 @@ import { api } from "../../utils/api";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import type { Comment, User } from "@prisma/client";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 const AddComment = () => {
 
@@ -20,37 +20,32 @@ const AddComment = () => {
 
     const { mutateAsync } = api.comments.leaveComment.useMutation({
         onMutate: async (values) => {
-            await apiUtils.posts.getPost.cancel();
+            await apiUtils.comments.getAllComments.cancel();
 
-            apiUtils.posts.getPost.setData(
-                { postId, order: 'oldest' }, 
+            apiUtils.comments.getAllComments.setData(
+                { postId }, 
                 prev => {
                     if (!prev) return;
-                    return {
-                        ...prev, 
-                        comments: [
-                            ...prev.comments,
-                            { 
-                                postId: values.postId,
-                                text: values.commentText,
-                                authorId: session?.user?.id,
-                                id: 'dummy-id-for-now',
-                                author: { ...session?.user } 
-                            } as Comment & { author: User | null },
-                        ]}
+                    return [
+                        ...prev,
+                        { 
+                            postId: values.postId,
+                            text: values.commentText,
+                            authorId: session?.user?.id,
+                            id: 'dummy-id-for-now',
+                            author: { ...session?.user } 
+                        } as Comment & { author: User | null },
+                    ];
                 }
             );
         },
 
         onError: () => {
-            apiUtils.posts.getPost.setData(
-                { postId, order: 'oldest' },
+            apiUtils.comments.getAllComments.setData(
+                { postId },
                 prev => {
                     if (!prev) return;
-                    return {
-                        ...prev,
-                        comments: prev.comments.filter((comment) => comment.id !== 'dummy-id-for-now')
-                    }
+                    return prev.filter((comment) => comment.id !== 'dummy-id-for-now');
                 }
             );
 
@@ -58,7 +53,7 @@ const AddComment = () => {
         },
 
         onSettled: async () => {
-            await apiUtils.posts.getPost.invalidate({ postId })
+            await apiUtils.comments.getAllComments.invalidate({ postId })
         }
     });
 

@@ -12,7 +12,7 @@ import TextArea from '../inputs/TextArea';
 import Button from '../general/Button';
 import { api } from '../../utils/api';
 import { isToday } from 'date-fns';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 
 type UpdateProfileFormProps = {
     user: Self;
@@ -45,15 +45,14 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
             );
         },
 
-        onError: () => {
-            toast.error("Could not update profile. Try again.");
-        },
+        onSettled: async (_data, err) => {
 
-        onSuccess: () => {
-            toast.success("Profile updated successfully!");
-        },
+            if (err) {
+                toast.error("Could not update profile. Try again.");
+            } else {
+                toast.success("Profile updated successfully!");
+            }
 
-        onSettled: async () => {
             await apiUtils.users.getOneUser.invalidate({ userId: user.id })
         }
     });

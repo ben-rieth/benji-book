@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import {z } from 'zod';
+import { TRPCError } from "@trpc/server";
 
 const commentRouter = createTRPCRouter({
     leaveComment: protectedProcedure
@@ -46,6 +47,48 @@ const commentRouter = createTRPCRouter({
             })
         }
     ),
+
+    getAllComments: protectedProcedure
+        .input(z.object({
+            postId: z.string().cuid(),
+            sortOrder: z.enum(["oldest", "newest"]).optional()
+        }))
+        .query(async ({ input, ctx }) => {
+
+            const [comments, post] = await Promise.all([
+                ctx.prisma.comment.findMany({
+                    where: { postId: input.postId },
+                    include: {
+                        author: true,
+                    }
+                }),
+                ctx.prisma.post.findUnique({
+                    where: { id: input.postId }
+                }),
+            ]);
+
+            if (!post) {
+                throw new TRPCError({ code: 'NOT_FOUND'});
+            }
+
+            const relationship = await ctx.prisma.follows.findUnique({
+                where: {
+                    followerId_followingId: {
+                        followerId: ctx.session.user.id,
+                        followingId: post?.authorId,
+                    },
+                },
+                select: {
+                    status: true,
+                }
+            });
+
+            if (!relationship?.status || relationship.status !== 'accepted') {
+                throw new TRPCError({ code: 'FORBIDDEN' })
+            }
+
+            return comments;
+        })
 });
 
 export default commentRouter;

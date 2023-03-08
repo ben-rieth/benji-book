@@ -1,4 +1,4 @@
-import type { User, Likes, Comment, Post as PostType } from "@prisma/client";
+import type { User, Likes, Post as PostType } from "@prisma/client";
 import type { FC} from "react";
 import { useMemo } from "react";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
@@ -11,9 +11,6 @@ import { useSession } from "next-auth/react";
 
 type PostProps = {
     post: PostType & {
-        comments: (Comment & {
-            author: User | null;
-        })[];
         author: User;
         likedBy: Likes[] };
     containerClasses?: string;
@@ -29,7 +26,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
             await apiUtils.posts.getPost.cancel();
 
             apiUtils.posts.getPost.setData(
-                { postId: values.postId, order: 'oldest' }, 
+                { postId: values.postId }, 
                 prev => {
                     if (!prev) return;
                     return {
@@ -48,7 +45,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
         },
 
         onSettled: async () => {
-            await apiUtils.posts.getPost.invalidate({ postId: post.id, order: 'oldest' });
+            await apiUtils.posts.getPost.invalidate({ postId: post.id });
         }
     });
 
