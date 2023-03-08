@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import type { FullUser, PrivateUser, Self } from '../../../types/User';
+import { TRPCError } from '@trpc/server';
 
 const userRouter = createTRPCRouter({
     getAllUsers: protectedProcedure
@@ -197,9 +198,96 @@ const userRouter = createTRPCRouter({
                 }
             });
 
-        })
+        }
+    ),
 
+    getFollowers: protectedProcedure
+        .input(z.object({
+            userId: z.string().cuid(),
+        }))
+        .query(async ({ ctx, input }) => {
+            if (input.userId === ctx.session.user.id) {
+                return ctx.prisma.follows.findMany({
+                    where: {
+                        followingId: input.userId,
+                    },
+                    include: {
+                        follower: true,
+                        following: true,
+                    }
+                })
+            }
 
+            const relationship = await ctx.prisma.follows.findUnique({
+                where: {
+                    followerId_followingId: {
+                        followerId: ctx.session.user.id,
+                        followingId: input.userId
+                    }
+                },
+                select: {
+                    status: true,
+                }
+            });
+
+            if (!relationship?.status || relationship?.status !== 'accepted') {
+                throw new TRPCError({ code: 'FORBIDDEN' })
+            }
+
+            return ctx.prisma.follows.findMany({
+                where: {
+                    followingId: input.userId,
+                },
+                include: {
+                    follower: true,
+                    following: true,
+                }
+            });
+        }),
+
+        getFollowing: protectedProcedure
+            .input(z.object({
+                userId: z.string().cuid(),
+            }))
+            .query(async ({ ctx, input }) => {
+                if (input.userId === ctx.session.user.id) {
+                    return ctx.prisma.follows.findMany({
+                        where: {
+                            followerId: input.userId,
+                        },
+                        include: {
+                            following: true,
+                            follower: true,
+                        }
+                    })
+                }
+
+                const relationship = await ctx.prisma.follows.findUnique({
+                    where: {
+                        followerId_followingId: {
+                            followerId: ctx.session.user.id,
+                            followingId: input.userId
+                        }
+                    },
+                    select: {
+                        status: true,
+                    }
+                });
+
+                if (!relationship?.status || relationship?.status !== 'accepted') {
+                    throw new TRPCError({ code: 'FORBIDDEN' })
+                }
+
+                return ctx.prisma.follows.findMany({
+                    where: {
+                        followerId: input.userId,
+                    },
+                    include: {
+                        following: true,
+                        follower: true,
+                    }
+                });
+            }),
 });
 
 export default userRouter;

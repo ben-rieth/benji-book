@@ -2,6 +2,7 @@ import classNames from "classnames";
 import type { GetServerSideProps} from "next";
 import { type NextPage } from "next";
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import UpdateProfileForm from "../../../components/auth/UpdateProfileForm";
 import Button from "../../../components/general/Button";
@@ -75,6 +76,21 @@ const AccountPage: NextPage = () => {
                             {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 md:text-sm lg:text-base">{data.bio}</p>}
                         </div>
                         {data.status === 'self' && <UpdateProfileForm user={data} />}
+
+                        {data.status === 'self' || data.status === 'accepted' && (
+                            <div className="flex justify-center gap-10 w-full">
+                                <Link href={`/users/${data.id}/follows`}>
+                                    <Button variant="minimal">
+                                        {data.following.length} Following
+                                    </Button>
+                                </Link>
+                                <Link href={`/users/${data.id}/followers`}>
+                                    <Button variant="minimal">
+                                        {data.followedBy.length} Followers
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
                     </header>
 
                     <div className="w-full px-5 max-w-screen-lg">
