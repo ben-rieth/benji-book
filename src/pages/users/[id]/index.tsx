@@ -77,7 +77,7 @@ const AccountPage: NextPage = () => {
                         </div>
                         {data.status === 'self' && <UpdateProfileForm user={data} />}
 
-                        {data.status === 'self' || data.status === 'accepted' && (
+                        {(data.status === 'self' || data.status === 'accepted') && (
                             <div className="flex justify-center gap-10 w-full">
                                 <Link href={`/users/${data.id}/follows`}>
                                     <Button variant="minimal">
