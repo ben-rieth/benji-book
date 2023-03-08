@@ -6,6 +6,7 @@ import { api } from "../../utils/api";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import type { Comment, User } from "@prisma/client";
+import { toast } from "react-toastify";
 
 const AddComment = () => {
 
@@ -51,9 +52,9 @@ const AddComment = () => {
                         comments: prev.comments.filter((comment) => comment.id !== 'dummy-id-for-now')
                     }
                 }
-            )
+            );
 
-            console.log("Comment error");
+            toast.error("Could not leave comment. Try again.");
         },
 
         onSettled: async () => {
