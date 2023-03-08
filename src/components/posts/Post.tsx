@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Link from "next/link";
 import { api } from "../../utils/api";
 import { useSession } from "next-auth/react";
+import { formatDistanceToNow } from "date-fns";
 
 type PostProps = {
     post: PostType & {
@@ -87,12 +88,20 @@ const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
                     className="object-contain"
                 />
                 <div className="absolute bg-white p-3 bottom-0 right-0 rounded-tl-xl">
-                    {likedStatus === 'liked' && <BsHeartFill className="w-7 h-7 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" onClick={unlikePost}/> }
-                    {likedStatus === 'unliked' && <TbHeartBroken className="w-7 h-7 scale-125 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" onClick={likePost}/> }
-                    {likedStatus === 'none' && <BsHeart className="w-7 h-7 hover:fill-rose-500 hover:cursor-pointer" onClick={likePost} />}
+                    {likedStatus === 'liked' && <BsHeartFill className="w-9 h-9 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" onClick={unlikePost}/> }
+                    {likedStatus === 'unliked' && <TbHeartBroken className="w-9 h-9 scale-125 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" onClick={likePost}/> }
+                    {likedStatus === 'none' && <BsHeart className="w-9 h-9 hover:fill-rose-500 hover:cursor-pointer" onClick={likePost} />}
                 </div>
             </div>
-            <p className="p-2 shadow-lg rounded-b-lg bg-white md:text-lg">{post.text}</p>
+            <div className="p-2 shadow-lg rounded-b-lg bg-white">
+                <p className=" md:text-lg">{post.text}</p>
+                <p className="text-sm text-slate-400">
+                    {post.likedBy.filter(like => !like.unliked).length} Likes&nbsp;|&nbsp;
+                    {formatDistanceToNow(post.createdAt)} ago
+                    {post.createdAt.toISOString() !== post.updatedAt.toISOString() && " | Updated"}
+                </p>
+            </div>
+            
         </article>
     )
 };
