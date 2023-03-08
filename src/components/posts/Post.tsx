@@ -94,8 +94,8 @@ const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
                 </div>
             </div>
             <div className="p-2 shadow-lg rounded-b-lg bg-white">
-                <p className=" md:text-lg">{post.text}</p>
-                <p className="text-sm text-slate-400">
+                <p className=" md:text-lg xl:text-xl">{post.text}</p>
+                <p className="text-sm md:text-base text-slate-400">
                     {post.likedBy.filter(like => !like.unliked).length} Likes&nbsp;|&nbsp;
                     {formatDistanceToNow(post.createdAt)} ago
                     {post.createdAt.toISOString() !== post.updatedAt.toISOString() && " | Updated"}

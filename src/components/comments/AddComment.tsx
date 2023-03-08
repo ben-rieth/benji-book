@@ -33,7 +33,9 @@ const AddComment = () => {
                             text: values.commentText,
                             authorId: session?.user?.id,
                             id: 'dummy-id-for-now',
-                            author: { ...session?.user } 
+                            author: { ...session?.user },
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
                         } as Comment & { author: User | null },
                     ];
                 }
