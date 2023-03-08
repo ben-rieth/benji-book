@@ -52,6 +52,10 @@ const AddComment = () => {
             toast.error("Could not leave comment. Try again.");
         },
 
+        onSuccess: () => {
+            toast.success(`Comment added to post`);
+        },
+
         onSettled: async () => {
             await apiUtils.comments.getAllComments.invalidate({ postId })
         }
