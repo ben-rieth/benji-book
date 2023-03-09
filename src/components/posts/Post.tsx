@@ -85,7 +85,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="" }) => {
                     alt="Post Image"
                     fill
                     priority
-                    className="object-contain"
+                    className="object-cover"
                 />
                 <div className="absolute bg-white p-3 bottom-0 right-0 rounded-tl-xl">
                     {likedStatus === 'liked' && <BsHeartFill className="w-9 h-9 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" onClick={unlikePost}/> }

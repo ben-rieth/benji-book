@@ -3,8 +3,6 @@ import { type User, getServerSession } from "next-auth";
 import MainLayout from "../components/layouts/MainLayout";
 import CreatePost from "../components/posts/CreatePost";
 import { authOptions } from "../server/auth";
-// import { api } from "../utils/api";
-
 type FeedPageProps = {
     user: User;
 }

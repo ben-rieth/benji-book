@@ -23,9 +23,11 @@ const CreatePost = () => {
             })}
         >
             {(props) => (
-                <Form className="flex flex-col gap-4 bg-white rounded-lg p-4 shadow-lg w-5/6">
+                <Form className="flex flex-col gap-4 bg-white rounded-lg p-4 shadow-lg w-5/6 max-w-xl">
 
                     <ImageUpload onChange={(file) => props.setFieldValue('image', file)} />
+
+                    <hr />
 
                     <TextArea 
                         id="postText"
