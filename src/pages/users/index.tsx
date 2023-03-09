@@ -11,6 +11,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import ErrorBox from "../../components/error/ErrorBox";
 import MainLayout from "../../components/layouts/MainLayout";
 import Link from "next/link";
+import { toast } from "react-hot-toast";
 
 const SearchUsersPage: NextPage = () => {
 
@@ -19,6 +20,43 @@ const SearchUsersPage: NextPage = () => {
 
 
     const { data, isSuccess, isLoading, isError } = api.users.getAllUsers.useQuery({ query: debouncedQuery });
+
+    const apiUtils = api.useContext();
+    const { mutate: sendFollowRequest } = api.users.sendFollowRequest.useMutation({
+
+        onMutate: async (values) => {
+            await apiUtils.users.getAllUsers.cancel();
+            apiUtils.users.getAllUsers.setData(
+                { query: debouncedQuery }, 
+                prev => {
+                    if (!prev) return;
+                    return prev.map(item => {
+                        if (item.id !== values.followingId) return item;
+
+                        return { ...item, followedBy: [{ status: 'pending' }]}
+                    });
+                }
+            );
+        },
+
+        onError: (_err, values) => {
+            apiUtils.users.getAllUsers.setData({ query: debouncedQuery },
+                prev => {
+                    if (!prev) return;
+                    return prev.map(item => {
+                        if (item.id !== values.followingId) return item;
+                        
+                        return { ...item, followedBy: [] }
+                    });
+                }    
+            );
+
+            toast.error("Could not send follow request.")
+        },
+
+        onSuccess: () => toast.success(`Sent Follow Request!`),
+        onSettled: async () => await apiUtils.users.getAllUsers.invalidate({query: debouncedQuery}),
+    });
 
     return (
         <MainLayout title="Benji Book" description="Search for other users!">
@@ -41,7 +79,7 @@ const SearchUsersPage: NextPage = () => {
                     <section className="flex flex-col gap-5 items-center w-full px-10">
                         {data.map(user => (
                             <Link href={`/users/${user.id}`} key={user.id} className="w-full ">
-                                <UserCard user={user} />
+                                <UserCard user={user} onFollowRequest={() => sendFollowRequest({ followingId: user.id })} />
                             </Link>
                         ))}
                     </section>
