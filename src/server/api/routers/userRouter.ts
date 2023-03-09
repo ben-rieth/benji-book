@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import type { FullUser, PrivateUser, Self } from '../../../types/User';
-import { TRPCError } from '@trpc/server';
 
 const userRouter = createTRPCRouter({
     getAllUsers: protectedProcedure

@@ -1,6 +1,87 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
+import { prisma } from "../../db";
+
+const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
+    return Promise.all([
+        prisma.user.findUnique({
+            where: { id: inputUserId },
+            include: {
+                _count: {
+                    select: { 
+                        followedBy: true,
+                        following: true,
+                    },
+                },
+            },
+        }),
+        prisma.follows.findMany({
+            where: {
+                followingId: inputUserId,
+            },
+            select: {
+                follower: {
+                    select: {
+                        firstName: true,
+                        lastName: true,
+                        image: true, 
+                        username: true,
+                        id: true,
+                        followedBy: {
+                            where: {
+                                followerId: currentUserId,
+                            },
+                            select: {
+                                status: true,
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    ])
+}
+
+const getUserAndFollowing = (inputUserId: string, currentUserId?: string) => {
+    return Promise.all([
+        prisma.user.findUnique({
+            where: { id: inputUserId },
+            include: {
+                _count: {
+                    select: { 
+                        followedBy: true,
+                        following: true,
+                    },
+                },
+            },
+        }),
+        prisma.follows.findMany({
+            where: {
+                followerId: inputUserId,
+            },
+            select: {
+                following: {
+                    select: {
+                        firstName: true,
+                        lastName: true,
+                        image: true, 
+                        username: true,
+                        id: true,
+                        followedBy: {
+                            where: {
+                                followerId: currentUserId,
+                            },
+                            select: {
+                                status: true,
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    ])
+}
 
 const followsRouter = createTRPCRouter({
     sendFollowRequest: protectedProcedure
@@ -52,27 +133,7 @@ const followsRouter = createTRPCRouter({
         .query(async ({ ctx, input }) => {
             if (input.userId === ctx.session.user.id) {
 
-                const [user, followers] = await Promise.all([
-                    ctx.prisma.user.findUnique({
-                        where: { id: input.userId },
-                        include: {
-                            _count: {
-                                select: { 
-                                    followedBy: true,
-                                    following: true,
-                                },
-                            },
-                        },
-                    }),
-                    ctx.prisma.follows.findMany({
-                        where: {
-                            followingId: input.userId,
-                        },
-                        select: {
-                            follower: true,
-                        }
-                    })
-                ])
+                const [user, followers] = await getUserAndFollowers(input.userId, input.userId);
 
                 return {
                     user,
@@ -96,27 +157,7 @@ const followsRouter = createTRPCRouter({
                 throw new TRPCError({ code: 'FORBIDDEN' })
             }
 
-            const [user, followers] = await Promise.all([
-                ctx.prisma.user.findUnique({
-                    where: { id: input.userId },
-                    include: {
-                        _count: {
-                            select: { 
-                                followedBy: true,
-                                following: true,
-                            },
-                        },
-                    },
-                }),
-                ctx.prisma.follows.findMany({
-                    where: {
-                        followingId: input.userId,
-                    },
-                    include: {
-                        follower: true,
-                    }
-                })
-            ])
+            const [user, followers] = await getUserAndFollowers(input.userId, ctx.session.user.id);
 
             return {
                 user,
@@ -130,27 +171,7 @@ const followsRouter = createTRPCRouter({
             }))
             .query(async ({ ctx, input }) => {
                 if (input.userId === ctx.session.user.id) {
-                    const [user, following] = await Promise.all([
-                        ctx.prisma.user.findUnique({
-                            where: { id: input.userId },
-                            include: {
-                                _count: {
-                                    select: { 
-                                        followedBy: true,
-                                        following: true,
-                                    },
-                                },
-                            },
-                        }),
-                        ctx.prisma.follows.findMany({
-                            where: {
-                                followerId: input.userId,
-                            },
-                            include: {
-                                following: true,
-                            }
-                        })
-                    ])
+                    const [user, following] = await getUserAndFollowing(input.userId, input.userId);
     
                     return {
                         user,
@@ -174,27 +195,7 @@ const followsRouter = createTRPCRouter({
                     throw new TRPCError({ code: 'FORBIDDEN' })
                 }
 
-                const [user, following] = await Promise.all([
-                    ctx.prisma.user.findUnique({
-                        where: { id: input.userId },
-                        include: {
-                            _count: {
-                                select: { 
-                                    followedBy: true,
-                                    following: true,
-                                },
-                            },
-                        },
-                    }),
-                    ctx.prisma.follows.findMany({
-                        where: {
-                            followerId: input.userId,
-                        },
-                        include: {
-                            following: true,
-                        }
-                    })
-                ])
+                const [user, following] = await getUserAndFollowing(input.userId, ctx.session.user.id);
 
                 return {
                     user,

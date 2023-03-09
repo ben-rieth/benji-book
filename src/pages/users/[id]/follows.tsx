@@ -50,7 +50,7 @@ const FollowingPage: NextPage = () => {
                     <section className="flex flex-col gap-2 items-center w-full px-10 ">
                         {data.following.map(relation => (
                             <Link href={`/users/${relation.following.id}`} key={relation.following.id} className="w-full ">
-                                <UserCard user={relation.following} />
+                                <UserCard user={relation.following} onFollowRequest={() => console.log("")} />
                             </Link>
                         ))}
                     </section>
