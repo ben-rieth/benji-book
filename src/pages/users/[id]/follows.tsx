@@ -3,6 +3,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 import ErrorBox from "../../../components/error/ErrorBox";
 import Button from "../../../components/general/Button";
 import MainLayout from "../../../components/layouts/MainLayout";
@@ -16,6 +17,47 @@ const FollowingPage: NextPage = () => {
     const userId = router.query.id as string;
 
     const { data, isSuccess, isError, isLoading } = api.follows.getFollowing.useQuery({ userId });
+
+    const apiUtils = api.useContext();
+    const { mutate: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({
+        
+        onMutate: async (values) => {
+            await apiUtils.follows.getFollowing.cancel();
+            apiUtils.follows.getFollowing.setData(
+                { userId }, 
+                prev => {
+                    if (!prev) return;
+                    return {
+                        user: prev.user,
+                        following: prev.following.map(item => {
+                            if (userId !== values.followingId) return item;
+                            return { ...item, following: { ...item.following, followedBy: [{ status: 'pending'}]}}
+                        })
+                    }
+                }
+            );
+        },
+
+        onError: (_err, values) => {
+            apiUtils.follows.getFollowing.setData({ userId },
+                prev => {
+                    if (!prev) return;
+                    return {
+                        user: prev.user,
+                        following: prev.following.map(item => {
+                            if (userId !== values.followingId) return item;
+                            return { ...item, following: { ...item.following, followedBy: []}}
+                        })
+                    }
+                }    
+            );
+
+            toast.error("Could not send follow request.")
+        },
+
+        onSuccess: () => toast.success(`Sent Follow Request!`),
+        onSettled: async () => await apiUtils.follows.getFollowing.invalidate({userId}),
+    });
 
     return (
         <MainLayout title="Benji Book" description="">
@@ -50,7 +92,10 @@ const FollowingPage: NextPage = () => {
                     <section className="flex flex-col gap-2 items-center w-full px-10 ">
                         {data.following.map(relation => (
                             <Link href={`/users/${relation.following.id}`} key={relation.following.id} className="w-full ">
-                                <UserCard user={relation.following} onFollowRequest={() => console.log("")} />
+                                <UserCard 
+                                    user={relation.following} 
+                                    onFollowRequest={() => sendFollowRequest({ followingId: relation.following.id })} 
+                                />
                             </Link>
                         ))}
                     </section>
