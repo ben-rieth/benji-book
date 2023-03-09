@@ -21,7 +21,7 @@ const AccountPage: NextPage = () => {
     const apiUtils = api.useContext();
     const { data, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: id })
 
-    const { mutateAsync: sendFollowRequest } = api.users.sendFollowRequest.useMutation({ 
+    const { mutateAsync: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({ 
         onMutate: async () => {
             await apiUtils.users.getOneUser.cancel();
             apiUtils.users.getOneUser.setData(

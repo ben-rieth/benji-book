@@ -18,11 +18,10 @@ const SearchUsersPage: NextPage = () => {
     const [query, setQuery] = useState<string>('');
     const debouncedQuery = useDebounce<string>(query, 350);
 
-
     const { data, isSuccess, isLoading, isError } = api.users.getAllUsers.useQuery({ query: debouncedQuery });
 
     const apiUtils = api.useContext();
-    const { mutate: sendFollowRequest } = api.users.sendFollowRequest.useMutation({
+    const { mutate: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({
 
         onMutate: async (values) => {
             await apiUtils.users.getAllUsers.cancel();
@@ -84,13 +83,13 @@ const SearchUsersPage: NextPage = () => {
                         ))}
                     </section>
                 )}
-                {isSuccess && data.length === 0 && query === '' && (
+                {isSuccess && data.length === 0 && debouncedQuery === '' && (
                     <p>Search for other users!</p>
                 )}
-                {isSuccess && data.length === 0 && query !== '' && (
+                {(isSuccess && data.length === 0 && debouncedQuery !== '') && (
                     <p className="text-center">Cannot find a user with a name or username containing: <span className="italic">{query}</span></p>
                 )}
-                {isLoading && (
+                {(isLoading) && (
                     <AiOutlineLoading className="animate-spin w-14 h-14" />   
                 )}
                 {isError && (

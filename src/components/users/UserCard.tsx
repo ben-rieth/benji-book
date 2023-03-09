@@ -1,5 +1,4 @@
 import { type FC } from "react";
-import { api } from "../../utils/api";
 import Button from "../general/Button";
 import Avatar from "./Avatar";
 

@@ -15,7 +15,7 @@ const FollowingPage: NextPage = () => {
     const router = useRouter();
     const userId = router.query.id as string;
 
-    const { data, isSuccess, isError, isLoading } = api.users.getFollowing.useQuery({ userId });
+    const { data, isSuccess, isError, isLoading } = api.follows.getFollowing.useQuery({ userId });
 
     return (
         <MainLayout title="Benji Book" description="">
