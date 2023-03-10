@@ -187,22 +187,27 @@ const postRouter = createTRPCRouter({
             liked: z.boolean(),
         }))
         .mutation(async ({ input, ctx }) => {
-            await ctx.prisma.likes.upsert({
-                where: {
-                    userId_postId: {
-                        userId: ctx.session.user.id,
-                        postId: input.postId
+            if (!input.liked) {
+                await ctx.prisma.likes.delete({
+                    where: {
+                        userId_postId: {
+                            userId: ctx.session.user.id,
+                            postId: input.postId
+                        }
                     }
-                },
-                update: {
-                    unliked: !input.liked,
-                },
-                create: {
-                    userId: ctx.session.user.id,
+                });
+
+                return input.postId;
+            }
+
+            await ctx.prisma.likes.create({
+                data: {
                     postId: input.postId,
-                    unliked: !input.liked,
+                    userId: ctx.session.user.id
                 }
-            })
+            });
+            
+            return input.postId;
         }
     ),
 });

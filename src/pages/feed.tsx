@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { type User, getServerSession } from "next-auth";
-import { useEffect } from "react";
 import Button from "../components/general/Button";
 import MainLayout from "../components/layouts/MainLayout";
 import Post from "../components/posts/Post";

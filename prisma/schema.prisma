@@ -57,7 +57,7 @@ model Likes {
     post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId  String
 
-    unliked Boolean @default(false)
+    createdAt DateTime @default(now())
 
     @@id([userId, postId])
 }
