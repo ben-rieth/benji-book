@@ -1,11 +1,21 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import type { Likes, Post, User } from "@prisma/client";
 
 const postRouter = createTRPCRouter({
     getAllPosts: protectedProcedure
-        .query(({ ctx }) => {
-            return ctx.prisma.post.findMany({
+        .input(z.object({
+            limit: z.number().min(1).max(30).nullish(),
+            cursor: z.string().nullish(),
+        }))
+        .query(async ({ ctx, input }) => {
+
+            const limit = input.limit ?? 10;
+
+            const posts : (Post & { author: User, likedBy: Likes[]})[] = await ctx.prisma.post.findMany({
+                take: limit + 1,
+                cursor: input.cursor ? { id: input.cursor } : undefined,
                 where: {
                     author: {
                         followedBy: {
@@ -24,7 +34,18 @@ const postRouter = createTRPCRouter({
                     createdAt: 'desc',
                 }
             
-            })
+            });
+
+            let nextCursor: string | undefined = undefined;
+            if (posts.length > limit) {
+                const nextItem = posts.pop();
+                nextCursor = !!nextItem ? nextItem.id : undefined;
+            }
+
+            return {
+                posts,
+                nextCursor
+            }
         }),
 
     createNewPost: protectedProcedure
