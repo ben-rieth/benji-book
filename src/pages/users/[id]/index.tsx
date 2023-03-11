@@ -116,18 +116,18 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                         {(data.status === 'self' || data.status === 'accepted') && (
                             <div className="flex justify-center gap-10 w-full">
                                 <Link href={`/users/${data.id}/follows`}>
-                                    <Button variant="minimal">
+                                    <Button variant="minimal" propagate>
                                         {data._count.following} Following
                                     </Button>
                                 </Link>
                                 <Link href={`/users/${data.id}/followers`}>
-                                    <Button variant="minimal">
+                                    <Button variant="minimal" propagate>
                                         {data._count.followedBy} Followers
                                     </Button>
                                 </Link>
                                 {data.status === 'self' && (
                                     <Link href={`/users/${data.id}/requests`}>
-                                        <Button variant="minimal">
+                                        <Button variant="minimal" propagate>
                                             {data._count.requests} Requests
                                         </Button>
                                     </Link>

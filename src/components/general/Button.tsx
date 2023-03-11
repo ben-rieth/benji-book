@@ -7,9 +7,10 @@ type ButtonProps = {
     type?: 'button' | 'submit' | 'reset'
     disabled?: boolean
     variant?: "filled" | "outline" | "minimal"
+    propagate?: boolean
 }
 
-const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="filled"}) => {
+const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="filled", propagate=false}) => {
     
     return (
         <button 
@@ -28,8 +29,10 @@ const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="
                 },
             )}
             onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
+                if (!propagate) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
 
                 if (onClick) onClick();
             }}
