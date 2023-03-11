@@ -6,11 +6,12 @@ import Image from 'next/image';
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { formatDistanceToNow } from "date-fns";
-import { DeleteIcon, EditIcon } from "../general/icons";
+import { DeleteIcon } from "../general/icons";
 import Alert from "../general/Alert";
 import { api } from "../../utils/api";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import UpdatePost from "./UpdatePost";
 
 type PostProps = {
     post: PostType & {
@@ -59,7 +60,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike }) => {
                 </Link>
                 { session?.user?.id === post.authorId && (
                     <div className="flex gap-3 absolute right-2 top-4">
-                        <EditIcon />
+                        <UpdatePost post={post} />
                         <Alert 
                             title="Are you sure?" 
                             description="This action cannot be undone. This post will be permanently deleted from our servers."

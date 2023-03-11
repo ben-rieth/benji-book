@@ -1,4 +1,4 @@
-import type { Comment, User } from "@prisma/client";
+import type { Post, User, Likes } from "@prisma/client";
 import { type FC, useState } from "react";
 import TextArea from "../inputs/TextArea";
 import { Form, Formik } from "formik";
@@ -9,36 +9,42 @@ import { toast } from 'react-hot-toast';
 import Modal from "../general/Modal";
 import { EditIcon } from "../general/icons";
 
-type UpdateCommentProps = {
-    comment: Comment & { author: User | null };
+type UpdatePostProps = {
+    post: Post & {
+        author: User;
+        likedBy: Likes[];
+    }
 }
 
-const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
+const UpdatePost: FC<UpdatePostProps> = ({ post }) => {
     
     const [open, setOpen] = useState<boolean>(false);
 
     const apiUtils = api.useContext();
-    const { mutate: updateComment } = api.comments.updateComment.useMutation({
-        onMutate: async (values) => {
-            await apiUtils.comments.getAllComments.cancel();
-
-            apiUtils.comments.getAllComments.setData(
-                { postId: comment.postId }, 
-                prev => {
-                    if (!prev) return;
-                    return prev.map(item => {
-                        if (item.id !== comment.id) return item;
-                        else return {
-                            ...item,
-                            text: values.newText,
-                        }
-                    });
-                }
-            );
+    const { mutate: updatePost } = api.posts.updatePost.useMutation({
+        onMutate: async () => {
+            await apiUtils.posts.getPost.cancel();
+            await apiUtils.posts.getAllPosts.cancel();
+            // apiUtils.comments.getAllComments.setData(
+            //     { postId: comment.postId }, 
+            //     prev => {
+            //         if (!prev) return;
+            //         return prev.map(item => {
+            //             if (item.id !== comment.id) return item;
+            //             else return {
+            //                 ...item,
+            //                 text: values.newText,
+            //             }
+            //         });
+            //     }
+            // );
         },
         onSuccess: () => toast.success("Comment updated!"),
         onError: () => toast.error("Could not update comment."),
-        onSettled: () => apiUtils.comments.getAllComments.invalidate({ postId: comment.postId }),
+        onSettled: async () => {
+            await apiUtils.posts.getPost.invalidate({ postId: post.id });
+            await apiUtils.posts.getAllPosts.invalidate();
+        },
     });
 
     return (
@@ -50,11 +56,11 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
         >
             <Formik
                 initialValues={{
-                    updatedText: comment.text
+                    updatedText: post.text
                 }}
                 onSubmit={(values) => {
-                    updateComment({
-                        commentId: comment.id,
+                    updatePost({
+                        postId: post.id,
                         newText: values.updatedText,
                     });
                     setOpen(false);
@@ -68,18 +74,18 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
                         <TextArea 
                             id="updatedText"
                             name="updatedText"
-                            label="Update Comment"
+                            label="Update Post Text"
                             showLabel={false}
                             onChange={props.handleChange}
                             onBlur={props.handleBlur}
                             value={props.values.updatedText}
                             error={props.errors.updatedText}
                             touched={props.touched.updatedText}
-                            placeholder="Update Comment"
+                            placeholder="Update Post Text"
                         />
 
                         <Button variant="filled" type="submit" propagate>
-                            Update Comment
+                            Update Post Text
                         </Button>
                     </Form>
                 )}
@@ -88,4 +94,4 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
     )
 };
 
-export default UpdateComment;
+export default UpdatePost;

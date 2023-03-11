@@ -182,7 +182,7 @@ const postRouter = createTRPCRouter({
             postId: z.string().cuid(),
             newText: z.string(), 
         }))
-        .query( async ({ input, ctx }) => {
+        .mutation( async ({ input, ctx }) => {
             await ctx.prisma.post.update({
                 where: {
                     id_authorId: {
