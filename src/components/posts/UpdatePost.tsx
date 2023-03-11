@@ -25,22 +25,9 @@ const UpdatePost: FC<UpdatePostProps> = ({ post }) => {
         onMutate: async () => {
             await apiUtils.posts.getPost.cancel();
             await apiUtils.posts.getAllPosts.cancel();
-            // apiUtils.comments.getAllComments.setData(
-            //     { postId: comment.postId }, 
-            //     prev => {
-            //         if (!prev) return;
-            //         return prev.map(item => {
-            //             if (item.id !== comment.id) return item;
-            //             else return {
-            //                 ...item,
-            //                 text: values.newText,
-            //             }
-            //         });
-            //     }
-            // );
         },
-        onSuccess: () => toast.success("Comment updated!"),
-        onError: () => toast.error("Could not update comment."),
+        onSuccess: () => toast.success("Post text updated!"),
+        onError: () => toast.error("Could not update post text."),
         onSettled: async () => {
             await apiUtils.posts.getPost.invalidate({ postId: post.id });
             await apiUtils.posts.getAllPosts.invalidate();
