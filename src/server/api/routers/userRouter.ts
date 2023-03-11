@@ -55,24 +55,30 @@ const userRouter = createTRPCRouter({
                             }
                         },
                         likes: true,
-                        _count: {
-                            select: {
-                                followedBy: {
-                                    where: {
-                                        status: 'accepted'
-                                    }
-                                },
-                                following: {
-                                    where: {
-                                        status: 'accepted'
-                                    }
-                                },
-                            }
-                        }
                     }
                 });
 
-                return user ? { ...user, status: 'self' } : null;
+                const [followedByCount, followingCount, requestCount] = await Promise.all([
+                    ctx.prisma.follows.count({
+                        where: { followingId: input.userId, status: 'accepted' }
+                    }),
+                    ctx.prisma.follows.count({
+                        where: { followerId: input.userId, status: 'accepted' }
+                    }),
+                    ctx.prisma.follows.count({
+                        where: { followerId: input.userId, status: 'pending' },
+                    })
+                ]);
+
+                return user ? { 
+                    ...user, 
+                    status: 'self',
+                    _count: { 
+                        followedBy: followedByCount, 
+                        following: followingCount, 
+                        requests: requestCount,
+                }
+                } : null;
             }
                 // otherwise find relationship of two people
             const relationship = await ctx.prisma.follows.findUnique({

@@ -125,6 +125,13 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                         {data._count.followedBy} Followers
                                     </Button>
                                 </Link>
+                                {data.status === 'self' && (
+                                    <Link href={`/users/${data.id}/requests`}>
+                                        <Button variant="minimal">
+                                            {data._count.requests} Requests
+                                        </Button>
+                                    </Link>
+                                )}
                             </div>
                         )}
                     </header>

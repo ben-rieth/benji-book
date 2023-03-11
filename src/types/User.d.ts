@@ -7,6 +7,14 @@ type FollowCount = {
     }
 }
 
+type FollowCountSelf = {
+    _count: {
+        followedBy: number;
+        following: number;
+        requests: number;
+    }
+}
+
 type FullUser = User & {
     status: 'accepted';
     posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
@@ -16,7 +24,7 @@ type Self = User & {
     likes: Likes[];
     status: 'self';
     posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
-} & FollowCount;
+} & FollowCountSelf;
 
 type PrivateUser = {
     id: string;
