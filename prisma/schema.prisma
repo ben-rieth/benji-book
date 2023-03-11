@@ -17,6 +17,7 @@ model Post {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     image     String?
+    placeholder String?
     
     author    User @relation("createdPosts", fields: [authorId], references: [id], onDelete: Cascade)
     authorId  String

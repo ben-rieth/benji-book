@@ -81,6 +81,8 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike }) => {
                     fill
                     priority
                     className="object-cover"
+                    placeholder={post.placeholder ? "blur" : "empty"}
+                    blurDataURL={post.placeholder as string}
                 />
                 <div className="absolute bg-white p-3 bottom-0 right-0 rounded-tl-xl">
                     {!!post.likedBy.find(like => like.userId === session?.user?.id) ? (

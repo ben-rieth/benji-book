@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import type { Likes, Post, User } from "@prisma/client";
 import { v2 as cloudinary } from 'cloudinary';
 import { env } from "../../../env.mjs";
+import { getPlaiceholder } from "plaiceholder";
 
 
 cloudinary.config({
@@ -66,6 +67,7 @@ const postRouter = createTRPCRouter({
             image: z.string(),
         }))
         .mutation(async ({ input, ctx }) => {
+
             const { id } = await ctx.prisma.post.create({
                 data: {
                     authorId: ctx.session.user.id,
@@ -73,13 +75,13 @@ const postRouter = createTRPCRouter({
                 }
             });
             try {
-
                 const res = await cloudinary.uploader.upload(input.image, { public_id: id });
-
+                const { base64 } = await getPlaiceholder(res.secure_url);
                 await ctx.prisma.post.update({
                     where: { id },
                     data: {
-                        image: res.secure_url
+                        image: res.secure_url,
+                        placeholder: base64
                     }
                 });
             } catch (err) {
