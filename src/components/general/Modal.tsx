@@ -17,7 +17,7 @@ const Modal: FC<ModalProps> = ({ children, trigger, title, open, onOpenChange })
             open={open} 
             onOpenChange={onOpenChange}
         >
-            <Dialog.Trigger asChild>
+            <Dialog.Trigger>
                 {trigger}
             </Dialog.Trigger>
             <Dialog.Portal>

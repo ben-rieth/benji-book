@@ -7,14 +7,14 @@ type AlertProps = {
     description: string;
     actionLabel: string;
     handleAction: () => void;
-    children: ReactNode;
+    trigger: ReactNode;
 }
 
-const Alert: FC<AlertProps> = ({ title, description, actionLabel, children, handleAction }) => {
+const Alert: FC<AlertProps> = ({ title, description, actionLabel, trigger, handleAction }) => {
     return (
         <AlertDialog.Root>
-            <AlertDialog.Trigger asChild>
-                {children}
+            <AlertDialog.Trigger>
+                {trigger}
             </AlertDialog.Trigger>
             <AlertDialog.Portal>
                 <AlertDialog.Overlay className="bg-black/50 data-[state=open]:animate-overlayShow fixed inset-0" />

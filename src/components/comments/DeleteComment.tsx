@@ -35,9 +35,8 @@ const DeleteComment: FC<DeleteCommentProps> = ({ comment }) => {
             description="This action cannot be undone. This comment will be permanently deleted from our servers."
             actionLabel="Delete Comment"
             handleAction={() => deleteComment({ commentId: comment.id })}
-        >
-            <DeleteIcon />
-        </Alert>
+            trigger={<DeleteIcon />}
+        />
     )   
 }
 

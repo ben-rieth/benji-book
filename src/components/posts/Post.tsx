@@ -7,6 +7,10 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { formatDistanceToNow } from "date-fns";
 import { DeleteIcon, EditIcon } from "../general/icons";
+import Alert from "../general/Alert";
+import { api } from "../../utils/api";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 type PostProps = {
     post: PostType & {
@@ -18,7 +22,30 @@ type PostProps = {
 
 const Post : FC<PostProps> = ({ post, containerClasses="", changeLike }) => {
     
+    let deleteToastId : string | undefined;
     const { data: session } = useSession();
+    const router = useRouter();
+
+    const apiUtils = api.useContext();
+    const { mutate: deletePost } = api.posts.deletePost.useMutation({
+        onMutate: async () => {
+            await apiUtils.posts.getPost.cancel();
+            await apiUtils.posts.getAllPosts.cancel();
+        },
+        onError: () => {
+            toast.dismiss(deleteToastId);
+            toast.error("Could not delete post")
+        },
+        onSuccess: async () =>{
+            await router.push('/feed');
+            toast.dismiss(deleteToastId);
+            toast.success("Post deleted!")
+        },
+        onSettled: async () => {
+            await apiUtils.posts.getAllPosts.invalidate()
+        }
+
+    });
     
     return (
         <article className={containerClasses}>
@@ -33,7 +60,16 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike }) => {
                 { session?.user?.id === post.authorId && (
                     <div className="flex gap-3 absolute right-2 top-4">
                         <EditIcon />
-                        <DeleteIcon />
+                        <Alert 
+                            title="Are you sure?" 
+                            description="This action cannot be undone. This post will be permanently deleted from our servers."
+                            actionLabel="Delete Post"
+                            handleAction={() => {
+                                deleteToastId = toast.loading("Deleting post...")
+                                deletePost({ postId: post.id })
+                            }}
+                            trigger={<DeleteIcon />}
+                        />
                     </div>)
                 }
             </div>

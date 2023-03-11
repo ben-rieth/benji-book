@@ -201,15 +201,44 @@ const postRouter = createTRPCRouter({
         .input(z.object({ 
             postId: z.string().cuid() 
         }))
-        .query(async ({ input, ctx }) => {
-            await ctx.prisma.post.delete({
+        .mutation(async ({ input, ctx }) => {
+
+            const post = await ctx.prisma.post.delete({
                 where: {
                     id_authorId: {
                         id: input.postId,
                         authorId: ctx.session.user.id
                     }
+                },
+                include: {
+                    likedBy: true,
+                    comments: true,
                 }
-            })
+            });
+
+            await cloudinary.uploader.destroy(input.postId)
+                .catch(async _err => {
+                    await ctx.prisma.post.create({
+                        data: {
+                            id: post.id,
+                            image: post.image,
+                            authorId: post.authorId,
+                            text: post.text,
+                            updatedAt: post.updatedAt,
+                            createdAt: post.createdAt,
+                            likedBy: {
+                                create: [
+                                    ...post.likedBy,
+                                ]
+                            },
+                            comments: {
+                                connect: [
+                                    ...post.comments.map(comment => {return {id: comment.id}})
+                                ]
+                            }
+                        }
+                    })
+                });
         }
     ),
 
