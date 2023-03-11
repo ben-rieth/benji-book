@@ -10,8 +10,16 @@ const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
             include: {
                 _count: {
                     select: { 
-                        followedBy: true,
-                        following: true,
+                        followedBy: {
+                            where: {
+                                status: 'accepted'
+                            }
+                        },
+                        following: {
+                            where: {
+                                status: 'accepted'
+                            }
+                        },
                     },
                 },
             },
@@ -19,6 +27,7 @@ const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
         prisma.follows.findMany({
             where: {
                 followingId: inputUserId,
+                status: 'accepted',
             },
             select: {
                 follower: {
@@ -50,8 +59,16 @@ const getUserAndFollowing = (inputUserId: string, currentUserId?: string) => {
             include: {
                 _count: {
                     select: { 
-                        followedBy: true,
-                        following: true,
+                        followedBy: {
+                            where: {
+                                status: 'accepted'
+                            }
+                        },
+                        following: {
+                            where: {
+                                status: 'accepted'
+                            }
+                        },
                     },
                 },
             },
@@ -59,6 +76,7 @@ const getUserAndFollowing = (inputUserId: string, currentUserId?: string) => {
         prisma.follows.findMany({
             where: {
                 followerId: inputUserId,
+                status: 'accepted',
             },
             select: {
                 following: {
@@ -77,7 +95,7 @@ const getUserAndFollowing = (inputUserId: string, currentUserId?: string) => {
                             }
                         }
                     }
-                }
+                },
             }
         })
     ])

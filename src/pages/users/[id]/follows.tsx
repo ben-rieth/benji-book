@@ -78,11 +78,13 @@ const FollowingPage: NextPage = () => {
                         <div className="flex justify-center gap-10 w-full">
                             <Link href={`/users/${data.user?.id as string}/follows`}>
                                 <Button variant="minimal">
+                                    {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
                                     {data.user?._count.following} Following
                                 </Button>
                             </Link>
                             <Link href={`/users/${data.user?.id as string}/followers`}>
                                 <Button variant="minimal">
+                                    {/* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
                                     {data.user?._count.followedBy} Followers
                                 </Button>
                             </Link>
