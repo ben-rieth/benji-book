@@ -4,6 +4,7 @@ import ImageUpload from "../inputs/ImageUpload";
 import TextArea from "../inputs/TextArea";
 import * as yup from 'yup';
 import { api } from "../../utils/api";
+import { toast } from "react-hot-toast";
 
 type FormValues = {
     image: File | null;
@@ -12,7 +13,10 @@ type FormValues = {
 
 const CreatePost = () => {
 
-    const { mutate } = api.posts.createNewPost.useMutation();
+    const { mutate } = api.posts.createNewPost.useMutation({
+        onSuccess: () => toast.success("Successfully created post!"),
+        onError: () => toast.error("Post could not be created")
+    });
 
     return (
         <Formik
@@ -21,11 +25,19 @@ const CreatePost = () => {
                 postText: '',
             } as FormValues}
             onSubmit={(values) => {
-                console.log(values)
-                mutate({
-                    postText: values.postText,
-                    image: values.image?.toString() as string,
-                })
+                const reader = new FileReader();
+
+                if (!values.image) return;
+                reader.readAsDataURL(values.image);
+
+                reader.onload = () => {
+                    mutate({
+                        postText: values.postText,
+                        image: reader.result as string,
+                    })
+                }
+
+                reader.onerror = () => toast.error("Could not upload image");
             }}
             validationSchema={yup.object().shape({
                 image: yup.mixed().required("Image is required"),

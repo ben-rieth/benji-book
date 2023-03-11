@@ -62,14 +62,29 @@ const postRouter = createTRPCRouter({
             postText: z.string(),
             image: z.string(),
         }))
-        .mutation(({ input, ctx }) => {
-            // await ctx.prisma.post.create({
-            //     data: {
-            //         authorId: ctx.session.user.id,
-            //         text: input.postText,
-            //     }
-            // });
-            console.log(input, 'created')
+        .mutation(async ({ input, ctx }) => {
+            const { id } = await ctx.prisma.post.create({
+                data: {
+                    authorId: ctx.session.user.id,
+                    text: input.postText,
+                }
+            });
+            try {
+
+                const res = await cloudinary.uploader.upload(input.image, { public_id: id, folder: 'posts' });
+
+                await ctx.prisma.post.update({
+                    where: { id },
+                    data: {
+                        image: res.secure_url
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+                throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+            }
+
+
         }
     ),
 
