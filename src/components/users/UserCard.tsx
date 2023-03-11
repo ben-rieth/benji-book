@@ -11,17 +11,17 @@ type UserCardProps = {
         lastName: string | null;
         username: string | null;
         image: string | null;
-        followedBy: {
+        followedBy?: {
             status: string;
         }[];
     }
-    onFollowRequest: () => void;
+    onFollowRequest?: () => void;
 }
 
 const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
     let followStatus : string | undefined;
     
-    if (user.followedBy.length === 1) {
+    if (user.followedBy && user.followedBy.length === 1) {
         followStatus = user.followedBy[0]?.status;
     }
 
@@ -36,23 +36,25 @@ const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
                     <p className="text-sm text-slate-300">@{user.username}</p>
                 </div>
             </div>
-            <div className={classNames("flex items-center justify-center w-28", { "hidden": user.id === session?.user?.id})}>
-                {!followStatus && (
-                    <Button variant="filled" onClick={onFollowRequest}>
-                        Follow
-                    </Button>
-                )}
-                {(followStatus === 'pending' || followStatus === 'denied') && (
-                    <Button variant="outline" disabled>
-                        Pending
-                    </Button>
-                )}
-                {followStatus === 'accepted' && (
-                    <Button variant="outline" disabled>
-                        Following
-                    </Button>
-                )}
-            </div>
+            {user.followedBy && (
+                <div className={classNames("flex items-center justify-center w-28", { "hidden": user.id === session?.user?.id})}>
+                    {!followStatus && (
+                        <Button variant="filled" onClick={onFollowRequest}>
+                            Follow
+                        </Button>
+                    )}
+                    {(followStatus === 'pending' || followStatus === 'denied') && (
+                        <Button variant="outline" disabled>
+                            Pending
+                        </Button>
+                    )}
+                    {followStatus === 'accepted' && (
+                        <Button variant="outline" disabled>
+                            Following
+                        </Button>
+                    )}
+                </div>
+            )}
         </article>
     )
 }

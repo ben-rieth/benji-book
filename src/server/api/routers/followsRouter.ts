@@ -5,25 +5,25 @@ import { prisma } from "../../db";
 
 const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
     return Promise.all([
-        prisma.user.findUnique({
-            where: { id: inputUserId },
-            include: {
-                _count: {
-                    select: { 
-                        followedBy: {
-                            where: {
-                                status: 'accepted'
-                            }
-                        },
-                        following: {
-                            where: {
-                                status: 'accepted'
-                            }
-                        },
-                    },
-                },
-            },
-        }),
+        // prisma.user.findUnique({
+        //     where: { id: inputUserId },
+        //     include: {
+        //         _count: {
+        //             select: { 
+        //                 followedBy: {
+        //                     where: {
+        //                         status: 'accepted'
+        //                     }
+        //                 },
+        //                 following: {
+        //                     where: {
+        //                         status: 'accepted'
+        //                     }
+        //                 },
+        //             },
+        //         },
+        //     },
+        // }),
         prisma.follows.findMany({
             where: {
                 followingId: inputUserId,
@@ -54,25 +54,25 @@ const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
 
 const getUserAndFollowing = (inputUserId: string, currentUserId?: string) => {
     return Promise.all([
-        prisma.user.findUnique({
-            where: { id: inputUserId },
-            include: {
-                _count: {
-                    select: { 
-                        followedBy: {
-                            where: {
-                                status: 'accepted'
-                            }
-                        },
-                        following: {
-                            where: {
-                                status: 'accepted'
-                            }
-                        },
-                    },
-                },
-            },
-        }),
+        // prisma.user.findUnique({
+        //     where: { id: inputUserId },
+        //     include: {
+        //         _count: {
+        //             select: { 
+        //                 followedBy: {
+        //                     where: {
+        //                         status: 'accepted'
+        //                     }
+        //                 },
+        //                 following: {
+        //                     where: {
+        //                         status: 'accepted'
+        //                     }
+        //                 },
+        //             },
+        //         },
+        //     },
+        // }),
         prisma.follows.findMany({
             where: {
                 followerId: inputUserId,
@@ -172,12 +172,9 @@ const followsRouter = createTRPCRouter({
         .query(async ({ ctx, input }) => {
             if (input.userId === ctx.session.user.id) {
 
-                const [user, followers] = await getUserAndFollowers(input.userId, input.userId);
+                const [followers] = await getUserAndFollowers(input.userId, input.userId);
 
-                return {
-                    user,
-                    followers,
-                }
+                return followers;
             }
 
             const relationship = await ctx.prisma.follows.findUnique({
@@ -196,12 +193,9 @@ const followsRouter = createTRPCRouter({
                 throw new TRPCError({ code: 'FORBIDDEN' })
             }
 
-            const [user, followers] = await getUserAndFollowers(input.userId, ctx.session.user.id);
+            const [followers] = await getUserAndFollowers(input.userId, ctx.session.user.id);
 
-            return {
-                user,
-                followers,
-            }
+            return followers;
         }),
 
         getFollowing: protectedProcedure
@@ -210,12 +204,10 @@ const followsRouter = createTRPCRouter({
             }))
             .query(async ({ ctx, input }) => {
                 if (input.userId === ctx.session.user.id) {
-                    const [user, following] = await getUserAndFollowing(input.userId, input.userId);
+                    const [following] = await getUserAndFollowing(input.userId, input.userId);
     
-                    return {
-                        user,
-                        following,
-                    }
+                    return following;
+
                 }
 
                 const relationship = await ctx.prisma.follows.findUnique({
@@ -234,13 +226,39 @@ const followsRouter = createTRPCRouter({
                     throw new TRPCError({ code: 'FORBIDDEN' })
                 }
 
-                const [user, following] = await getUserAndFollowing(input.userId, ctx.session.user.id);
+                const [following] = await getUserAndFollowing(input.userId, ctx.session.user.id);
 
-                return {
-                    user,
-                    following,
-                }
+                return following;
             }),
+
+        getRequests: protectedProcedure
+            .input(z.object({
+                userId: z.string().cuid()
+            }))
+            .query(({ ctx, input }) => {
+
+                if (input.userId !== ctx.session.user.id) {
+                    throw new TRPCError({ code: 'FORBIDDEN' })
+                }
+
+                return ctx.prisma.follows.findMany({
+                    where: {
+                        followerId: ctx.session.user.id,
+                        status: 'pending',
+                    },
+                    select: {
+                        following: {
+                            select: {
+                                firstName: true,
+                                lastName: true,
+                                image: true, 
+                                username: true,
+                                id: true,
+                            }
+                        },
+                    }
+                })
+            }) 
 });
 
 export default followsRouter;

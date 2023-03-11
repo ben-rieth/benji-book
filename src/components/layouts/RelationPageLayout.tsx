@@ -11,16 +11,15 @@ import MainLayout from "./MainLayout";
 type RelationPageLayoutProps = {
     // user: FullUser | PrivateUser | Self | undefined | null;
     children: ReactNode;
-    isError: boolean;
 }
 
-const RelationPageLayout: FC<RelationPageLayoutProps> = ({ isError, children }) => {
+const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
 
     const router = useRouter();
     const queries = router.query;
     const id = queries.id as string;
 
-    const { data: user, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: id })
+    const { data: user, isSuccess, isLoading, isError } = api.users.getOneUser.useQuery({ userId: id })
 
     return (
         <MainLayout title="Benji Book" description="">
@@ -40,12 +39,12 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ isError, children }) 
 
                         <div className="flex justify-center gap-10 w-full">
                             <Link href={`/users/${user.id}/follows`}>
-                                <Button variant="minimal">
+                                <Button variant="minimal" propagate>
                                     {user?._count.following} Following
                                 </Button>
                             </Link>
                             <Link href={`/users/${user.id}/followers`}>
-                                <Button variant="minimal">
+                                <Button variant="minimal" propagate>
                                     {user?._count.followedBy} Followers
                                 </Button>
                             </Link>
