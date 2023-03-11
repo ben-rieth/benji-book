@@ -7,7 +7,7 @@ import { authOptions } from "../../server/auth";
 const CreatePostPage: NextPage = () => {
     return (
         <MainLayout title="Create" description="Create a post for Benji Book!">
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center mt-5">
                 <CreatePost />
             </div>
         </MainLayout>

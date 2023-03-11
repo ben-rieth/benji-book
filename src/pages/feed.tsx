@@ -64,9 +64,9 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
 
     return (
         <MainLayout title="Feed" description="Posts from the people that you follow!">
-            <div className="flex flex-col items-center relative px-5">
+            <div className="flex flex-col items-center relative px-5 w-full">
                 {isSuccess && (
-                    <section className="flex flex-col gap-5 mt-10">
+                    <section className="flex flex-col items-center gap-5 mt-10 w-full">
                         {data.pages.map((group) => (
                             <>
                                 {group.posts.map(post => (

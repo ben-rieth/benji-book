@@ -52,7 +52,10 @@ const userRouter = createTRPCRouter({
                             include: {
                                 comments: true,
                                 likedBy: true,
-                            }
+                            },
+                            orderBy: {
+                                createdAt: 'desc',
+                            },
                         },
                         likes: true,
                     }

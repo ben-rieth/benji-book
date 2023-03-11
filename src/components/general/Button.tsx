@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import type { FC, ReactNode } from "react";
+import type { FC, ReactNode, MouseEventHandler } from "react";
 
 type ButtonProps = {
     onClick?: () => void;
@@ -10,8 +10,17 @@ type ButtonProps = {
     propagate?: boolean
 }
 
-const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="filled", propagate=false}) => {
+const Button: FC<ButtonProps> = ({ onClick, children, type, disabled, variant="filled", propagate=false}) => {
     
+    const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+        if (!propagate) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        
+        if (onClick) onClick();
+    }
+
     return (
         <button 
             className={classNames(
@@ -28,14 +37,7 @@ const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="
                     'hover:text-sky-600': variant === 'minimal' && !disabled,
                 },
             )}
-            onClick={(e) => {
-                if (!propagate) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                }
-
-                if (onClick) onClick();
-            }}
+            onClick={handleClick}
             type={type}
             disabled={!!disabled}
         >

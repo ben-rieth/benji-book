@@ -32,7 +32,7 @@ const ImageUpload: FC<ImageUploadProps> = ({ onChange }) => {
         <div>
             <div
                 className={classNames(
-                    "flex items-center justify-center w-full h-auto aspect-square bg-white cursor-pointer border-4 border-dashed rounded-lg overflow-hidden",
+                    "flex items-center justify-center w-full h-auto aspect-square bg-white cursor-pointer border-4 border-dashed rounded-lg overflow-hidden mb-3",
                 )}
                 onDragOver={e => e.preventDefault()}
                 onDrop={e => {

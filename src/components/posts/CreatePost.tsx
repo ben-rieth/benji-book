@@ -5,6 +5,7 @@ import TextArea from "../inputs/TextArea";
 import * as yup from 'yup';
 import { api } from "../../utils/api";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 
 type FormValues = {
     image: File | null;
@@ -13,9 +14,19 @@ type FormValues = {
 
 const CreatePost = () => {
 
+    let toastId: string | undefined;
+    const router = useRouter();
+
     const { mutate } = api.posts.createNewPost.useMutation({
-        onSuccess: () => toast.success("Successfully created post!"),
-        onError: () => toast.error("Post could not be created")
+        onSuccess: async () => {
+            toast.dismiss(toastId)
+            toast.success("Successfully created post!");
+            await router.push("/feed");
+        },
+        onError: () => {
+            toast.dismiss(toastId)
+            toast.error("Post could not be created")
+        },
     });
 
     return (
@@ -25,6 +36,7 @@ const CreatePost = () => {
                 postText: '',
             } as FormValues}
             onSubmit={(values) => {
+                toastId = toast.loading("Uploading post");
                 const reader = new FileReader();
 
                 if (!values.image) return;
@@ -63,7 +75,7 @@ const CreatePost = () => {
                         label="Post Text"
                         placeholder="Tell Your Story"
                     />
-                    <Button variant="filled" type="submit">
+                    <Button variant="filled" type="submit" propagate>
                         Post
                     </Button>
                 </Form>

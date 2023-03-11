@@ -43,6 +43,12 @@ const NavBar = () => {
                         </DropdownMenu.Item>
 
                         <DropdownMenu.Item className={itemClasses} asChild>
+                            <Link href="/posts/create">
+                                Create Post
+                            </Link>
+                        </DropdownMenu.Item>
+
+                        <DropdownMenu.Item className={itemClasses} asChild>
                             <Link href='/users'>
                                 Search Users
                             </Link>
@@ -81,7 +87,15 @@ const NavBar = () => {
                     <NavigationMenu.Item>
                         <NavigationMenu.Link asChild>
                             <Link href="/feed">
-                                <Button variant="minimal">Feed</Button>
+                                <Button variant="minimal" propagate>Feed</Button>
+                            </Link>
+                        </NavigationMenu.Link>
+                    </NavigationMenu.Item>
+
+                    <NavigationMenu.Item>
+                        <NavigationMenu.Link asChild>
+                            <Link href={`/posts/create`}>
+                                <Button variant="minimal" propagate>Create Post</Button>
                             </Link>
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
@@ -89,17 +103,17 @@ const NavBar = () => {
                     <NavigationMenu.Item>
                         <NavigationMenu.Link asChild>
                             <Link href={`/users/`}>
-                                <Button variant="minimal">Search Users</Button>
+                                <Button variant="minimal" propagate>Search Users</Button>
                             </Link>
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
 
                     <NavigationMenu.Item>
                         <NavigationMenu.Trigger asChild>
-                            <Button variant="minimal">
+                            <button className="text-sky-500 hover:text-sky-600 flex flex-row items-center gap-2">
                                 Account
                                 <BsChevronDown />
-                            </Button>
+                            </button>
                         </NavigationMenu.Trigger>
                         <NavigationMenu.Content className="absolute z-20 bg-white shadow-2xl rounded-lg px-5 py-3 w-1/2 top-14 right-0">
                             <ul className="flex flex-col gap-2">
