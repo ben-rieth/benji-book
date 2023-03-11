@@ -34,7 +34,9 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
                         <Avatar url={user?.image} className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32" />
                         <div className="flex flex-col items-center md:items-start">
                             <p className="text-slate-300 text-base -mb-1">@{user?.username}</p>
-                            <h1 className="font-semibold text-4xl mb-2">{user?.firstName} {user?.lastName}</h1>
+                            <Link href={`/users/${user.id}`}>
+                                <h1 className="font-semibold text-4xl mb-2 hover:underline">{user?.firstName} {user?.lastName}</h1>
+                            </Link>
                         </div>
 
                         <div className="flex justify-center gap-10 w-full">

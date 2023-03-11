@@ -1,5 +1,4 @@
 import type { NextPage, GetServerSideProps } from "next";
-import type { User } from "next-auth";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
