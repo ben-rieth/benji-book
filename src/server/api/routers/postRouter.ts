@@ -27,12 +27,15 @@ const postRouter = createTRPCRouter({
                 cursor: input.cursor ? { id: input.cursor } : undefined,
                 where: {
                     author: {
-                        followedBy: {
-                            some: {
-                                followerId: ctx.session.user.id,
-                                status: 'accepted',
-                            }
-                        }
+                        OR: [
+                            {followedBy: {
+                                some: {
+                                    followerId: ctx.session.user.id,
+                                    status: 'accepted',
+                                }
+                            }},
+                            { id: ctx.session.user.id }
+                        ]
                     }
                 },
                 include: {
