@@ -51,7 +51,7 @@ const FollowingPage: NextPage = () => {
 
     return (
         <RelationPageLayout>
-            <section className="flex flex-col gap-2 items-center w-full px-10 ">
+            <>
                 <h2 className="text-2xl font-semibold">Following</h2>
                 {data?.map(relation => (
                     <Link href={`/users/${relation.following.id}`} key={relation.following.id} className="w-full ">
@@ -61,7 +61,7 @@ const FollowingPage: NextPage = () => {
                         />
                     </Link>
                 ))}
-            </section>
+            </>
         </RelationPageLayout>
     )
 };
