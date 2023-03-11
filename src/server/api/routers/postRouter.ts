@@ -74,7 +74,7 @@ const postRouter = createTRPCRouter({
             });
             try {
 
-                const res = await cloudinary.uploader.upload(input.image, { public_id: id, folder: 'posts' });
+                const res = await cloudinary.uploader.upload(input.image, { public_id: id });
 
                 await ctx.prisma.post.update({
                     where: { id },
@@ -203,7 +203,7 @@ const postRouter = createTRPCRouter({
         }))
         .mutation(async ({ input, ctx }) => {
 
-            const post = await ctx.prisma.post.delete({
+            await ctx.prisma.post.delete({
                 where: {
                     id_authorId: {
                         id: input.postId,
@@ -217,28 +217,30 @@ const postRouter = createTRPCRouter({
             });
 
             await cloudinary.uploader.destroy(input.postId)
-                .catch(async _err => {
-                    await ctx.prisma.post.create({
-                        data: {
-                            id: post.id,
-                            image: post.image,
-                            authorId: post.authorId,
-                            text: post.text,
-                            updatedAt: post.updatedAt,
-                            createdAt: post.createdAt,
-                            likedBy: {
-                                create: [
-                                    ...post.likedBy,
-                                ]
-                            },
-                            comments: {
-                                connect: [
-                                    ...post.comments.map(comment => {return {id: comment.id}})
-                                ]
-                            }
-                        }
-                    })
-                });
+                // .catch(async _err => {
+                //     await ctx.prisma.post.create({
+                //         data: {
+                //             id: post.id,
+                //             image: post.image,
+                //             authorId: post.authorId,
+                //             text: post.text,
+                //             updatedAt: post.updatedAt,
+                //             createdAt: post.createdAt,
+                //             likedBy: {
+                //                 create: [
+                //                     ...post.likedBy,
+                //                 ]
+                //             },
+                //             comments: {
+                //                 connect: [
+                //                     ...post.comments.map(comment => {return {id: comment.id}})
+                //                 ]
+                //             }
+                //         }
+                //     });
+
+                //     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR"})
+                // });
         }
     ),
 
