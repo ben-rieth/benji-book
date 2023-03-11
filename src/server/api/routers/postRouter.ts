@@ -80,7 +80,6 @@ const postRouter = createTRPCRouter({
                     }
                 });
             } catch (err) {
-                console.log(err);
                 throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
             }
 
@@ -103,6 +102,10 @@ const postRouter = createTRPCRouter({
 
             if (!post) {
                 throw new TRPCError({ code: "NOT_FOUND" });
+            }
+
+            if (post.authorId === ctx.session.user.id) {
+                return post;
             }
 
             const relationship = await ctx.prisma.follows.findUnique({

@@ -93,7 +93,7 @@ const AccountPage: NextPage = () => {
                         )}
                     </header>
 
-                    <div className="w-full px-5 max-w-screen-lg">
+                    <div className="w-full px-5 max-w-screen-md">
                         {!data.status && (
                             <div className="flex flex-col gap-3">
                                 <p className="text-lg">You don&apos;t follow this person yet!</p>
@@ -109,7 +109,7 @@ const AccountPage: NextPage = () => {
                         )}
                         {data.status === 'denied' && <p>Your follow request was denied.</p>}
                         {(data.status === 'accepted' || data.status === 'self') && (
-                            <section className="w-full grid grid-cols-3 md:grid-cols-4 auto-rows-auto gap-2">
+                            <section className="w-full grid grid-cols-3 md:grid-cols-4 auto-rows-auto gap-4">
                                 {data.posts.map(post => (
                                     <PostThumbnail post={post} key={post.id} />
                                 ))}

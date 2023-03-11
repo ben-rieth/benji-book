@@ -74,6 +74,8 @@ const commentRouter = createTRPCRouter({
                 }),
             ]);
 
+            if (post.authorId === ctx.session.user.id) return comments;
+
             if (!post) {
                 throw new TRPCError({ code: 'NOT_FOUND'});
             }

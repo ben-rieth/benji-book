@@ -21,7 +21,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ['i.pravatar.cc', 'placeimg.com'],
+    domains: ['i.pravatar.cc', 'placeimg.com', 'res.cloudinary.com'],
   }
 };
 export default config;
