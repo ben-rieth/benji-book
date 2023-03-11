@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { formatDistanceToNow } from "date-fns";
-import { AiFillEdit } from "react-icons/ai";
+import { DeleteIcon, EditIcon } from "../general/icons";
 
 type PostProps = {
     post: PostType & {
@@ -30,7 +30,12 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike }) => {
                         <p className="text-lg">{post.author.firstName} {post.author.lastName}</p>
                     </div>
                 </Link>
-                { session?.user?.id === post.authorId && <AiFillEdit className="absolute top-2 right-2 w-8 h-8 fill-sky-500 hover:fill-sky-600 cursor-pointer" />}
+                { session?.user?.id === post.authorId && (
+                    <div className="flex gap-3 absolute right-2 top-4">
+                        <EditIcon />
+                        <DeleteIcon />
+                    </div>)
+                }
             </div>
             <div className="aspect-square w-full relative">
                 <Image 

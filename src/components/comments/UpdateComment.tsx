@@ -1,6 +1,5 @@
 import type { Comment, User } from "@prisma/client";
 import { type FC, useState } from "react";
-import { AiFillEdit } from "react-icons/ai";
 import TextArea from "../inputs/TextArea";
 import { Form, Formik } from "formik";
 import Button from "../general/Button";
@@ -8,6 +7,7 @@ import * as yup from 'yup';
 import { api } from "../../utils/api";
 import { toast } from 'react-hot-toast';
 import Modal from "../general/Modal";
+import { EditIcon } from "../general/icons";
 
 type UpdateCommentProps = {
     comment: Comment & { author: User | null };
@@ -46,11 +46,7 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
             title="Update Comment"
             open={open}
             onOpenChange={(open) => setOpen(open)}
-            trigger={
-                <AiFillEdit 
-                    className={"fill-sky-500 w-6 h-6 cursor-pointer hover:scale-110 hover:fill-sky-600"} 
-                />
-            }
+            trigger={<EditIcon />}
         >
             <Formik
                 initialValues={{

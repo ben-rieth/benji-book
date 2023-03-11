@@ -48,8 +48,6 @@ const AccountPage: NextPage = () => {
         }
     });
 
-    console.log(data?.status);
-
     if (!data && isSuccess) {
         return (
             <p>User does not exist</p>
@@ -75,7 +73,11 @@ const AccountPage: NextPage = () => {
                             <h1 className="font-semibold text-4xl mb-2">{data.firstName} {data.lastName}</h1>
                             {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 md:text-sm lg:text-base">{data.bio}</p>}
                         </div>
-                        {data.status === 'self' && <UpdateProfileForm user={data} />}
+                        {data.status === 'self' && (
+                            <div className="absolute top-5 right-5">
+                                <UpdateProfileForm user={data} />
+                            </div>)
+                        }
 
                         {(data.status === 'self' || data.status === 'accepted') && (
                             <div className="flex justify-center gap-10 w-full">

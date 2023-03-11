@@ -1,9 +1,9 @@
-import { AiFillDelete } from 'react-icons/ai';
 import { api } from '../../utils/api';
 import { toast } from 'react-hot-toast';
 import { type FC } from 'react';
 import type { Comment, User } from '@prisma/client';
 import Alert from '../general/Alert';
+import { DeleteIcon } from '../general/icons';
 
 type DeleteCommentProps = {
     comment: Comment & { author: User | null }
@@ -36,7 +36,7 @@ const DeleteComment: FC<DeleteCommentProps> = ({ comment }) => {
             actionLabel="Delete Comment"
             handleAction={() => deleteComment({ commentId: comment.id })}
         >
-            <AiFillDelete className="fill-red-500 w-6 h-6 cursor-pointer hover:scale-110 hover:fill-red-600" />
+            <DeleteIcon />
         </Alert>
     )   
 }
