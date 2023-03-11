@@ -29,7 +29,12 @@ const Button: FC<ButtonProps> = ({ onClick , children, type, disabled, variant="
     return (
         <button 
             className={buttonClasses}
-            onClick={onClick}
+            onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                if (onClick) onClick();
+            }}
             type={type}
             disabled={!!disabled}
         >

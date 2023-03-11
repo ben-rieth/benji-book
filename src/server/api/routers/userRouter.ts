@@ -54,9 +54,21 @@ const userRouter = createTRPCRouter({
                                 likedBy: true,
                             }
                         },
-                        followedBy: true,
-                        following: true,
                         likes: true,
+                        _count: {
+                            select: {
+                                followedBy: {
+                                    where: {
+                                        status: 'accepted'
+                                    }
+                                },
+                                following: {
+                                    where: {
+                                        status: 'accepted'
+                                    }
+                                },
+                            }
+                        }
                     }
                 });
 
@@ -86,8 +98,20 @@ const userRouter = createTRPCRouter({
                                 likedBy: true,
                             }
                         },
-                        followedBy: true,
-                        following: true,
+                        _count: {
+                            select: {
+                                followedBy: {
+                                    where: {
+                                        status: 'accepted'
+                                    }
+                                },
+                                following: {
+                                    where: {
+                                        status: 'accepted'
+                                    }
+                                },
+                            }
+                        }
                     }
                 });
 
@@ -106,6 +130,20 @@ const userRouter = createTRPCRouter({
                     image: true,
                     bio: true,
                     username: true,
+                    _count: {
+                        select: {
+                            followedBy: {
+                                where: {
+                                    status: 'accepted'
+                                }
+                            },
+                            following: {
+                                where: {
+                                    status: 'accepted'
+                                }
+                            },
+                        }
+                    }
                 }
             });
 

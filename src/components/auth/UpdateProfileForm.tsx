@@ -1,8 +1,5 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { useState, type FC } from 'react';
-import { AiFillEdit, AiOutlineClose } from "react-icons/ai";
 import { type Self } from '../../types/User';
 import DateInput from '../inputs/DateInput';
 import SelectInput from '../inputs/SelectInput';

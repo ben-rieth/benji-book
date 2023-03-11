@@ -1,19 +1,22 @@
-import type { User, Post, Follows, Comment, Likes } from "@prisma/client";
+import type { User, Post, Comment, Likes } from "@prisma/client";
+
+type FollowCount = {
+    _count: {
+        followedBy: number;
+        following: number;
+    }
+}
 
 type FullUser = User & {
     status: 'accepted';
     posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
-    followedBy: Follows[];
-    following: Follows[];
-};
+} & FollowCount;
 
 type Self = User & {
     likes: Likes[];
     status: 'self';
     posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
-    followedBy: Follows[];
-    following: Follows[];
-}
+} & FollowCount;
 
 type PrivateUser = {
     id: string;
@@ -23,6 +26,6 @@ type PrivateUser = {
     lastName?: string | null;
     image?: string | null;
     bio?: string | null;
-}
+} & FollowCount;
 
 export { FullUser, PrivateUser, Self }

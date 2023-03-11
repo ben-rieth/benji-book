@@ -83,19 +83,19 @@ const AccountPage: NextPage = () => {
                             <div className="flex justify-center gap-10 w-full">
                                 <Link href={`/users/${data.id}/follows`}>
                                     <Button variant="minimal">
-                                        {data.following.length} Following
+                                        {data._count.following} Following
                                     </Button>
                                 </Link>
                                 <Link href={`/users/${data.id}/followers`}>
                                     <Button variant="minimal">
-                                        {data.followedBy.length} Followers
+                                        {data._count.followedBy} Followers
                                     </Button>
                                 </Link>
                             </div>
                         )}
                     </header>
 
-                    <div className="w-full px-5 max-w-screen-md">
+                    <div className="w-full px-5 max-w-screen-lg md:w-10/12">
                         {!data.status && (
                             <div className="flex flex-col gap-3">
                                 <p className="text-lg">You don&apos;t follow this person yet!</p>
@@ -111,7 +111,7 @@ const AccountPage: NextPage = () => {
                         )}
                         {data.status === 'denied' && <p>Your follow request was denied.</p>}
                         {(data.status === 'accepted' || data.status === 'self') && (
-                            <section className="w-full grid grid-cols-3 md:grid-cols-4 auto-rows-auto gap-4">
+                            <section className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto gap-8 md:gap-4">
                                 {data.posts.map(post => (
                                     <PostThumbnail post={post} key={post.id} />
                                 ))}
