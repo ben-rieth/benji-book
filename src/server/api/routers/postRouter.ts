@@ -2,6 +2,15 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import type { Likes, Post, User } from "@prisma/client";
+import { v2 as cloudinary } from 'cloudinary';
+import { env } from "../../../env.mjs";
+
+
+cloudinary.config({
+    cloud_name: env.CLOUDINARY_CLOUD_NAME,
+    api_key: env.CLOUDINARY_API_KEY,
+    api_secret: env.CLOUDINARY_API_SECRET,
+});
 
 const postRouter = createTRPCRouter({
     getAllPosts: protectedProcedure
@@ -51,14 +60,16 @@ const postRouter = createTRPCRouter({
     createNewPost: protectedProcedure
         .input(z.object({
             postText: z.string(),
+            image: z.string(),
         }))
-        .query(async ({ input, ctx }) => {
-            await ctx.prisma.post.create({
-                data: {
-                    authorId: ctx.session.user.id,
-                    text: input.postText,
-                }
-            });
+        .mutation(({ input, ctx }) => {
+            // await ctx.prisma.post.create({
+            //     data: {
+            //         authorId: ctx.session.user.id,
+            //         text: input.postText,
+            //     }
+            // });
+            console.log(input, 'created')
         }
     ),
 

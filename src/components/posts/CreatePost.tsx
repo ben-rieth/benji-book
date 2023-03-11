@@ -3,6 +3,7 @@ import Button from "../general/Button";
 import ImageUpload from "../inputs/ImageUpload";
 import TextArea from "../inputs/TextArea";
 import * as yup from 'yup';
+import { api } from "../../utils/api";
 
 type FormValues = {
     image: File | null;
@@ -10,13 +11,22 @@ type FormValues = {
 }
 
 const CreatePost = () => {
+
+    const { mutate } = api.posts.createNewPost.useMutation();
+
     return (
         <Formik
             initialValues={{
                 image: null,
                 postText: '',
             } as FormValues}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) => {
+                console.log(values)
+                mutate({
+                    postText: values.postText,
+                    image: values.image?.toString() as string,
+                })
+            }}
             validationSchema={yup.object().shape({
                 image: yup.mixed().required("Image is required"),
                 postText: yup.string().required("Post text is required."),
