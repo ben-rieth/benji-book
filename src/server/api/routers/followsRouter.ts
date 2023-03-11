@@ -117,6 +117,27 @@ const followsRouter = createTRPCRouter({
         }
     ),
 
+    deleteFollowRequest: protectedProcedure
+        .input(z.object({
+            followingId: z.string().cuid(),
+            followerId: z.string().cuid()
+        }))
+        .mutation(async ({ input, ctx }) => {
+
+            if (ctx.session.user.id !== input.followingId && ctx.session.user.id !== input.followerId) {
+                throw new TRPCError({ code: 'FORBIDDEN' });
+            }
+
+            await ctx.prisma.follows.delete({
+                where: {
+                    followerId_followingId: {
+                        followerId: input.followerId,
+                        followingId: input.followingId,
+                    }
+                }
+            });
+        }),
+
     changeFollowStatus: protectedProcedure
         .input(z.object({
             followerId: z.string().cuid(),

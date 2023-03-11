@@ -1,9 +1,11 @@
 import classNames from "classnames";
 import type { GetServerSideProps} from "next";
 import { type NextPage } from "next";
+import type { User } from "next-auth";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
 import UpdateProfileForm from "../../../components/auth/UpdateProfileForm";
 import Button from "../../../components/general/Button";
 import MainLayout from "../../../components/layouts/MainLayout";
@@ -12,7 +14,11 @@ import Avatar from "../../../components/users/Avatar";
 import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
 
-const AccountPage: NextPage = () => {
+type AccountPageProps = {
+    currentUser: User;
+}
+
+const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
 
     const router = useRouter();
     const queries = router.query;
@@ -47,6 +53,34 @@ const AccountPage: NextPage = () => {
             await apiUtils.users.getOneUser.invalidate({ userId: id })
         }
     });
+
+    const { mutate: removeFollowRequest } = api.follows.deleteFollowRequest.useMutation({
+        onMutate: async () => {
+            await apiUtils.users.getOneUser.cancel();
+            apiUtils.users.getOneUser.setData(
+                { userId: id }, 
+                prev => {
+                    if (!prev) return;
+                    return {...prev, status: null }
+                }
+            );
+        },
+
+        onError: () => {
+            apiUtils.users.getOneUser.setData(
+                {userId: id },
+                prev => {
+                    if (!prev) return;
+                    return { ...prev, status: 'pending' }
+                }
+            )
+
+            toast.error("Could not undo request at this time.")
+        },
+
+        onSuccess: () => toast.success("Follow request undone!"),
+        onSettled: async () => await apiUtils.users.getOneUser.invalidate({ userId: id }),
+    })
 
     if (!data && isSuccess) {
         return (
@@ -98,16 +132,19 @@ const AccountPage: NextPage = () => {
                     <div className="w-full px-5 max-w-screen-lg md:w-10/12">
                         {!data.status && (
                             <div className="flex flex-col gap-3">
-                                <p className="text-lg">You don&apos;t follow this person yet!</p>
+                                <p className="text-xl font-semibold text-center">You don&apos;t follow this person yet!</p>
                                 <Button variant="filled" onClick={() => sendFollowRequest({ followingId: data.id })}>
                                     Send Follow Request
                                 </Button>
                             </div>
                         )}
                         {data.status === 'pending' && (
-                            <Button disabled>
-                                Follow Request Pending
-                            </Button>
+                            <>
+                                <p className="text-xl font-semibold text-center mb-5">Follow Request Sent!</p>
+                                <Button onClick={() => removeFollowRequest({ followingId: data.id, followerId: currentUser.id })}>
+                                    Undo Request
+                                </Button>
+                            </>
                         )}
                         {data.status === 'denied' && <p>Your follow request was denied.</p>}
                         {(data.status === 'accepted' || data.status === 'self') && (
@@ -139,6 +176,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     }
 
     return {
-        props: {}
+        props: {
+            currentUser: session.user
+        }
     }
 }
