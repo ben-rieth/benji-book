@@ -28,17 +28,23 @@ const commentRouter = createTRPCRouter({
             newText: z.string(),
         }))
         .mutation(async ({ input, ctx }) => {
-            const { count } = await ctx.prisma.comment.updateMany({
+
+            const comment = await ctx.prisma.comment.findUnique({
+                where: { id: input.commentId }
+            });
+
+            if (!comment) throw new TRPCError({ code: "NOT_FOUND" })
+
+            if (comment.authorId !== ctx.session.user.id) {
+                throw new TRPCError({ code: "FORBIDDEN" })
+            }
+
+            await ctx.prisma.comment.update({
                 where: { 
                     id: input.commentId,
-                    authorId: ctx.session.user.id,
                 },
                 data: { text: input.newText }
             });
-
-            if (count === 0) {
-                throw new TRPCError({ code: 'UNAUTHORIZED' })
-            }
         }
     ),
 
