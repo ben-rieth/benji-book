@@ -12,6 +12,7 @@ import { api } from "../../utils/api";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import UpdatePost from "./UpdatePost";
+import classNames from "classnames";
 
 type PostProps = {
     post: PostType & {
@@ -19,9 +20,10 @@ type PostProps = {
         likedBy: Likes[] };
     containerClasses?: string;
     changeLike: (liked: boolean) => void;
+    linkToPostPage?: boolean
 }
 
-const Post : FC<PostProps> = ({ post, containerClasses="", changeLike }) => {
+const Post : FC<PostProps> = ({ post, containerClasses="", changeLike, linkToPostPage=false }) => {
     
     let deleteToastId : string | undefined;
     const { data: session } = useSession();
@@ -75,15 +77,34 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike }) => {
                 }
             </div>
             <div className="aspect-square w-full relative">
-                <Image 
-                    src={post.image as string}
-                    alt="Post Image"
-                    fill
-                    priority
-                    className="object-cover"
-                    placeholder={post.placeholder ? "blur" : "empty"}
-                    blurDataURL={post.placeholder as string}
-                />
+                {linkToPostPage ? (
+                    <Link href={`/posts/${post.id}`} className="w-full">
+                        <Image 
+                            src={post.image as string}
+                            alt="Post Image"
+                            fill
+                            priority
+                            className={classNames(
+                                "object-cover"
+                            )}
+                            placeholder={post.placeholder ? "blur" : "empty"}
+                            blurDataURL={post.placeholder as string}
+                        />
+                    </Link>
+                ) : (
+                    <Image 
+                        src={post.image as string}
+                        alt="Post Image"
+                        fill
+                        priority
+                        className={classNames(
+                            "object-cover"
+                        )}
+                        placeholder={post.placeholder ? "blur" : "empty"}
+                        blurDataURL={post.placeholder as string}
+                    />
+                )}
+                
                 <div className="absolute bg-white p-3 bottom-0 right-0 rounded-tl-xl">
                     {!!post.likedBy.find(like => like.userId === session?.user?.id) ? (
                         <BsHeartFill 

@@ -71,8 +71,10 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
                             <>
                                 {group.posts.map(post => (
                                     <Post 
+                                        key={post.id}
                                         post={post} 
-                                        key={post.id} containerClasses="w-full max-w-xl" 
+                                        linkToPostPage
+                                        containerClasses="w-full max-w-xl" 
                                         changeLike={(liked) => mutate({ postId: post.id, liked })}
                                     />
                                 ))}
