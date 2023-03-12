@@ -9,9 +9,10 @@ import DeleteComment from './DeleteComment';
 
 type CommentCardProps = {
     comment: Comment & { author: User | null };
+    postAuthor: string;
 }
 
-const CommentCard : FC<CommentCardProps> = ({ comment }) => {
+const CommentCard : FC<CommentCardProps> = ({ comment, postAuthor }) => {
 
     const { data: session } = useSession();
 
@@ -39,7 +40,7 @@ const CommentCard : FC<CommentCardProps> = ({ comment }) => {
 
             <div className="flex gap-3 absolute top-2 right-2">
                 {session?.user?.id === comment.authorId && <UpdateComment comment={comment} />}
-                {(session?.user?.id === comment.authorId) && <DeleteComment comment={comment} />}
+                {(session?.user?.id === comment.authorId || session?.user?.id === postAuthor) && <DeleteComment comment={comment} />}
             </div>
         </div>
     )

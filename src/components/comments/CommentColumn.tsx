@@ -10,7 +10,7 @@ type CommentColumnProps = {
 
 const CommentColumn: FC<CommentColumnProps> = ({ postId }) => {
     
-    const { data: comments, isSuccess, isLoading } = api.comments.getAllComments.useQuery({ postId });
+    const { data, isSuccess, isLoading } = api.comments.getAllComments.useQuery({ postId });
     const [animateRef] = useAutoAnimate();
 
     return (
@@ -19,8 +19,8 @@ const CommentColumn: FC<CommentColumnProps> = ({ postId }) => {
                 <>
                     <p className="md:hidden">Comments</p>
                     <AddComment />
-                    {comments.map((comment) => (
-                        <CommentCard comment={comment} key={comment.id} />
+                    {data.comments.map((comment) => (
+                        <CommentCard comment={comment} key={comment.id} postAuthor={data.postAuthor} />
                     ))}
                 </>
                 

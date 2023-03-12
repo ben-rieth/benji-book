@@ -15,14 +15,6 @@ const DeleteComment: FC<DeleteCommentProps> = ({ comment }) => {
     const { mutate: deleteComment } = api.comments.deleteComment.useMutation({
         onMutate: async () => {
             await apiUtils.comments.getAllComments.cancel();
-
-            apiUtils.comments.getAllComments.setData(
-                {postId: comment.postId },
-                prev => {
-                    if (!prev) return;
-                    return prev.filter(item => item.id !== comment.postId)
-                }
-            )
         },
         onSuccess: () => toast.success("Comment deleted!"),
         onError: () => toast.error("Could not delete comment."),

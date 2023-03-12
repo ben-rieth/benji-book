@@ -47,9 +47,27 @@ const commentRouter = createTRPCRouter({
             commentId: z.string().cuid(),
         }))
         .mutation(async ({ input, ctx }) => {
+
+            const comment = await ctx.prisma.comment.findUnique({
+                where: { id: input.commentId },
+                include: {
+                    post: {
+                        select: {
+                            authorId: true,
+                        }
+                    }
+                }
+            });
+
+            if (!comment) throw new TRPCError({ code: "NOT_FOUND" })
+
+            if (comment.authorId !== ctx.session.user.id && comment.post.authorId !== ctx.session.user.id) {
+                throw new TRPCError({ code: "FORBIDDEN" })
+            }
+
             await ctx.prisma.comment.delete({
                 where: {
-                    id: input.commentId
+                    id: input.commentId,
                 }
             })
         }
@@ -74,11 +92,15 @@ const commentRouter = createTRPCRouter({
                 }),
             ]);
 
-            if (post.authorId === ctx.session.user.id) return comments;
-
             if (!post) {
                 throw new TRPCError({ code: 'NOT_FOUND'});
             }
+
+            if (post.authorId === ctx.session.user.id) 
+                return {
+                    comments,
+                    postAuthor: post.authorId
+                };
 
             const relationship = await ctx.prisma.follows.findUnique({
                 where: {
@@ -96,7 +118,10 @@ const commentRouter = createTRPCRouter({
                 throw new TRPCError({ code: 'FORBIDDEN' })
             }
 
-            return comments;
+            return {
+                comments,
+                postAuthor: post.authorId
+            };
         })
 });
 
