@@ -2,6 +2,16 @@ import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import type { FullUser, PrivateUser, Self } from '../../../types/User';
 
+import { v2 as cloudinary } from 'cloudinary';
+import { env } from "../../../env.mjs";
+import { TRPCError } from '@trpc/server';
+
+cloudinary.config({
+    cloud_name: env.CLOUDINARY_CLOUD_NAME,
+    api_key: env.CLOUDINARY_API_KEY,
+    api_secret: env.CLOUDINARY_API_SECRET,
+});
+
 const userRouter = createTRPCRouter({
     getAllUsers: protectedProcedure
         .input(z.object({
@@ -212,6 +222,27 @@ const userRouter = createTRPCRouter({
 
         }
     ),
+
+    updateAvatar: protectedProcedure
+        .input(z.object({
+            userId: z.string(),
+            image: z.string(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+
+            try {
+                const res = await cloudinary.uploader.upload(input.image, { public_id: `${input.userId}-avatar`, overwrite: true });
+                // const { base64 } = await getPlaiceholder(res.secure_url);
+                await ctx.prisma.user.update({
+                    where: { id: input.userId },
+                    data: {
+                        image: res.secure_url
+                    }
+                });
+            } catch (err) {
+                throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
+            }
+        })
 });
 
 export default userRouter;

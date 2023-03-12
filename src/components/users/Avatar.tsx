@@ -11,7 +11,7 @@ const Avatar:FC<AvatarProps> = ({ url, className="" }) => {
     if (url) {
         return (
             <div className={classNames("relative aspect-square", className)}>
-                <Image src={url} fill alt="profile pic" className="object-contain rounded-full" />
+                <Image src={url} fill alt="profile pic" className="object-cover rounded-full" />
             </div>
         )
     }

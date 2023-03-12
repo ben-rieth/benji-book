@@ -7,10 +7,16 @@ import Webcam from 'react-webcam';
 
 type ImageUploadProps = {
     onChange: (file: File) => void;
+    imageValue: File | null;
+    rounded?: boolean;
 }
 
-const ImageUpload: FC<ImageUploadProps> = ({ onChange }) => {
-    const [previewImage, setPreviewImage] = useState("");
+const ImageUpload: FC<ImageUploadProps> = ({ onChange, imageValue, rounded=false }) => {
+    const [previewImage, setPreviewImage] = useState<string>(() => {
+        if (imageValue) return URL.createObjectURL(imageValue as Blob);
+        return ""
+    });
+
     const [webcamOpen, setWebcamOpen] = useState<boolean>(false);
     const fileInputRef: MutableRefObject<HTMLInputElement | null> = useRef(null);
     const webcamRef: MutableRefObject<Webcam | null> = useRef(null);
@@ -32,7 +38,8 @@ const ImageUpload: FC<ImageUploadProps> = ({ onChange }) => {
         <div>
             <div
                 className={classNames(
-                    "flex items-center justify-center w-full h-auto aspect-square bg-white cursor-pointer border-4 border-dashed rounded-lg overflow-hidden mb-3",
+                    "flex items-center justify-center w-full h-auto aspect-square bg-white cursor-pointer border-4 border-dashed overflow-hidden mb-3",
+                    { "rounded-full": rounded, "rounded-lg" : !rounded }
                 )}
                 onDragOver={e => e.preventDefault()}
                 onDrop={e => {
