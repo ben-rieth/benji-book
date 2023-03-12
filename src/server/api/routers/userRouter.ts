@@ -242,7 +242,7 @@ const userRouter = createTRPCRouter({
             } catch (err) {
                 throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
             }
-        })
+        }),
 });
 
 export default userRouter;

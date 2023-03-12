@@ -64,6 +64,17 @@ model Likes {
     @@id([userId, postId])
 }
 
+model Notification {
+    id          String @id @default(cuid())
+
+    subjectType String
+    subjectId   String
+    text        String?
+
+    userId      String
+    user        User @relation(fields: [userId], references: [id])
+}
+
 model User {
     id            String    @id @default(cuid()) 
     email         String?   @unique
@@ -88,6 +99,8 @@ model User {
 
     followedBy    Follows[] @relation("following")
     following     Follows[] @relation("follower")
+
+    notifcations  Notification[]
 }
 
 model Account {
