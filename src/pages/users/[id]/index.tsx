@@ -121,30 +121,32 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                         <UpdateProfileForm user={data} />
                                     </div>)
                                 }
+
+                                {(data.status === 'self' || data.status === 'accepted') && (
+                                    <div className="flex gap-5 w-fit -ml-2">
+                                        <Link href={`/users/${data.id}/follows`}>
+                                            <Button variant="minimal" propagate>
+                                                {data._count.following} Following
+                                            </Button>
+                                        </Link>
+                                        <Link href={`/users/${data.id}/followers`}>
+                                            <Button variant="minimal" propagate>
+                                                {data._count.followedBy} Followers
+                                            </Button>
+                                        </Link>
+                                        {data.status === 'self' && (
+                                            <Link href={`/users/${data.id}/requests`}>
+                                                <Button variant="minimal" propagate>
+                                                    {data._count.requests} Requests
+                                                </Button>
+                                            </Link>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
-                        {(data.status === 'self' || data.status === 'accepted') && (
-                            <div className="flex justify-center gap-10 w-full md:justify-start md:px-3.5">
-                                <Link href={`/users/${data.id}/follows`}>
-                                    <Button variant="minimal" propagate>
-                                        {data._count.following} Following
-                                    </Button>
-                                </Link>
-                                <Link href={`/users/${data.id}/followers`}>
-                                    <Button variant="minimal" propagate>
-                                        {data._count.followedBy} Followers
-                                    </Button>
-                                </Link>
-                                {data.status === 'self' && (
-                                    <Link href={`/users/${data.id}/requests`}>
-                                        <Button variant="minimal" propagate>
-                                            {data._count.requests} Requests
-                                        </Button>
-                                    </Link>
-                                )}
-                            </div>
-                        )}
+                        
                     </header>
 
                     <div className="w-full px-5 max-w-screen-lg md:w-10/12">

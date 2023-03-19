@@ -1,3 +1,4 @@
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -18,6 +19,8 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
     const router = useRouter();
     const queries = router.query;
     const id = queries.id as string;
+
+    const [animateRef] = useAutoAnimate();
 
     const { data: user, isSuccess, isLoading, isError } = api.users.getOneUser.useQuery({ userId: id })
 
@@ -61,7 +64,10 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
                             )}
                         </div>
                     </header>
-                    <section className="flex flex-col gap-2 items-center w-full px-10 max-w-screen-md">
+                    <section 
+                        className="flex flex-col gap-2 items-center w-full px-10 max-w-screen-md"
+                        ref={animateRef}
+                    >
                         {children}
                     </section>
                 </div>
