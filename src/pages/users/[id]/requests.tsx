@@ -1,6 +1,5 @@
 import type { NextPage, GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import ErrorBox from "../../../components/error/ErrorBox";
 import MainLayout from "../../../components/layouts/MainLayout";
@@ -31,11 +30,10 @@ const RequestsPage: NextPage = () => {
             <>
                 <h2 className="text-2xl font-semibold">Requested to Follow</h2>
                 {data?.map(relation => (
-                    <Link href={`/users/${relation.following.id}`} key={relation.following.id} className="w-full ">
-                        <UserCard 
-                            user={relation.following}
-                        />
-                    </Link>
+                    <UserCard 
+                        key={relation.following.id}
+                        user={relation.following}
+                    />
                 ))}
             </>
         </RelationPageLayout>

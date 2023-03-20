@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { type FC } from "react";
 import Button from "../general/Button";
 import Avatar from "./Avatar";
@@ -28,14 +29,14 @@ const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
     const { data: session } = useSession();
 
     return (
-        <article className="group bg-white shadow-md rounded-lg p-3 w-full flex flex-row items-center justify-between">
-            <div className="flex flex-row gap-4 items-center">
+        <article className="group bg-white shadow-md rounded-lg p-3 w-full flex flex-row items-center">
+            <Link href={`/users/${user.id}`} className="flex flex-row gap-4 items-center flex-grow">
                 <Avatar url={user.image} className="w-16 h-16" />
                 <div className="flex flex-col">
                     <p className="text-lg group-hover:text-sky-500">{user.firstName} {user.lastName}</p>
                     <p className="text-sm text-slate-300">@{user.username}</p>
                 </div>
-            </div>
+            </Link>
             {user.followedBy && (
                 <div className={classNames("flex items-center justify-center w-28", { "hidden": user.id === session?.user?.id})}>
                     {!followStatus && (

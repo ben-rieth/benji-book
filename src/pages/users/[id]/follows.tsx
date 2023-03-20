@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import RelationPageLayout from "../../../components/layouts/RelationPageLayout";
@@ -54,12 +53,11 @@ const FollowingPage: NextPage = () => {
             <>
                 <h2 className="text-2xl font-semibold">Following</h2>
                 {data?.map(relation => (
-                    <Link href={`/users/${relation.following.id}`} key={relation.following.id} className="w-full ">
-                        <UserCard 
-                            user={relation.following} 
-                            onFollowRequest={() => sendFollowRequest({ followingId: relation.following.id })} 
-                        />
-                    </Link>
+                    <UserCard 
+                        key={relation.following.id}
+                        user={relation.following} 
+                        onFollowRequest={() => sendFollowRequest({ followingId: relation.following.id })} 
+                    />
                 ))}
             </>
         </RelationPageLayout>

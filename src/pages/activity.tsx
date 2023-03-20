@@ -11,11 +11,11 @@ const ActivityPage: NextPage = () => {
 
     return (
         <MainLayout title="Benji Book" description="Recent activity with your profile.">
-            <div className="flex flex-col gap-5 max-w-screen-sm mx-auto mt-10">
+            <div className="flex flex-col gap-5 max-w-screen-sm mx-auto mt-10 px-5">
                 <section className="w-full">
                     <h2 className="text-2xl font-semibold text-center mb-5">Follow Requests</h2>
                     {isSuccess && data.map(item => (
-                        <RequestCard user={item.follower} key={item.follower.id} />
+                        <RequestCard user={item.follower} key={item.follower.id}/>
                     ))}
                 </section>
 

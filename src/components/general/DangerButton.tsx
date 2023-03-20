@@ -11,7 +11,7 @@ type DangerButtonProps = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-const DangerButton:FC<DangerButtonProps> = ({ onClick=() => {}, children, type, disabled, variant="filled"}) => {
+const DangerButton:FC<DangerButtonProps> = ({ onClick=() => {}, children, type, disabled, variant="filled" }) => {
     const buttonClasses = classNames(
         "py-2 px-2 w-full mx-auto",
         "flex flex-row items-center justify-center gap-2",
@@ -26,7 +26,7 @@ const DangerButton:FC<DangerButtonProps> = ({ onClick=() => {}, children, type, 
             'hover:text-red-600': variant === 'minimal' && !disabled,
         },
     );
-    
+
     return (
         <Alert 
             title="Are you sure?"

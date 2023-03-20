@@ -106,7 +106,7 @@ const followsRouter = createTRPCRouter({
             followingId: z.string().cuid(),
             newStatus: z.enum(['accepted', 'denied'])
         }))
-        .query(async ({ input, ctx }) => {
+        .mutation(async ({ input, ctx }) => {
             
             if (input.followingId !== ctx.session.user.id) {
                 return;
