@@ -41,27 +41,26 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
                                 <Link href={`/users/${user.id}`}>
                                     <h1 className="font-semibold text-4xl mb-2 hover:underline">{user?.firstName} {user?.lastName}</h1>
                                 </Link>
+                                <div className="flex gap-5 w-fit -ml-2">
+                                    <Link href={`/users/${user.id}/follows`}>
+                                        <Button variant="minimal" propagate>
+                                            {user?._count.following} Following
+                                        </Button>
+                                    </Link>
+                                    <Link href={`/users/${user.id}/followers`}>
+                                        <Button variant="minimal" propagate>
+                                            {user?._count.followedBy} Followers
+                                        </Button>
+                                    </Link>
+                                    {user.status === 'self' && (
+                                        <Link href={`/users/${user.id}/requests`}>
+                                            <Button variant="minimal" propagate>
+                                                {user._count.requests} Requests
+                                            </Button>
+                                        </Link>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="flex justify-center gap-10 w-full md:justify-start md:px-3.5">
-                            <Link href={`/users/${user.id}/follows`}>
-                                <Button variant="minimal" propagate>
-                                    {user?._count.following} Following
-                                </Button>
-                            </Link>
-                            <Link href={`/users/${user.id}/followers`}>
-                                <Button variant="minimal" propagate>
-                                    {user?._count.followedBy} Followers
-                                </Button>
-                            </Link>
-                            {user.status === 'self' && (
-                                <Link href={`/users/${user.id}/requests`}>
-                                    <Button variant="minimal" propagate>
-                                        {user._count.requests} Requests
-                                    </Button>
-                                </Link>
-                            )}
                         </div>
                     </header>
                     <section 

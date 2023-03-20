@@ -258,7 +258,17 @@ const followsRouter = createTRPCRouter({
                         },
                     }
                 })
-            }) 
+            }),
+
+        getReceivedRequests: protectedProcedure
+            .query(({ ctx }) => {
+                return ctx.prisma.follows.findMany({
+                    where: {
+                        followingId: ctx.session.user.id,
+                        status: 'pending',
+                    },
+                });
+            })
 });
 
 export default followsRouter;
