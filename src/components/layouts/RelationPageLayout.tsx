@@ -43,18 +43,18 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
                                 </Link>
                                 <div className="flex gap-5 w-fit -ml-2">
                                     <Link href={`/users/${user.id}/follows`}>
-                                        <Button variant="minimal" propagate>
+                                        <Button variant="minimal" >
                                             {user?._count.following} Following
                                         </Button>
                                     </Link>
                                     <Link href={`/users/${user.id}/followers`}>
-                                        <Button variant="minimal" propagate>
+                                        <Button variant="minimal" >
                                             {user?._count.followedBy} Followers
                                         </Button>
                                     </Link>
                                     {user.status === 'self' && (
                                         <Link href={`/users/${user.id}/requests`}>
-                                            <Button variant="minimal" propagate>
+                                            <Button variant="minimal" >
                                                 {user._count.requests} Requests
                                             </Button>
                                         </Link>

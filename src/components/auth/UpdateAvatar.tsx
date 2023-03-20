@@ -92,7 +92,7 @@ const UpdateAvatar: FC<UpdateAvatarProps> = ({ avatar, userId }) => {
                         
                         <hr className="my-5" />
                         
-                        <Button propagate type="submit">
+                        <Button type="submit">
                             Update Avatar
                         </Button>
                     </Form>

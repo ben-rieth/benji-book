@@ -7,17 +7,11 @@ type ButtonProps = {
     type?: 'button' | 'submit' | 'reset'
     disabled?: boolean
     variant?: "filled" | "outline" | "minimal"
-    propagate?: boolean
 }
 
-const Button: FC<ButtonProps> = ({ onClick, children, type, disabled, variant="filled", propagate=false}) => {
+const Button: FC<ButtonProps> = ({ onClick, children, type, disabled, variant="filled"}) => {
     
-    const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {
-        if (!propagate) {
-            e.stopPropagation();
-            e.preventDefault();
-        }
-        
+    const handleClick: MouseEventHandler<HTMLButtonElement> = () => { 
         if (onClick) onClick();
     }
 

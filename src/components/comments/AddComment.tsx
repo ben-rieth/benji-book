@@ -19,38 +19,11 @@ const AddComment = () => {
     const apiUtils = api.useContext();
 
     const { mutateAsync } = api.comments.leaveComment.useMutation({
-        onMutate: async (values) => {
+        onMutate: async () => {
             await apiUtils.comments.getAllComments.cancel();
-
-            apiUtils.comments.getAllComments.setData(
-                { postId }, 
-                prev => {
-                    if (!prev) return;
-                    return [
-                        ...prev,
-                        { 
-                            postId: values.postId,
-                            text: values.commentText,
-                            authorId: session?.user?.id,
-                            id: 'dummy-id-for-now',
-                            author: { ...session?.user },
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                        } as Comment & { author: User | null },
-                    ];
-                }
-            );
         },
 
         onError: () => {
-            apiUtils.comments.getAllComments.setData(
-                { postId },
-                prev => {
-                    if (!prev) return;
-                    return prev.filter((comment) => comment.id !== 'dummy-id-for-now');
-                }
-            );
-
             toast.error("Could not leave comment. Try again.");
         },
 

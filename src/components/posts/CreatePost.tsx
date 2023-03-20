@@ -75,7 +75,7 @@ const CreatePost = () => {
                         label="Post Text"
                         placeholder="Tell Your Story"
                     />
-                    <Button variant="filled" type="submit" propagate>
+                    <Button variant="filled" type="submit" >
                         Post
                     </Button>
                 </Form>

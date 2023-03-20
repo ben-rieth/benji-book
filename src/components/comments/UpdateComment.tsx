@@ -64,7 +64,7 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
                             placeholder="Update Comment"
                         />
 
-                        <Button variant="filled" type="submit" propagate>
+                        <Button variant="filled" type="submit" >
                             Update Comment
                         </Button>
                     </Form>

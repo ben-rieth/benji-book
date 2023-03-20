@@ -94,7 +94,7 @@ const NavBar = () => {
                     <NavigationMenu.Item>
                         <NavigationMenu.Link asChild>
                             <Link href={`/activity`}>
-                                <Button variant="minimal" propagate>Recent Activity</Button>
+                                <Button variant="minimal" >Recent Activity</Button>
                             </Link>
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
@@ -102,7 +102,7 @@ const NavBar = () => {
                     <NavigationMenu.Item>
                         <NavigationMenu.Link asChild>
                             <Link href={`/posts/create`}>
-                                <Button variant="minimal" propagate>Create Post</Button>
+                                <Button variant="minimal" >Create Post</Button>
                             </Link>
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
@@ -110,7 +110,7 @@ const NavBar = () => {
                     <NavigationMenu.Item>
                         <NavigationMenu.Link asChild>
                             <Link href={`/users/`}>
-                                <Button variant="minimal" propagate>Search Users</Button>
+                                <Button variant="minimal" >Search Users</Button>
                             </Link>
                         </NavigationMenu.Link>
                     </NavigationMenu.Item>
