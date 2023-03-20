@@ -19,22 +19,8 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
 
     const apiUtils = api.useContext();
     const { mutate: updateComment } = api.comments.updateComment.useMutation({
-        onMutate: async (values) => {
+        onMutate: async () => {
             await apiUtils.comments.getAllComments.cancel();
-
-            apiUtils.comments.getAllComments.setData(
-                { postId: comment.postId }, 
-                prev => {
-                    if (!prev) return;
-                    return prev.map(item => {
-                        if (item.id !== comment.id) return item;
-                        else return {
-                            ...item,
-                            text: values.newText,
-                        }
-                    });
-                }
-            );
         },
         onSuccess: () => toast.success("Comment updated!"),
         onError: () => toast.error("Could not update comment."),

@@ -5,25 +5,6 @@ import { prisma } from "../../db";
 
 const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
     return Promise.all([
-        // prisma.user.findUnique({
-        //     where: { id: inputUserId },
-        //     include: {
-        //         _count: {
-        //             select: { 
-        //                 followedBy: {
-        //                     where: {
-        //                         status: 'accepted'
-        //                     }
-        //                 },
-        //                 following: {
-        //                     where: {
-        //                         status: 'accepted'
-        //                     }
-        //                 },
-        //             },
-        //         },
-        //     },
-        // }),
         prisma.follows.findMany({
             where: {
                 followingId: inputUserId,
@@ -54,25 +35,6 @@ const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
 
 const getUserAndFollowing = (inputUserId: string, currentUserId?: string) => {
     return Promise.all([
-        // prisma.user.findUnique({
-        //     where: { id: inputUserId },
-        //     include: {
-        //         _count: {
-        //             select: { 
-        //                 followedBy: {
-        //                     where: {
-        //                         status: 'accepted'
-        //                     }
-        //                 },
-        //                 following: {
-        //                     where: {
-        //                         status: 'accepted'
-        //                     }
-        //                 },
-        //             },
-        //         },
-        //     },
-        // }),
         prisma.follows.findMany({
             where: {
                 followerId: inputUserId,
@@ -267,6 +229,17 @@ const followsRouter = createTRPCRouter({
                         followingId: ctx.session.user.id,
                         status: 'pending',
                     },
+                    select: {
+                        follower: {
+                            select: {
+                                firstName: true,
+                                lastName: true,
+                                username: true,
+                                image: true,
+                                id: true,
+                            }
+                        }
+                    }
                 });
             })
 });

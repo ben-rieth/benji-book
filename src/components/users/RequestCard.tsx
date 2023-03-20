@@ -23,12 +23,14 @@ const RequestCard: FC<RequestCardProps> = ({ user }) => {
                     <p className="text-sm text-slate-300">@{user.username}</p>
                 </div>
             </div>
-            <Button variant="filled" onClick={() => console.log("Pressed")}>
-                Accept
-            </Button>
-            <DangerButton onClick={() => console.log("Danger!")}>
-                Deny
-            </DangerButton>
+            <div className="flex gap-5">
+                <Button variant="filled" onClick={() => console.log("Pressed")}>
+                    Accept
+                </Button>
+                <DangerButton onClick={() => console.log("Danger!")}>
+                    Deny
+                </DangerButton>
+            </div>
         </article>
     )
 }
