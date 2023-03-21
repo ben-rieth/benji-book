@@ -31,16 +31,20 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
 
     const { mutateAsync: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({ 
         onMutate: () => apiUtils.users.getOneUser.cancel(),
-        onSuccess: () => toast.error("Follow request sent!"),
+        onSuccess: () => toast.success("Follow request sent!"),
         onError: () => toast.error("Cannot send follow request"),
         onSettled: () => apiUtils.users.getOneUser.invalidate({ userId: id })
     });
 
     const { mutate: removeFollowRequest } = api.follows.deleteFollowRequest.useMutation({
-        onMutate: () => apiUtils.users.getOneUser.cancel(),
+        onMutate: async () => {
+            await apiUtils.users.getOneUser.cancel();
+        },
         onError: () => toast.error("Could not undo request at this time."),
         onSuccess: () => toast.success("Follow request undone!"),
-        onSettled: async () => await apiUtils.users.getOneUser.invalidate({ userId: id }),
+        onSettled: async () => {
+            await apiUtils.users.getOneUser.invalidate({ userId: id })
+        },
     })
 
     if (!data && isSuccess) {

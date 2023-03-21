@@ -169,11 +169,11 @@ const userRouter = createTRPCRouter({
 
             if (relationship?.status === 'pending') 
                 return user ? 
-                    { ...user, status: 'pending', statusUpdatedAt: relationship.updatedAt as Date } 
+                    { ...user, status: 'pending', statusUpdatedAt: relationship.updatedAt } 
                     : null;
             if (relationship?.status === 'denied') 
                 return user ? 
-                    { ...user, status: 'denied', statusUpdatedAt: relationship.updatedAt as Date } 
+                    { ...user, status: 'denied', statusUpdatedAt: relationship.updatedAt } 
                     : null;
             
             return user ? { ...user, status: null, statusUpdatedAt: null } : null;
@@ -250,6 +250,37 @@ const userRouter = createTRPCRouter({
                 throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
             }
         }),
+
+    getLikes: protectedProcedure
+        .query(({ ctx }) => {
+            return ctx.prisma.likes.findMany({
+                where: {
+                    post: {
+                        authorId: ctx.session.user.id,
+                    }
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                },
+                take: 50,
+                select: {
+                    createdAt: true,
+                    user: {
+                        select: {
+                            username: true,
+                            id: true,
+                        }
+                    },
+                    post: {
+                        select: {
+                            placeholder: true,
+                            id: true,
+                            image: true,
+                        }
+                    }
+                },
+            })
+        })
 });
 
 export default userRouter;
