@@ -69,8 +69,17 @@ const followsRouter = createTRPCRouter({
             followingId: z.string().cuid(),
         }))
         .mutation(async ({ input, ctx }) => {
-            await ctx.prisma.follows.create({
-                data: {
+            await ctx.prisma.follows.upsert({
+                where: {
+                    followerId_followingId: {
+                        followerId: ctx.session.user.id,
+                        followingId: input.followingId,
+                    }
+                },
+                update: {
+                    status: 'pending',
+                },
+                create: {
                     followerId: ctx.session.user.id,
                     followingId: input.followingId,
                     status: 'pending',
@@ -109,9 +118,11 @@ const followsRouter = createTRPCRouter({
         .mutation(async ({ input, ctx }) => {
             
             if (input.followingId !== ctx.session.user.id) {
-                return;
+                throw new TRPCError({ code: 'FORBIDDEN' })
             }
 
+            // if (input.newStatus === 'accepted') {
+                // set status to accepted if 
             await ctx.prisma.follows.update({
                 where: {
                     followerId_followingId: {
@@ -122,10 +133,22 @@ const followsRouter = createTRPCRouter({
                 data: {
                     status: input.newStatus,
                 }
-            })
+            });
+            // } else {
+            //     // delete follows record if the user denies the request
+            //     await ctx.prisma.follows.delete({
+            //         where: {
+            //             followerId_followingId: {
+            //                 followerId: input.followerId,
+            //                 followingId: input.followingId,
+            //             }
+            //         },
+            //     });
+            // }
 
         }
     ),
+
 
     getFollowers: protectedProcedure
         .input(z.object({

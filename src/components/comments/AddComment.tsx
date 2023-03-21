@@ -4,14 +4,11 @@ import  {FaPaperPlane} from 'react-icons/fa';
 import Button from "../general/Button";
 import { api } from "../../utils/api";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-import type { Comment, User } from "@prisma/client";
 import { toast } from "react-hot-toast";
 
 const AddComment = () => {
 
     const [comment, setComment] = useState<string>('');
-    const { data: session } = useSession();
     
     const router = useRouter();
     const postId = router.query.id as string;
