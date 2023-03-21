@@ -8,10 +8,23 @@ type DangerButtonProps = {
     type?: 'button' | 'submit' | 'reset'
     disabled?: boolean
     variant?: "filled" | "outline" | "minimal"
+    alertTitle?: string;
+    alertDescription?: string;
+    alertActionLabel: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const DangerButton:FC<DangerButtonProps> = ({ onClick=() => {}, children, type, disabled, variant="filled" }) => {
+const DangerButton:FC<DangerButtonProps> = ({ 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onClick=() => {}, 
+    children, 
+    type, 
+    disabled, 
+    variant="filled",
+    alertTitle="Are you sure?",
+    alertDescription="This action cannot be undone",
+    alertActionLabel
+
+}) => {
     const buttonClasses = classNames(
         "py-2 px-2 w-full mx-auto",
         "flex flex-row items-center justify-center gap-2",
@@ -29,9 +42,9 @@ const DangerButton:FC<DangerButtonProps> = ({ onClick=() => {}, children, type, 
 
     return (
         <Alert 
-            title="Are you sure?"
-            description="This action cannot be undone."
-            actionLabel="Deny Request"
+            title={alertTitle}
+            description={alertDescription}
+            actionLabel={alertActionLabel}
             handleAction={onClick}
             trigger={
                 <button

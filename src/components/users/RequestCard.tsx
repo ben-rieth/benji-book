@@ -58,6 +58,9 @@ const RequestCard: FC<RequestCardProps> = ({ user }) => {
                     onClick={() => mutate(
                         { followerId: user.id, followingId: session?.user?.id as string, newStatus: 'denied' }
                     )}
+                    alertActionLabel="Deny Request"
+                    alertDescription={`@${user.username as string} will be able to send follow requests in the future even if this one is denied.`}
+                    alertTitle={`Are you sure you want to deny @${user.username as string}'s request?`}
                 >
                     Deny
                 </DangerButton>
