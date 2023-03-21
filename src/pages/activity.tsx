@@ -8,11 +8,12 @@ import RequestCard from "../components/users/RequestCard";
 import { authOptions } from "../server/auth";
 import { api } from "../utils/api";
 import * as Tabs from '@radix-ui/react-tabs';
+import Loader from "../components/general/Loader/Loader";
 
 const ActivityPage: NextPage = () => {
 
-    const { data: requestsData, isSuccess: isRequestsSuccess } = api.follows.getReceivedRequests.useQuery();
-    const { data: likesData, isSuccess: isLikesSuccess } = api.users.getLikes.useQuery();
+    const { data: requestsData, isSuccess: isRequestsSuccess, isLoading: isRequestsLoading } = api.follows.getReceivedRequests.useQuery();
+    const { data: likesData, isSuccess: isLikesSuccess, isLoading: isLikesLoading } = api.users.getLikes.useQuery();
 
     return (
         <MainLayout title="Benji Book" description="Recent activity with your profile.">
@@ -44,6 +45,9 @@ const ActivityPage: NextPage = () => {
                                 </Link>
                             </>
                         )}
+                        {isRequestsLoading && (
+                            <Loader text="Loading follow requests" />
+                        )}
                     </section>
                 </Tabs.Content>
                 <Tabs.Content value="likes">
@@ -68,6 +72,9 @@ const ActivityPage: NextPage = () => {
                                     </Button>
                                 </Link>
                             </>
+                        )}
+                        {isLikesLoading && (
+                            <Loader text="Loading recent likes on your posts" />
                         )}
                     </section>
                 </Tabs.Content>
