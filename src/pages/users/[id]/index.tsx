@@ -30,56 +30,15 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
     const { data, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: id })
 
     const { mutateAsync: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({ 
-        onMutate: async () => {
-            await apiUtils.users.getOneUser.cancel();
-            apiUtils.users.getOneUser.setData(
-                { userId: id }, 
-                prev => {
-                    if (!prev) return;
-                    return {...prev, status: 'pending'}
-                }
-            );
-        },
-
-        onError: () => {
-            apiUtils.users.getOneUser.setData(
-                {userId: id },
-                prev => {
-                    if (!prev) return;
-                    return { ...prev, status: null }
-                }
-            )
-        },
-
-        onSettled: async () => {
-            await apiUtils.users.getOneUser.invalidate({ userId: id })
-        }
+        onMutate: () => apiUtils.users.getOneUser.cancel(),
+        onSuccess: () => toast.error("Follow request sent!"),
+        onError: () => toast.error("Cannot send follow request"),
+        onSettled: () => apiUtils.users.getOneUser.invalidate({ userId: id })
     });
 
     const { mutate: removeFollowRequest } = api.follows.deleteFollowRequest.useMutation({
-        onMutate: async () => {
-            await apiUtils.users.getOneUser.cancel();
-            apiUtils.users.getOneUser.setData(
-                { userId: id }, 
-                prev => {
-                    if (!prev) return;
-                    return {...prev, status: null }
-                }
-            );
-        },
-
-        onError: () => {
-            apiUtils.users.getOneUser.setData(
-                {userId: id },
-                prev => {
-                    if (!prev) return;
-                    return { ...prev, status: 'pending' }
-                }
-            )
-
-            toast.error("Could not undo request at this time.")
-        },
-
+        onMutate: () => apiUtils.users.getOneUser.cancel(),
+        onError: () => toast.error("Could not undo request at this time."),
         onSuccess: () => toast.success("Follow request undone!"),
         onSettled: async () => await apiUtils.users.getOneUser.invalidate({ userId: id }),
     })
