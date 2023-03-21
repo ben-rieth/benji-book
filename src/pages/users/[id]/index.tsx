@@ -170,7 +170,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                         {data.status === 'denied' && isAfter(data.statusUpdatedAt as Date, addDays(new Date(), 7)) && (
                             <>
                                 <p className="text-xl text-center">Your follow request was denied.</p>
-                                <Button variant="filled">
+                                <Button variant="filled" onClick={() => sendFollowRequest({ followingId: data.id })}>
                                     Send Another Request
                                 </Button>
                             </>

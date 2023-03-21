@@ -169,7 +169,7 @@ const userRouter = createTRPCRouter({
 
             if (relationship?.status === 'pending') 
                 return user ? 
-                    { ...user, status: 'pending', statusUpdatedAt: relationship.updatedAt as Date} 
+                    { ...user, status: 'pending', statusUpdatedAt: relationship.updatedAt as Date } 
                     : null;
             if (relationship?.status === 'denied') 
                 return user ? 
