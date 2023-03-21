@@ -103,6 +103,7 @@ const userRouter = createTRPCRouter({
                 },
                 select: {
                     status: true,
+                    updatedAt: true,
                 }
             });
 
@@ -166,10 +167,16 @@ const userRouter = createTRPCRouter({
                 }
             });
 
-            if (relationship?.status === 'pending') return user ? { ...user, status: 'pending' } : null;
-            if (relationship?.status === 'denied') return user ? { ...user, status: 'denied' } : null;
+            if (relationship?.status === 'pending') 
+                return user ? 
+                    { ...user, status: 'pending', statusUpdatedAt: relationship.updatedAt as Date} 
+                    : null;
+            if (relationship?.status === 'denied') 
+                return user ? 
+                    { ...user, status: 'denied', statusUpdatedAt: relationship.updatedAt as Date } 
+                    : null;
             
-            return user ? { ...user, status: null } : null;
+            return user ? { ...user, status: null, statusUpdatedAt: null } : null;
         }
     ),
 

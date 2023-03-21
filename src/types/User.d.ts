@@ -29,6 +29,7 @@ type Self = User & {
 type PrivateUser = {
     id: string;
     status: "pending" | "denied" | null;
+    statusUpdatedAt: Date | null;
     username?: string | null;
     firstName?: string | null;
     lastName?: string | null;

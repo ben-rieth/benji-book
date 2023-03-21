@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { addDays, formatDistance, isAfter } from "date-fns";
 import type { GetServerSideProps} from "next";
 import { type NextPage } from "next";
 import type { User } from "next-auth";
@@ -166,12 +167,18 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 </Button>
                             </>
                         )}
-                        {data.status === 'denied' && (
+                        {data.status === 'denied' && isAfter(data.statusUpdatedAt as Date, addDays(new Date(), 7)) && (
                             <>
                                 <p className="text-xl text-center">Your follow request was denied.</p>
                                 <Button variant="filled">
                                     Send Another Request
                                 </Button>
+                            </>
+                        )}
+                        {data.status === 'denied' && !isAfter(data.statusUpdatedAt as Date, addDays(new Date(), 7)) && (
+                            <>
+                                <p className="text-xl text-center">Your follow request was denied.</p>
+                                <p className="text-center">You can send another request in {formatDistance(new Date(), addDays(data.statusUpdatedAt as Date, 7))}</p>
                             </>
                         )}
                         {(data.status === 'accepted' || data.status === 'self') && (
