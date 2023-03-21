@@ -166,7 +166,14 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 </Button>
                             </>
                         )}
-                        {data.status === 'denied' && <p>Your follow request was denied.</p>}
+                        {data.status === 'denied' && (
+                            <>
+                                <p className="text-xl text-center">Your follow request was denied.</p>
+                                <Button variant="filled">
+                                    Send Another Request
+                                </Button>
+                            </>
+                        )}
                         {(data.status === 'accepted' || data.status === 'self') && (
                             <section className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto gap-8 md:gap-4">
                                 {data.posts.map(post => (

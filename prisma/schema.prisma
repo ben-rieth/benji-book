@@ -51,6 +51,7 @@ model Follows {
     @@id([followerId, followingId])
 
     status String
+    updatedAt DateTime @updatedAt
 }
 
 model Likes {

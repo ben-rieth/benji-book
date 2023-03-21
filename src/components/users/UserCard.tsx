@@ -44,9 +44,14 @@ const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
                             Follow
                         </Button>
                     )}
-                    {(followStatus === 'pending' || followStatus === 'denied') && (
+                    {(followStatus === 'pending') && (
                         <Button variant="outline" disabled>
                             Pending
+                        </Button>
+                    )}
+                    {(followStatus === 'denied') && (
+                        <Button variant="outline" disabled>
+                            Denied
                         </Button>
                     )}
                     {followStatus === 'accepted' && (
