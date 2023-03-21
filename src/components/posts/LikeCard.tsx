@@ -15,7 +15,7 @@ type LikeCardProps = {
 const LikeCard: FC<LikeCardProps> = ({ postId, postImage, postPlaceholder, username, userId, createdAt }) => {
     return (
         <article className="group bg-white shadow-md rounded-lg p-3 w-full flex flex-row gap-5 items-center">
-            <Link href={`/posts/${postId}`} className="relative aspect-square w-24 hover:scale-105">
+            <Link href={`/posts/${postId}`} className="relative aspect-square w-16 hover:scale-105">
                 <Image 
                     src={postImage as string}
                     alt="Image for the post"
@@ -27,7 +27,7 @@ const LikeCard: FC<LikeCardProps> = ({ postId, postImage, postPlaceholder, usern
             </Link>
 
             <p>
-                <Link href={`/users/${userId}`} className="hover:underline">@{username}</Link> liked your post {formatDistance(createdAt, new Date())} ago.
+                <Link href={`/users/${userId}`} className="underline hover:text-sky-500">@{username}</Link> liked your post {formatDistance(createdAt, new Date())} ago.
             </p>
         </article>
     )
