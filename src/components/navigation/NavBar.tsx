@@ -25,7 +25,7 @@ const NavBar = () => {
 
     return (
         <nav className="flex justify-between items-center bg-white px-5 py-2">
-            <Logo />
+            <Logo link />
 
             {/* trigger is only visible between md screen size */}
             <div className="flex gap-5 md:hidden">
