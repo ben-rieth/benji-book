@@ -26,7 +26,7 @@ const LikeCard: FC<LikeCardProps> = ({ postId, postImage, postPlaceholder, usern
                 />
             </Link>
 
-            <p>
+            <p className="text-sm md:text-base">
                 <Link href={`/users/${userId}`} className="underline hover:text-sky-500">@{username}</Link> liked your post {formatDistance(createdAt, new Date())} ago.
             </p>
         </article>
