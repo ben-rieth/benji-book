@@ -9,6 +9,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import toast from "react-hot-toast";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
+import Loader from "../../components/general/Loader/Loader";
 
 type IndividualPostPageProps = {
     user: User;
@@ -74,7 +75,11 @@ const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user }) => {
             </MainLayout>
         )
     } else if (isLoading) {
-        return <p>Loading</p>
+        return (
+            <div className="w-full mt-5">
+                <Loader text="Loading post" />
+            </div>
+        )
     } else {
         return <p>Error</p>
     }

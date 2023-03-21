@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import UpdateAvatar from "../../../components/auth/UpdateAvatar";
 import UpdateProfileForm from "../../../components/auth/UpdateProfileForm";
 import Button from "../../../components/general/Button";
+import Loader from "../../../components/general/Loader/Loader";
 import MainLayout from "../../../components/layouts/MainLayout";
 import PostThumbnail from "../../../components/posts/PostThumbnail";
 import Avatar from "../../../components/users/Avatar";
@@ -56,7 +57,9 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
     return (
         <MainLayout title="Benji Book" description="A user page">
             {isLoading && (
-                <p>Loading</p>
+                <div className="w-full mt-10">
+                    <Loader text="Getting user info" />
+                </div>
             )}
             {data && isSuccess && (
                 <div className="flex flex-col items-center gap-5">

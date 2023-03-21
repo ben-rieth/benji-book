@@ -3,6 +3,7 @@ import { api } from "../../utils/api";
 import AddComment from './AddComment';
 import CommentCard from './CommentCard';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import Loader from "../general/Loader/Loader";
 
 type CommentColumnProps = {
     postId: string;
@@ -26,7 +27,7 @@ const CommentColumn: FC<CommentColumnProps> = ({ postId }) => {
                 
             )} 
             {isLoading && (
-                <p>Loading Comments</p>
+                <Loader text="Loading post" />
             )}
         </div>
     );

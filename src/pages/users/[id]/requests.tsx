@@ -7,13 +7,14 @@ import RelationPageLayout from "../../../components/layouts/RelationPageLayout";
 import UserCard from "../../../components/users/UserCard";
 import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
+import Loader from "../../../components/general/Loader/Loader";
 
 const RequestsPage: NextPage = () => {
     
     const router = useRouter();
     const userId = router.query.id as string;
 
-    const { data, isError } = api.follows.getRequests.useQuery({ userId});
+    const { data, isError, isLoading } = api.follows.getRequests.useQuery({ userId});
 
     if (isError) {
         return (
@@ -28,13 +29,20 @@ const RequestsPage: NextPage = () => {
     return (
         <RelationPageLayout>
             <>
-                <h2 className="text-2xl font-semibold">Requested to Follow</h2>
-                {data?.map(relation => (
-                    <UserCard 
-                        key={relation.following.id}
-                        user={relation.following}
-                    />
-                ))}
+                {data && (
+                    <>
+                        <h2 className="text-2xl font-semibold">Requested to Follow</h2>
+                        {data.map(relation => (
+                            <UserCard 
+                                key={relation.following.id}
+                                user={relation.following}
+                            />
+                        ))}
+                    </>
+                )}
+                {isLoading && (
+                    <Loader />
+                )}
             </>
         </RelationPageLayout>
     );

@@ -6,12 +6,13 @@ import RelationPageLayout from "../../../components/layouts/RelationPageLayout";
 import UserCard from "../../../components/users/UserCard";
 import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
+import Loader from "../../../components/general/Loader/Loader";
 
 const FollowingPage: NextPage = () => {
     const router = useRouter();
     const userId = router.query.id as string;
 
-    const { data } = api.follows.getFollowing.useQuery({ userId });
+    const { data, isLoading } = api.follows.getFollowing.useQuery({ userId });
 
     const apiUtils = api.useContext();
     const { mutate: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({
@@ -51,14 +52,21 @@ const FollowingPage: NextPage = () => {
     return (
         <RelationPageLayout>
             <>
-                <h2 className="text-2xl font-semibold">Following</h2>
-                {data?.map(relation => (
-                    <UserCard 
-                        key={relation.following.id}
-                        user={relation.following} 
-                        onFollowRequest={() => sendFollowRequest({ followingId: relation.following.id })} 
-                    />
-                ))}
+                {data && (
+                    <>
+                        <h2 className="text-2xl font-semibold">Following</h2>
+                        {data.map(relation => (
+                            <UserCard 
+                                key={relation.following.id}
+                                user={relation.following}
+                                onFollowRequest={() => sendFollowRequest({ followingId: relation.following.id })} 
+                            />
+                        ))}
+                    </>
+                )}
+                {isLoading && (
+                    <Loader />
+                )}
             </>
         </RelationPageLayout>
     )

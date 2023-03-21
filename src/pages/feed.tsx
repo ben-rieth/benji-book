@@ -3,6 +3,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { type User, getServerSession } from "next-auth";
 import toast from "react-hot-toast";
 import Button from "../components/general/Button";
+import Loader from "../components/general/Loader/Loader";
 import MainLayout from "../components/layouts/MainLayout";
 import Post from "../components/posts/Post";
 import { authOptions } from "../server/auth";
@@ -64,9 +65,9 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
 
     return (
         <MainLayout title="Feed" description="Posts from the people that you follow!">
-            <div className="flex flex-col items-center relative px-5 w-full">
+            <div className="flex flex-col items-center relative px-5 w-full mt-10 ">
                 {isSuccess && (
-                    <section className="flex flex-col items-center gap-5 mt-10 w-full">
+                    <section className="flex flex-col items-center gap-5 w-full">
                         {data.pages.map((group) => (
                             <>
                                 {group.posts.map(post => (
@@ -83,7 +84,7 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
                         {hasNextPage && <Button onClick={fetchNextPage}>Load More</Button>}
                     </section>
                 )}
-                {isLoading && <p>Loading</p>}
+                {isLoading && <Loader text="Getting Your Feed" />}
             </div>
         </MainLayout>
     );

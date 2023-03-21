@@ -7,10 +7,10 @@ import { authOptions } from "../../server/auth";
 import { api } from "../../utils/api";
 import { BiSearchAlt } from 'react-icons/bi';
 import useDebounce from "../../hooks/useDebounce";
-import { AiOutlineLoading } from "react-icons/ai";
 import ErrorBox from "../../components/error/ErrorBox";
 import MainLayout from "../../components/layouts/MainLayout";
 import { toast } from "react-hot-toast";
+import Loader from "../../components/general/Loader/Loader";
 
 const SearchUsersPage: NextPage = () => {
 
@@ -87,7 +87,7 @@ const SearchUsersPage: NextPage = () => {
                     <p className="text-center">Cannot find a user with a name or username containing: <span className="italic">{query}</span></p>
                 )}
                 {(isLoading) && (
-                    <AiOutlineLoading className="animate-spin w-14 h-14" />   
+                    <Loader text="Finding users" /> 
                 )}
                 {isError && (
                     <ErrorBox message="Cannot search due to server error. Try again later." />

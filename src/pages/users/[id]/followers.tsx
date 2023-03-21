@@ -2,6 +2,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import Loader from "../../../components/general/Loader/Loader";
 import RelationPageLayout from "../../../components/layouts/RelationPageLayout";
 import UserCard from "../../../components/users/UserCard";
 import { authOptions } from "../../../server/auth";
@@ -11,7 +12,7 @@ const FollowersPage: NextPage = () => {
     const router = useRouter();
     const userId = router.query.id as string;
 
-    const { data } = api.follows.getFollowers.useQuery({ userId });
+    const { data, isLoading } = api.follows.getFollowers.useQuery({ userId });
 
     const apiUtils = api.useContext();
     const { mutate: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({
@@ -51,14 +52,21 @@ const FollowersPage: NextPage = () => {
     return (
         <RelationPageLayout>
             <>
-                <h2 className="text-2xl font-semibold">Followers</h2>
-                {data?.map(relation => (
-                    <UserCard 
-                        key={relation.follower.id}
-                        user={relation.follower} 
-                        onFollowRequest={() => sendFollowRequest({ followingId: relation.follower.id })} 
-                    />
-                ))}
+                {data && (
+                    <>
+                        <h2 className="text-2xl font-semibold">Followers</h2>
+                        {data.map(relation => (
+                            <UserCard 
+                                key={relation.follower.id}
+                                user={relation.follower} 
+                                onFollowRequest={() => sendFollowRequest({ followingId: relation.follower.id })} 
+                            />
+                        ))}
+                    </>
+                )}
+                {isLoading && (
+                    <Loader />
+                )}
             </>
         </RelationPageLayout>
     )
