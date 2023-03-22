@@ -42,6 +42,12 @@ model Comment {
     authorId String?
 }
 
+enum RequestStatus {
+    ACCEPTED
+    PENDING
+    DENIED
+}
+
 model Follows {
     follower    User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
     followerId  String
@@ -50,7 +56,7 @@ model Follows {
 
     @@id([followerId, followingId])
 
-    status String
+    status RequestStatus
     updatedAt DateTime @updatedAt
 }
 

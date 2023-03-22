@@ -1,3 +1,4 @@
+import { RequestStatus } from "@prisma/client";
 import classNames from "classnames";
 import { addDays, formatDistance, isAfter } from "date-fns";
 import type { GetServerSideProps} from "next";
@@ -72,7 +73,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                         <div className="flex flex-col md:flex-row md:gap-5 items-center">
                             <div className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32 relative group">
                                 <Avatar url={data.image} className="" />
-                                {data.status === 'self' && (
+                                {data.status === 'SELF' && (
                                     <div className={"absolute top-0 -right-3 hidden group-hover:block"}> 
                                         <UpdateAvatar userId={data.id} avatar={data.image} />
                                     </div>
@@ -83,13 +84,13 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 <h1 className="font-semibold text-4xl mb-2">{data.firstName} {data.lastName}</h1>
                                 {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 md:text-sm lg:text-base">{data.bio}</p>}
                                 
-                                {data.status === 'self' && (
+                                {data.status === 'SELF' && (
                                     <div className="absolute top-0 right-0 group-hover:block hidden">
                                         <UpdateProfileForm user={data} />
                                     </div>)
                                 }
 
-                                {(data.status === 'self' || data.status === 'accepted') && (
+                                {(data.status === 'SELF' || data.status === RequestStatus.ACCEPTED) && (
                                     <div className="flex gap-5 w-fit -ml-2">
                                         <Link href={`/users/${data.id}/follows`}>
                                             <Button variant="minimal" >
@@ -101,7 +102,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                                 {data._count.followedBy} Followers
                                             </Button>
                                         </Link>
-                                        {data.status === 'self' && (
+                                        {data.status === 'SELF' && (
                                             <Link href={`/users/${data.id}/requests`}>
                                                 <Button variant="minimal" >
                                                     {data._count.requests} Requests
@@ -125,7 +126,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 </Button>
                             </div>
                         )}
-                        {data.status === 'pending' && (
+                        {data.status === RequestStatus.PENDING && (
                             <>
                                 <p className="text-xl font-semibold text-center mb-5">Follow Request Sent!</p>
                                 <Button onClick={() => removeFollowRequest({ followingId: data.id, followerId: currentUser.id })}>
@@ -133,7 +134,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 </Button>
                             </>
                         )}
-                        {data.status === 'denied' && isAfter(data.statusUpdatedAt as Date, addDays(new Date(), 7)) && (
+                        {data.status === RequestStatus.DENIED && isAfter(data.statusUpdatedAt as Date, addDays(new Date(), 7)) && (
                             <>
                                 <p className="text-xl text-center">Your follow request was denied.</p>
                                 <Button variant="filled" onClick={() => sendFollowRequest({ followingId: data.id })}>
@@ -141,13 +142,13 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 </Button>
                             </>
                         )}
-                        {data.status === 'denied' && !isAfter(data.statusUpdatedAt as Date, addDays(new Date(), 7)) && (
+                        {data.status === RequestStatus.DENIED && !isAfter(data.statusUpdatedAt as Date, addDays(new Date(), 7)) && (
                             <>
                                 <p className="text-xl text-center">Your follow request was denied.</p>
                                 <p className="text-center">You can send another request in {formatDistance(new Date(), addDays(data.statusUpdatedAt as Date, 7))}</p>
                             </>
                         )}
-                        {(data.status === 'accepted' || data.status === 'self') && (
+                        {(data.status === RequestStatus.ACCEPTED || data.status === 'SELF') && (
                             <section className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto gap-8 md:gap-4">
                                 {data.posts.map(post => (
                                     <PostThumbnail post={post} key={post.id} />

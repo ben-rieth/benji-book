@@ -1,3 +1,4 @@
+import { RequestStatus } from "@prisma/client";
 import classNames from "classnames";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -13,14 +14,14 @@ type UserCardProps = {
         username: string | null;
         image: string | null;
         followedBy?: {
-            status: string;
+            status: RequestStatus;
         }[];
     }
     onFollowRequest?: () => void;
 }
 
 const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
-    let followStatus : string | undefined;
+    let followStatus : RequestStatus | undefined;
     
     if (user.followedBy && user.followedBy.length === 1) {
         followStatus = user.followedBy[0]?.status;
@@ -44,17 +45,17 @@ const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
                             Follow
                         </Button>
                     )}
-                    {(followStatus === 'pending') && (
+                    {(followStatus === RequestStatus.PENDING) && (
                         <Button variant="outline" disabled>
                             Pending
                         </Button>
                     )}
-                    {(followStatus === 'denied') && (
+                    {(followStatus === RequestStatus.DENIED) && (
                         <Button variant="outline" disabled>
                             Denied
                         </Button>
                     )}
-                    {followStatus === 'accepted' && (
+                    {followStatus === RequestStatus.ACCEPTED && (
                         <Button variant="outline" disabled>
                             Following
                         </Button>

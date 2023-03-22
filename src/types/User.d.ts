@@ -16,19 +16,19 @@ type FollowCountSelf = {
 }
 
 type FullUser = User & {
-    status: 'accepted';
+    status: "ACCEPTED";
     posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
 } & FollowCount;
 
 type Self = User & {
     likes: Likes[];
-    status: 'self';
+    status: 'SELF';
     posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
 } & FollowCountSelf;
 
 type PrivateUser = {
     id: string;
-    status: "pending" | "denied" | null;
+    status: "PENDING" | "DENIED" | null;
     statusUpdatedAt: Date | null;
     username?: string | null;
     firstName?: string | null;

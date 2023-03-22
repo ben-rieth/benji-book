@@ -6,6 +6,7 @@ import Avatar from "./Avatar";
 import toast from 'react-hot-toast';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { RequestStatus } from "@prisma/client";
 
 type RequestCardProps = {
     user: {
@@ -24,9 +25,9 @@ const RequestCard: FC<RequestCardProps> = ({ user }) => {
     const apiUtils = api.useContext();
     const { mutate } = api.follows.changeFollowStatus.useMutation({
         onSuccess: (_data, values) => {
-            if (values.newStatus === 'denied') {
+            if (values.newStatus === RequestStatus.DENIED) {
                 toast.success("Request denied")
-            } else if (values.newStatus === 'accepted') {
+            } else if (values.newStatus === RequestStatus.ACCEPTED) {
                 toast.success("Request accepted!")
             }
         },
@@ -48,7 +49,7 @@ const RequestCard: FC<RequestCardProps> = ({ user }) => {
                 <Button 
                     variant="filled" 
                     onClick={() => mutate(
-                        { followerId: user.id, followingId: session?.user?.id as string, newStatus: 'accepted' }
+                        { followerId: user.id, followingId: session?.user?.id as string, newStatus: RequestStatus.ACCEPTED }
                     )}
                 >
                     Accept
@@ -56,7 +57,7 @@ const RequestCard: FC<RequestCardProps> = ({ user }) => {
                 <DangerButton
                     variant="filled" 
                     onClick={() => mutate(
-                        { followerId: user.id, followingId: session?.user?.id as string, newStatus: 'denied' }
+                        { followerId: user.id, followingId: session?.user?.id as string, newStatus: RequestStatus.DENIED }
                     )}
                     alertActionLabel="Deny Request"
                     alertDescription={`@${user.username as string} will be able to send follow requests in the future even if this one is denied.`}

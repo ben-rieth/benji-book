@@ -1,6 +1,7 @@
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import {z } from 'zod';
 import { TRPCError } from "@trpc/server";
+import { RequestStatus } from "@prisma/client";
 
 const commentRouter = createTRPCRouter({
     leaveComment: protectedProcedure
@@ -120,7 +121,7 @@ const commentRouter = createTRPCRouter({
                 }
             });
 
-            if (!relationship?.status || relationship.status !== 'accepted') {
+            if (!relationship?.status || relationship.status !== RequestStatus.ACCEPTED) {
                 throw new TRPCError({ code: 'FORBIDDEN' })
             }
 

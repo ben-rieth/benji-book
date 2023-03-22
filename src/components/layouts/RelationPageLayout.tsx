@@ -1,4 +1,5 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { RequestStatus } from "@prisma/client";
 import classNames from "classnames";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -26,7 +27,7 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
 
     return (
         <MainLayout title="Benji Book" description="">
-            {isSuccess && user && (user.status === 'accepted' || user.status === 'self') && (
+            {isSuccess && user && (user.status === RequestStatus.ACCEPTED || user.status === 'SELF') && (
                 <div className="flex flex-col items-center gap-2">
                     <header 
                         className={classNames(
@@ -52,7 +53,7 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
                                             {user?._count.followedBy} Followers
                                         </Button>
                                     </Link>
-                                    {user.status === 'self' && (
+                                    {user.status === 'SELF' && (
                                         <Link href={`/users/${user.id}/requests`}>
                                             <Button variant="minimal" >
                                                 {user._count.requests} Requests
@@ -76,7 +77,7 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
                     <ErrorBox message="User not found"/>
                 </section>
             )}
-            {isSuccess && user && (!user.status || user.status === 'pending' || user.status === 'denied') && (
+            {isSuccess && user && (!user.status || user.status === RequestStatus.PENDING || user.status === RequestStatus.DENIED) && (
                 <section className="max-w-xl mx-auto mt-10">
                     <ErrorBox message="Not authorized."/>
                 </section>

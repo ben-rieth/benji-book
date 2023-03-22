@@ -2,6 +2,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import type { Likes, Post, User } from "@prisma/client";
+import { RequestStatus } from "@prisma/client";
 import { v2 as cloudinary } from 'cloudinary';
 import { env } from "../../../env.mjs";
 import { getPlaiceholder } from "plaiceholder";
@@ -32,7 +33,7 @@ const postRouter = createTRPCRouter({
                             {followedBy: {
                                 some: {
                                     followerId: ctx.session.user.id,
-                                    status: 'accepted',
+                                    status: RequestStatus.ACCEPTED,
                                 }
                             }},
                             { id: ctx.session.user.id }
@@ -125,7 +126,7 @@ const postRouter = createTRPCRouter({
                 }
             });
 
-            if (!relationship?.status || relationship.status !== 'accepted') {
+            if (!relationship?.status || relationship.status !== RequestStatus.ACCEPTED) {
                 throw new TRPCError({ code: 'FORBIDDEN' })
             }
 
@@ -171,7 +172,7 @@ const postRouter = createTRPCRouter({
                 }
             });
 
-            if (!relationship?.status || relationship.status !== 'accepted') {
+            if (!relationship?.status || relationship.status !== RequestStatus.ACCEPTED) {
                 throw new TRPCError({ code: 'FORBIDDEN' })
             }
 
@@ -219,30 +220,6 @@ const postRouter = createTRPCRouter({
             });
 
             await cloudinary.uploader.destroy(input.postId)
-                // .catch(async _err => {
-                //     await ctx.prisma.post.create({
-                //         data: {
-                //             id: post.id,
-                //             image: post.image,
-                //             authorId: post.authorId,
-                //             text: post.text,
-                //             updatedAt: post.updatedAt,
-                //             createdAt: post.createdAt,
-                //             likedBy: {
-                //                 create: [
-                //                     ...post.likedBy,
-                //                 ]
-                //             },
-                //             comments: {
-                //                 connect: [
-                //                     ...post.comments.map(comment => {return {id: comment.id}})
-                //                 ]
-                //             }
-                //         }
-                //     });
-
-                //     throw new TRPCError({ code: "INTERNAL_SERVER_ERROR"})
-                // });
         }
     ),
 

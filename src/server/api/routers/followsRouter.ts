@@ -2,13 +2,14 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from 'zod';
 import { TRPCError } from "@trpc/server";
 import { prisma } from "../../db";
+import { RequestStatus } from "@prisma/client";
 
 const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
     return Promise.all([
         prisma.follows.findMany({
             where: {
                 followingId: inputUserId,
-                status: 'accepted',
+                status: RequestStatus.ACCEPTED,
             },
             select: {
                 follower: {
@@ -38,7 +39,7 @@ const getUserAndFollowing = (inputUserId: string, currentUserId?: string) => {
         prisma.follows.findMany({
             where: {
                 followerId: inputUserId,
-                status: 'accepted',
+                status: RequestStatus.ACCEPTED,
             },
             select: {
                 following: {
@@ -77,12 +78,12 @@ const followsRouter = createTRPCRouter({
                     }
                 },
                 update: {
-                    status: 'pending',
+                    status: RequestStatus.PENDING,
                 },
                 create: {
                     followerId: ctx.session.user.id,
                     followingId: input.followingId,
-                    status: 'pending',
+                    status: RequestStatus.PENDING,
                 }
             });
         }
@@ -113,16 +114,13 @@ const followsRouter = createTRPCRouter({
         .input(z.object({
             followerId: z.string().cuid(),
             followingId: z.string().cuid(),
-            newStatus: z.enum(['accepted', 'denied'])
+            newStatus: z.enum([RequestStatus.ACCEPTED, RequestStatus.DENIED])
         }))
         .mutation(async ({ input, ctx }) => {
             
             if (input.followingId !== ctx.session.user.id) {
                 throw new TRPCError({ code: 'FORBIDDEN' })
             }
-
-            // if (input.newStatus === 'accepted') {
-                // set status to accepted if 
             await ctx.prisma.follows.update({
                 where: {
                     followerId_followingId: {
@@ -134,17 +132,6 @@ const followsRouter = createTRPCRouter({
                     status: input.newStatus,
                 }
             });
-            // } else {
-            //     // delete follows record if the user denies the request
-            //     await ctx.prisma.follows.delete({
-            //         where: {
-            //             followerId_followingId: {
-            //                 followerId: input.followerId,
-            //                 followingId: input.followingId,
-            //             }
-            //         },
-            //     });
-            // }
 
         }
     ),
@@ -174,7 +161,7 @@ const followsRouter = createTRPCRouter({
                 }
             });
 
-            if (!relationship?.status || relationship?.status !== 'accepted') {
+            if (!relationship?.status || relationship?.status !== RequestStatus.ACCEPTED) {
                 throw new TRPCError({ code: 'FORBIDDEN' })
             }
 
@@ -207,7 +194,7 @@ const followsRouter = createTRPCRouter({
                     }
                 });
 
-                if (!relationship?.status || relationship?.status !== 'accepted') {
+                if (!relationship?.status || relationship?.status !== RequestStatus.ACCEPTED) {
                     throw new TRPCError({ code: 'FORBIDDEN' })
                 }
 
@@ -229,7 +216,7 @@ const followsRouter = createTRPCRouter({
                 return ctx.prisma.follows.findMany({
                     where: {
                         followerId: ctx.session.user.id,
-                        status: 'pending',
+                        status: RequestStatus.PENDING,
                     },
                     select: {
                         following: {
@@ -250,7 +237,7 @@ const followsRouter = createTRPCRouter({
                 return ctx.prisma.follows.findMany({
                     where: {
                         followingId: ctx.session.user.id,
-                        status: 'pending',
+                        status: RequestStatus.PENDING,
                     },
                     select: {
                         follower: {

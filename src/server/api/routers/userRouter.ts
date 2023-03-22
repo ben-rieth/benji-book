@@ -5,6 +5,7 @@ import type { FullUser, PrivateUser, Self } from '../../../types/User';
 import { v2 as cloudinary } from 'cloudinary';
 import { env } from "../../../env.mjs";
 import { TRPCError } from '@trpc/server';
+import { RequestStatus } from '@prisma/client';
 
 cloudinary.config({
     cloud_name: env.CLOUDINARY_CLOUD_NAME,
@@ -73,19 +74,19 @@ const userRouter = createTRPCRouter({
 
                 const [followedByCount, followingCount, requestCount] = await Promise.all([
                     ctx.prisma.follows.count({
-                        where: { followingId: input.userId, status: 'accepted' }
+                        where: { followingId: input.userId, status: RequestStatus.ACCEPTED }
                     }),
                     ctx.prisma.follows.count({
-                        where: { followerId: input.userId, status: 'accepted' }
+                        where: { followerId: input.userId, status: RequestStatus.ACCEPTED }
                     }),
                     ctx.prisma.follows.count({
-                        where: { followerId: input.userId, status: 'pending' },
+                        where: { followerId: input.userId, status: RequestStatus.PENDING },
                     })
                 ]);
 
                 return user ? { 
                     ...user, 
-                    status: 'self',
+                    status: 'SELF',
                     _count: { 
                         followedBy: followedByCount, 
                         following: followingCount, 
@@ -108,7 +109,7 @@ const userRouter = createTRPCRouter({
             });
 
             // return all info if the session user is following the searched for user
-            if (relationship?.status && relationship.status === 'accepted') {
+            if (relationship?.status && relationship.status === RequestStatus.ACCEPTED) {
                 const user = await ctx.prisma.user.findUnique({
                     where: { id: input.userId },
                     include: {
@@ -122,12 +123,12 @@ const userRouter = createTRPCRouter({
                             select: {
                                 followedBy: {
                                     where: {
-                                        status: 'accepted'
+                                        status: RequestStatus.ACCEPTED
                                     }
                                 },
                                 following: {
                                     where: {
-                                        status: 'accepted'
+                                        status: RequestStatus.ACCEPTED
                                     }
                                 },
                             }
@@ -135,7 +136,7 @@ const userRouter = createTRPCRouter({
                     }
                 });
 
-                return user ? { ...user, status: 'accepted' } : null;
+                return user ? { ...user, status: RequestStatus.ACCEPTED } : null;
             }
 
             // return limited info if users don't follow
@@ -154,12 +155,12 @@ const userRouter = createTRPCRouter({
                         select: {
                             followedBy: {
                                 where: {
-                                    status: 'accepted'
+                                    status: RequestStatus.ACCEPTED
                                 }
                             },
                             following: {
                                 where: {
-                                    status: 'accepted'
+                                    status: RequestStatus.ACCEPTED
                                 }
                             },
                         }
@@ -167,13 +168,13 @@ const userRouter = createTRPCRouter({
                 }
             });
 
-            if (relationship?.status === 'pending') 
+            if (relationship?.status === RequestStatus.PENDING) 
                 return user ? 
-                    { ...user, status: 'pending', statusUpdatedAt: relationship.updatedAt } 
+                    { ...user, status: RequestStatus.PENDING, statusUpdatedAt: relationship.updatedAt } 
                     : null;
-            if (relationship?.status === 'denied') 
+            if (relationship?.status === RequestStatus.DENIED) 
                 return user ? 
-                    { ...user, status: 'denied', statusUpdatedAt: relationship.updatedAt } 
+                    { ...user, status: RequestStatus.DENIED, statusUpdatedAt: relationship.updatedAt } 
                     : null;
             
             return user ? { ...user, status: null, statusUpdatedAt: null } : null;

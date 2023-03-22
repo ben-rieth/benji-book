@@ -10,6 +10,7 @@ import {
     randSentence, 
     randImg 
 } from "@ngneat/falso";
+import { RequestStatus } from "@prisma/client";
 import { prisma } from "./../src/server/db";
 
 function getRandomItem<T>(arr: T[]): T {
@@ -64,7 +65,7 @@ async function seed() {
                 data: {
                     followerId: user,
                     followingId: random,
-                    status: 'accepted',
+                    status: RequestStatus.ACCEPTED,
                 },
             });
 

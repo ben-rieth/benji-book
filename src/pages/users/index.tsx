@@ -22,33 +22,11 @@ const SearchUsersPage: NextPage = () => {
     const apiUtils = api.useContext();
     const { mutate: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({
 
-        onMutate: async (values) => {
+        onMutate: async () => {
             await apiUtils.users.getAllUsers.cancel();
-            apiUtils.users.getAllUsers.setData(
-                { query: debouncedQuery }, 
-                prev => {
-                    if (!prev) return;
-                    return prev.map(item => {
-                        if (item.id !== values.followingId) return item;
-
-                        return { ...item, followedBy: [{ status: 'pending' }]}
-                    });
-                }
-            );
         },
 
-        onError: (_err, values) => {
-            apiUtils.users.getAllUsers.setData({ query: debouncedQuery },
-                prev => {
-                    if (!prev) return;
-                    return prev.map(item => {
-                        if (item.id !== values.followingId) return item;
-                        
-                        return { ...item, followedBy: [] }
-                    });
-                }    
-            );
-
+        onError: () => {
             toast.error("Could not send follow request.")
         },
 

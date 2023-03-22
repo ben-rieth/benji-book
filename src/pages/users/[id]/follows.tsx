@@ -17,31 +17,11 @@ const FollowingPage: NextPage = () => {
     const apiUtils = api.useContext();
     const { mutate: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({
         
-        onMutate: async (values) => {
+        onMutate: async () => {
             await apiUtils.follows.getFollowing.cancel();
-            apiUtils.follows.getFollowing.setData(
-                { userId }, 
-                prev => {
-                    if (!prev) return;
-                    return prev.map(item => {
-                        if (userId !== values.followingId) return item;
-                        return { ...item, following: { ...item.following, followedBy: [{ status: 'pending'}]}}
-                    });
-                }
-            );
         },
 
-        onError: (_err, values) => {
-            apiUtils.follows.getFollowing.setData({ userId },
-                prev => {
-                    if (!prev) return;
-                    return prev.map(item => {
-                        if (userId !== values.followingId) return item;
-                        return { ...item, following: { ...item.following, followedBy: []}}
-                    });
-                }   
-            );
-
+        onError: () => {
             toast.error("Could not send follow request.")
         },
 
