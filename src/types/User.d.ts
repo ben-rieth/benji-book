@@ -34,6 +34,7 @@ type PrivateUser = {
     firstName?: string | null;
     lastName?: string | null;
     image?: string | null;
+    imagePlaceholder?: string | null;
     bio?: string | null;
 } & FollowCount;
 

@@ -3,15 +3,23 @@ import Image from 'next/image';
 import classNames from "classnames";
 type AvatarProps = {
     url: string | null | undefined;
+    placeholder?: string | null;
     className?: string;
 }
 
-const Avatar:FC<AvatarProps> = ({ url, className="" }) => {
+const Avatar:FC<AvatarProps> = ({ url, placeholder, className="" }) => {
     
     if (url) {
         return (
             <div className={classNames("relative aspect-square", className)}>
-                <Image src={url} fill alt="profile pic" className="object-cover rounded-full" />
+                <Image 
+                    src={url} 
+                    fill 
+                    alt="profile pic" 
+                    className="object-cover rounded-full" 
+                    placeholder={placeholder ? "blur" : "empty"}
+                    blurDataURL={placeholder as string}
+                />
             </div>
         )
     }

@@ -15,6 +15,7 @@ type RequestCardProps = {
         lastName: string | null;
         username: string | null;
         image: string | null;
+        imagePlaceholder: string | null;
     }
 }
 
@@ -39,7 +40,7 @@ const RequestCard: FC<RequestCardProps> = ({ user }) => {
     return (
         <article className="group bg-white shadow-md rounded-lg p-3 w-full flex flex-col gap-2 items-start sm:flex-row sm:items-center">
             <Link href={`/users/${user.id}`} className="flex flex-row gap-4 items-center flex-grow">
-                <Avatar url={user.image} className="w-16 h-16" />
+                <Avatar url={user.image} placeholder={user.imagePlaceholder} className="w-16 h-16" />
                 <div className="flex flex-col">
                     <p className="text-base md:text-lg group-hover:text-sky-500">{user.firstName} {user.lastName}</p>
                     <p className="text-xs md:text-sm text-slate-300">@{user.username}</p>

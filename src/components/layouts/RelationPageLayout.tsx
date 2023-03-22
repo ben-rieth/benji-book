@@ -36,7 +36,7 @@ const RelationPageLayout: FC<RelationPageLayoutProps> = ({ children }) => {
                         )}
                     >
                         <div className="flex flex-col md:flex-row md:gap-5 items-center">
-                            <Avatar url={user?.image} className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32" />
+                            <Avatar url={user?.image} placeholder={user?.imagePlaceholder} className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32" />
                             <div className="flex flex-col items-center md:items-start">
                                 <p className="text-slate-300 text-base -mb-1">@{user?.username}</p>
                                 <Link href={`/users/${user.id}`}>

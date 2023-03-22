@@ -16,7 +16,8 @@ const getUserAndFollowers = (inputUserId: string, currentUserId?: string) => {
                     select: {
                         firstName: true,
                         lastName: true,
-                        image: true, 
+                        image: true,
+                        imagePlaceholder: true, 
                         username: true,
                         id: true,
                         followedBy: {
@@ -47,6 +48,7 @@ const getUserAndFollowing = (inputUserId: string, currentUserId?: string) => {
                         firstName: true,
                         lastName: true,
                         image: true, 
+                        imagePlaceholder: true,
                         username: true,
                         id: true,
                         followedBy: {
@@ -224,6 +226,7 @@ const followsRouter = createTRPCRouter({
                                 firstName: true,
                                 lastName: true,
                                 image: true, 
+                                imagePlaceholder: true,
                                 username: true,
                                 id: true,
                             }
@@ -246,6 +249,7 @@ const followsRouter = createTRPCRouter({
                                 lastName: true,
                                 username: true,
                                 image: true,
+                                imagePlaceholder: true,
                                 id: true,
                             }
                         }

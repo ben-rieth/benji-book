@@ -72,29 +72,30 @@ model Likes {
 }
 
 model User {
-    id            String    @id @default(cuid()) 
-    email         String?   @unique
-    emailVerified DateTime?
-    accounts      Account[]
-    sessions      Session[]
+    id               String    @id @default(cuid()) 
+    email            String?   @unique
+    emailVerified    DateTime?
+    accounts         Account[]
+    sessions         Session[]
 
-    firstName     String?
-    lastName      String?
-    username      String?
-    birthday      DateTime?
-    gender        String?
-    image         String?
-    bio           String?
+    firstName        String?
+    lastName         String?
+    username         String?
+    birthday         DateTime?
+    gender           String?
+    image            String?
+    imagePlaceholder String?
+    bio              String?
 
-    setData       Boolean @default(false)
+    setData          Boolean @default(false)
 
-    posts         Post[]    @relation("createdPosts")
-    comments      Comment[]
+    posts            Post[]    @relation("createdPosts")
+    comments         Comment[]
 
-    likes         Likes[]
+    likes            Likes[]
 
-    followedBy    Follows[] @relation("following")
-    following     Follows[] @relation("follower")
+    followedBy       Follows[] @relation("following")
+    following        Follows[] @relation("follower")
 }
 
 model Account {

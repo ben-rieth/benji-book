@@ -19,7 +19,7 @@ const CommentCard : FC<CommentCardProps> = ({ comment, postAuthor }) => {
     return (
         <div key={comment.id} className="relative p-2 rounded-lg shadow-lg w-full bg-white" id={comment.id}>
             <Link className="flex flex-row gap-2 w-fit items-center" href={`/users/${comment.authorId as string}`}>
-                <Avatar url={comment.author?.image} className="w-10 h-10" />
+                <Avatar url={comment.author?.image} placeholder={comment.author?.imagePlaceholder} className="w-10 h-10" />
                 <div className="flex flex-col justify-center">
                     <p className="text-sm text-slate-300 -mb-1">
                         {comment.author ? `@${comment.author.username as string}` : '@deleted_user'}

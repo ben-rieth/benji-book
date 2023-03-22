@@ -54,7 +54,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike, linkToPos
         <article className={containerClasses}>
             <div className="w-full bg-white rounded-t-lg px-2 py-1 relative">
                 <Link href={`/users/${post.authorId}`} className="flex flex-row gap-2 w-fit">
-                    <Avatar url={post.author.image} className="w-10 h-10" />
+                    <Avatar url={post.author.image} placeholder={post.author.imagePlaceholder} className="w-10 h-10" />
                     <div className="flex flex-col justify-center">
                         <p className="text-sm text-slate-300 -mb-1">@{post.author.username}</p>
                         <p className="text-lg">{post.author.firstName} {post.author.lastName}</p>

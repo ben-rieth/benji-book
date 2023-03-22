@@ -72,7 +72,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                     >
                         <div className="flex flex-col md:flex-row md:gap-5 items-center">
                             <div className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32 relative group">
-                                <Avatar url={data.image} className="" />
+                                <Avatar url={data.image} placeholder={data.imagePlaceholder} className="" />
                                 {data.status === 'SELF' && (
                                     <div className={"absolute top-0 -right-3 hidden group-hover:block"}> 
                                         <UpdateAvatar userId={data.id} avatar={data.image} />

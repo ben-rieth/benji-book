@@ -6,6 +6,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { env } from "../../../env.mjs";
 import { TRPCError } from '@trpc/server';
 import { RequestStatus } from '@prisma/client';
+import { getPlaiceholder } from 'plaiceholder';
 
 cloudinary.config({
     cloud_name: env.CLOUDINARY_CLOUD_NAME,
@@ -149,6 +150,7 @@ const userRouter = createTRPCRouter({
                     firstName: true,
                     lastName: true,
                     image: true,
+                    imagePlaceholder: true,
                     bio: true,
                     username: true,
                     _count: {
@@ -240,11 +242,12 @@ const userRouter = createTRPCRouter({
 
             try {
                 const res = await cloudinary.uploader.upload(input.image, { public_id: `${input.userId}-avatar`, overwrite: true });
-                // const { base64 } = await getPlaiceholder(res.secure_url);
+                const { base64 } = await getPlaiceholder(res.secure_url);
                 await ctx.prisma.user.update({
                     where: { id: input.userId },
                     data: {
-                        image: res.secure_url
+                        image: res.secure_url,
+                        imagePlaceholder: base64,
                     }
                 });
             } catch (err) {
