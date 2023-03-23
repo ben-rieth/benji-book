@@ -78,9 +78,9 @@ model User {
     accounts         Account[]
     sessions         Session[]
 
-    firstName        String?
-    lastName         String?
-    username         String?
+    firstName        String @default("")
+    lastName         String @default("")
+    username         String @default(cuid()) @unique
     birthday         DateTime?
     gender           String?
     image            String?
