@@ -7,6 +7,10 @@ import "../styles/globals.css";
 import { Toaster } from "react-hot-toast";
 import NextProgress from "next-progress";
 
+import { Roboto_Flex } from 'next/font/google';
+
+const roboto = Roboto_Flex({ subsets: ['latin' ], variable: '--font-roboto'});
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
@@ -14,7 +18,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
-        <Component {...pageProps} />
+        <div className={`${roboto.variable} font-sans`}>
+          <Component {...pageProps} />
+        </div>
         <Toaster 
           position="bottom-right"
         />
