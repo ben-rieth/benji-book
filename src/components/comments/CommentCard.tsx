@@ -16,17 +16,21 @@ const CommentCard : FC<CommentCardProps> = ({ comment, postAuthor }) => {
 
     const { data: session } = useSession();
 
+    const username = comment?.author?.username ? comment.author.username : "";
+    const first = comment?.author?.firstName ? comment.author.firstName : "";
+    const last = comment?.author?.lastName ? comment.author.lastName : "";
+
     return (
         <div key={comment.id} className="relative p-2 rounded-lg shadow-lg w-full bg-white" id={comment.id}>
             <Link className="flex flex-row gap-2 w-fit items-center" href={`/users/${comment.authorId as string}`}>
                 <Avatar url={comment.author?.image} placeholder={comment.author?.imagePlaceholder} className="w-10 h-10" />
                 <div className="flex flex-col justify-center">
                     <p className="text-sm text-slate-300 -mb-1">
-                        {comment.author ? `@${comment.author.username as string}` : '@deleted_user'}
+                        {comment.author ? `@${username}` : '@deleted_user'}
                     </p>
                     <p className="text-lg">
                         {comment.author ? 
-                            `${comment.author.firstName as string} ${comment.author.lastName as string}` 
+                            `${first} ${last}` 
                             : 'Deleted User'
                         }
                     </p>

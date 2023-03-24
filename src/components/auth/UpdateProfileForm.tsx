@@ -65,12 +65,12 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
         >
             <Formik
                 initialValues={{
-                    firstName: user.firstName as string,
-                    lastName: user.lastName as string,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
                     gender: user.gender ? user.gender : undefined,
                     bio: user.bio ? user.bio : '',
                     birthday: user.birthday ? user.birthday : new Date(),
-                    username: user.username as string,
+                    username: user.username,
                 } as FormValues}
                 validationSchema={yup.object().shape({
                     firstName: yup.string()

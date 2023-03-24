@@ -7,7 +7,7 @@ type LogoProps = {
     link?: boolean
 }
 
-const Logo:FC<LogoProps> = ({ size='md', link=false }) => {
+const Logo:FC<LogoProps> = ({ link=false }) => {
 
     const logoClasses = classNames(
         "text-sky-500 font-bold text-xl md:text-3xl",

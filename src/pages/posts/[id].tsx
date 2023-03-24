@@ -52,13 +52,15 @@ const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user }) => {
         }
     });
 
-    if (isSuccess) {
+    const username = post?.author?.username ? post.author.username : "";
+
+    if (isSuccess && post) {
         return (
             <MainLayout title="Benji Book" description="A user's post">
                 <div className="hidden md:block w-[90vw] mx-auto mt-5 max-w-[70rem]">
                     <Breadcrumbs>
                         <BreadcrumbsLink title="Feed" href="/feed" />
-                        <BreadcrumbsLink title={`@${post.author.username as string}`} href={`/users/${post.authorId}`} last />
+                        <BreadcrumbsLink title={`@${username}`} href={`/users/${post.authorId}`} last />
                     </Breadcrumbs>
                 </div>
                 <div className="relative flex flex-col items-center w-11/12 mx-auto mt-5 md:flex-row md:gap-8 md:justify-center md:items-baseline">
