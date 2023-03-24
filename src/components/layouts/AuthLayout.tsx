@@ -16,7 +16,7 @@ const AuthLayout: FC<AuthLayoutProps> = ({ children, description }) => {
             </Head>
 
             <main className="bg-slate-100 w-screen">
-                <div className="flex flex-col items-center justify-center gap-4 md:gap-24 h-screen max-w-screen-xl md:flex-row md:justify-around mx-auto">
+                <div className="flex flex-col items-center justify-center gap-4 h-screen max-w-screen-xl mx-auto">
                     {children}
                 </div>
             </main>

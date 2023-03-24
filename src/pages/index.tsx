@@ -9,9 +9,9 @@ const Home: NextPage = () => {
 
   return (
     <AuthLayout description="Sign in to your Benji Book account!">
-      <div className="flex flex-col items-center md:items-start">
+      <div className="flex flex-col items-center">
         <Logo />
-        <p className="w-60 text-center md:text-left text-sm">Disclaimer: This is a dummy app. Please do not actually use it.</p>
+        <p className="w-60 text-center text-sm">Disclaimer: This is a dummy app. Please do not actually use it.</p>
       </div>
       <SignInForm />
     </AuthLayout>
