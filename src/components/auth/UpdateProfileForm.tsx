@@ -1,4 +1,5 @@
 import { Formik, Form } from 'formik';
+import type { ReactNode} from 'react';
 import { useState, type FC } from 'react';
 import { type Self } from '../../types/User';
 import DateInput from '../inputs/DateInput';
@@ -17,6 +18,7 @@ import ErrorBox from '../error/ErrorBox';
 
 type UpdateProfileFormProps = {
     user: Self;
+    trigger?: ReactNode;
 }
 
 type FormValues = {
@@ -28,7 +30,7 @@ type FormValues = {
     bio: string;
 }
 
-const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
+const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user, trigger }) => {
 
     const [open, setOpen] = useState<boolean>(false);
     const [serverError, setServerError] = useState<string | undefined>();
@@ -67,7 +69,7 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
             title="Update Your Profile"
             open={open}
             onOpenChange={open => setOpen(open)}
-            trigger={<EditIcon />}
+            trigger={trigger ? trigger : <EditIcon />}
         >
             <Formik
                 initialValues={{

@@ -8,8 +8,6 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
-import UpdateAvatar from "../../../components/auth/UpdateAvatar";
-import UpdateProfileForm from "../../../components/auth/UpdateProfileForm";
 import Button from "../../../components/general/Button";
 import Loader from "../../../components/general/Loader/Loader";
 import MainLayout from "../../../components/layouts/MainLayout";
@@ -73,22 +71,11 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                         <div className="flex flex-col md:flex-row md:gap-5 items-center">
                             <div className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32 relative group">
                                 <Avatar url={data.image} placeholder={data.imagePlaceholder} className="" />
-                                {data.status === 'SELF' && (
-                                    <div className={"absolute top-0 -right-3 hidden group-hover:block"}> 
-                                        <UpdateAvatar userId={data.id} avatar={data.image} />
-                                    </div>
-                                )}
                             </div>
                             <div className="flex flex-col items-center md:items-start relative group">
                                 <p className="text-slate-300 text-base -mb-1">@{data.username}</p>
                                 <h1 className="font-semibold text-4xl mb-2">{data.firstName} {data.lastName}</h1>
                                 {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 md:text-sm lg:text-base">{data.bio}</p>}
-                                
-                                {data.status === 'SELF' && (
-                                    <div className="absolute top-0 right-0 group-hover:block hidden">
-                                        <UpdateProfileForm user={data} />
-                                    </div>)
-                                }
 
                                 {(data.status === 'SELF' || data.status === RequestStatus.ACCEPTED) && (
                                     <div className="flex gap-5 w-fit -ml-2">

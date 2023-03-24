@@ -1,4 +1,5 @@
 import { Form, Formik } from "formik";
+import type { ReactNode } from "react";
 import { type FC, useState, useEffect } from "react";
 import Button from "../general/Button";
 import Modal from "../general/Modal";
@@ -11,13 +12,14 @@ import { toast } from "react-hot-toast";
 type UpdateAvatarProps = {
     userId: string;
     avatar: string | null | undefined;
+    trigger?: ReactNode;
 }
 
 type FormValues = {
     image: null | File
 }
 
-const UpdateAvatar: FC<UpdateAvatarProps> = ({ avatar, userId }) => {
+const UpdateAvatar: FC<UpdateAvatarProps> = ({ avatar, userId, trigger }) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [initialImage, setInitialImage] = useState<File | null>(null);
 
@@ -52,7 +54,7 @@ const UpdateAvatar: FC<UpdateAvatarProps> = ({ avatar, userId }) => {
             title="Update Your Avatar"
             open={modalOpen}
             onOpenChange={(open) => setModalOpen(open)}
-            trigger={<EditIcon />}
+            trigger={trigger ? trigger : <EditIcon />}
         >
             <Formik
                 initialValues={{
