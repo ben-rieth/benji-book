@@ -15,7 +15,7 @@ import Loader from "../../components/general/Loader/Loader";
 const SearchUsersPage: NextPage = () => {
 
     const [query, setQuery] = useState<string>('');
-    const debouncedQuery = useDebounce<string>(query, 350);
+    const debouncedQuery = useDebounce<string>(query, 250);
 
     const { data, isSuccess, isLoading, isError } = api.users.getAllUsers.useQuery({ query: debouncedQuery });
 

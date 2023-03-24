@@ -10,6 +10,7 @@ import { rand, randUser, randPastDate } from "@ngneat/falso";
 import { api } from "../../utils/api";
 import { useRouter } from "next/router";
 import { isToday } from "date-fns";
+import { AiOutlineLoading } from "react-icons/ai";
 
 type FormValues = {
     firstName: string;
@@ -137,7 +138,11 @@ const AboutYouForm = () => {
                     />
 
                     <Button variant="filled" type="submit">
-                        Submit
+                        {props.isSubmitting ? (
+                            <AiOutlineLoading className="animate-spin" />     
+                        ) : (
+                            "Sign In"
+                        )}
                     </Button>
 
                     <hr />
