@@ -9,9 +9,9 @@ import Avatar from "./Avatar";
 type UserCardProps = {
     user: {
         id: string;
-        firstName: string | null;
-        lastName: string | null;
-        username: string | null;
+        firstName: string;
+        lastName: string;
+        username: string;
         image: string | null;
         imagePlaceholder: string | null;
         followedBy?: {

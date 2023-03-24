@@ -20,7 +20,7 @@ const SearchUsersPage: NextPage = () => {
     const { data, isSuccess, isLoading, isError } = api.users.getAllUsers.useQuery({ query: debouncedQuery });
 
     const apiUtils = api.useContext();
-    const { mutate: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({
+    const { mutate } = api.follows.sendFollowRequest.useMutation({
 
         onMutate: async () => {
             await apiUtils.users.getAllUsers.cancel();
@@ -54,7 +54,7 @@ const SearchUsersPage: NextPage = () => {
                 {isSuccess && data.length > 0 && (
                     <section className="flex flex-col gap-5 items-center w-full px-10">
                         {data.map(user => (
-                            <UserCard key={user.id} user={user} onFollowRequest={() => sendFollowRequest({ followingId: user.id })} />
+                            <UserCard key={user.id} user={user} onFollowRequest={() => mutate({ followingId: user.id })} />
                         ))}
                     </section>
                 )}

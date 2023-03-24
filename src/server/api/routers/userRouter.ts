@@ -37,6 +37,7 @@ const userRouter = createTRPCRouter({
                     lastName: true,
                     username: true,
                     image: true,
+                    imagePlaceholder: true,
                     followedBy: {
                         where: {
                             followerId: ctx.session.user.id,
