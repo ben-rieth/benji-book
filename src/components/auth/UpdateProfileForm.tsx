@@ -13,6 +13,7 @@ import { toast } from 'react-hot-toast';
 import Modal from '../general/Modal';
 import { EditIcon } from '../general/icons';
 import { AiOutlineLoading } from 'react-icons/ai';
+import ErrorBox from '../error/ErrorBox';
 
 type UpdateProfileFormProps = {
     user: Self;
@@ -33,7 +34,7 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
     const [serverError, setServerError] = useState<string | undefined>();
 
     const apiUtils = api.useContext();
-    const { mutate: updateAccount } = api.users.updateAccount.useMutation({
+    const { mutateAsync: updateAccount } = api.users.updateAccount.useMutation({
         onMutate: async (values) => {
             await apiUtils.users.getOneUser.cancel();
 
@@ -92,15 +93,17 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
                     gender: yup.mixed().oneOf(['male', 'female', 'transgender', 'agender', 'non-binary', 'other', undefined]),
                     bio: yup.string().max(150, "Bio can only be up to 150 characters").optional()
                 })}
-                onSubmit={(values) => {
-                    updateAccount({
+                onSubmit={async (values) => {
+                    await updateAccount({
                         ...values,
                         birthday: isToday(values.birthday) ? undefined : values.birthday,
                     });
                 }}
             >
                 {(props) => (
-                    <Form className="flex flex-col gap-4">
+                    <Form className="flex flex-col gap-4 pt-3">
+
+                        {serverError && <ErrorBox message={serverError} />}
 
                         <div className="flex flex-col md:flex-row gap-2">
                             <TextInput 
