@@ -67,7 +67,7 @@ const NavBar = () => {
                             </DropdownMenu.Item>
 
                             <DropdownMenu.Item className={itemClasses} asChild>
-                                <Link href={`/users/${data?.user?.id ?? ''}/settings`}>
+                                <Link href={`/settings`}>
                                     Settings
                                 </Link>
                             </DropdownMenu.Item>
@@ -142,7 +142,7 @@ const NavBar = () => {
                                 </li>
                                 <li>
                                     <NavigationMenu.Link asChild>
-                                        <Link href={`/users/${data?.user?.id ?? ''}/settings`} className={itemClasses}>
+                                        <Link href={`/settings`} className={itemClasses}>
                                             Settings
                                         </Link>
                                     </NavigationMenu.Link>
