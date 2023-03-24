@@ -12,6 +12,7 @@ import { isToday } from 'date-fns';
 import { toast } from 'react-hot-toast';
 import Modal from '../general/Modal';
 import { EditIcon } from '../general/icons';
+import { AiOutlineLoading } from 'react-icons/ai';
 
 type UpdateProfileFormProps = {
     user: Self;
@@ -29,6 +30,7 @@ type FormValues = {
 const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
 
     const [open, setOpen] = useState<boolean>(false);
+    const [serverError, setServerError] = useState<string | undefined>();
 
     const apiUtils = api.useContext();
     const { mutate: updateAccount } = api.users.updateAccount.useMutation({
@@ -44,14 +46,17 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
             );
         },
 
-        onSettled: async (_data, err) => {
+        onError: (error) => {
+            setServerError(error.message);
+            toast.error("Could not update profile. Try again.");
+        },
 
-            if (err) {
-                toast.error("Could not update profile. Try again.");
-            } else {
-                toast.success("Profile updated successfully!");
-            }
+        onSuccess: () => {
+            setOpen(false);
+            toast.success("Profile updated successfully!");
+        },
 
+        onSettled: async () => {
             await apiUtils.users.getOneUser.invalidate({ userId: user.id })
         }
     });
@@ -92,7 +97,6 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
                         ...values,
                         birthday: isToday(values.birthday) ? undefined : values.birthday,
                     });
-                    setOpen(false);
                 }}
             >
                 {(props) => (
@@ -172,7 +176,11 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user }) => {
                         
                         
                         <Button variant="filled" type="submit">
-                            Save Changes
+                            {props.isSubmitting ? (
+                                <AiOutlineLoading className="animate-spin" />     
+                            ) : (
+                                "Save Changes"
+                            )}
                         </Button>
 
                     </Form>

@@ -5,6 +5,7 @@ import type { FullUser, PrivateUser, Self } from '../../../types/User';
 import { v2 as cloudinary } from 'cloudinary';
 import { env } from "../../../env.mjs";
 import { TRPCError } from '@trpc/server';
+import type { User } from '@prisma/client';
 import { RequestStatus } from '@prisma/client';
 import { getPlaiceholder } from 'plaiceholder';
 
@@ -217,7 +218,18 @@ const userRouter = createTRPCRouter({
             birthday: z.date().optional(),
             bio: z.string().optional(),
         }))
-        .mutation(({ input, ctx }) => {
+        .mutation( async ({ input, ctx }) => {
+
+            const user: User | null = await ctx.prisma.user.findUnique({
+                where: {
+                    username: input.username
+                }
+            });
+
+            if (user && user.id !== ctx.session.user.id) {
+                throw new TRPCError({ code: 'BAD_REQUEST', message: 'Username already exists!'});
+            }
+
             return ctx.prisma.user.update({
                 where: { id: ctx.session.user.id },
                 data: {
