@@ -4,8 +4,8 @@ import Button from "../general/Button";
 import { Form, Formik } from 'formik';
 import { MdOutlineMail } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
-import { FcGoogle } from 'react-icons/fc';
-import { FaFacebookF } from 'react-icons/fa';
+// import { FcGoogle } from 'react-icons/fc';
+// import { FaFacebookF } from 'react-icons/fa';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import WhyNoPassword from './WhyNoPassword';
@@ -40,9 +40,9 @@ const SignInForm = () => {
         >
             {props => {
                 if (!confirm) return (
-                    <Form className="flex flex-col gap-4 bg-white p-8 rounded-xl">
-                        <h1 className="text-center text-sky-500 text-2xl font-semibold">Sign In</h1>
+                    <Form className="flex flex-col bg-white p-5 rounded-xl">
                         {error && <ErrorBox message={error} />}
+                        <h1 className="text-center text-sky-500 text-2xl font-semibold">Sign In</h1>
                         <TextInput 
                             id="email"
                             name="email"
@@ -60,6 +60,8 @@ const SignInForm = () => {
                                     className={props.errors.email && props.touched.email ? "fill-red-500" : "fill-black"} />
                             }
                         />
+                        <div className="h-4"/>
+
                         <Button type="submit" variant="filled">
                             {props.isSubmitting ? (
                                 <AiOutlineLoading className="animate-spin" />     
@@ -68,11 +70,13 @@ const SignInForm = () => {
                             )}
                         </Button>
 
+                        <div className="h-4"/>
+
                         <WhyNoPassword />
 
-                        <hr />
+                        {/* <hr /> */}
 
-                        <Button 
+                        {/* <Button 
                             variant="outline"
                             type="button"
                         >
@@ -85,7 +89,7 @@ const SignInForm = () => {
                         >
                             <FaFacebookF />
                             Sign in with Facebook
-                        </Button>
+                        </Button> */}
                     </Form>
                 );
 

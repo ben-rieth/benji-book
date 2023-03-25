@@ -37,7 +37,7 @@ const TextInput: FC<TextInputProps> = ({
 }) => {
 
     const inputClasses = classNames(
-        "outline-none w-full",
+        "outline-none w-full text-sm sm:text-base",
         {
             "bg-slate-300": disabled
         }
@@ -57,7 +57,7 @@ const TextInput: FC<TextInputProps> = ({
     return (
         <div className="flex flex-col mx-auto w-full">
             {showLabel && (
-                <label htmlFor={id} className="ml-2">
+                <label htmlFor={id} className="ml-2 text-sm sm:text-base">
                     {label}
                     {required && <span className="text-red-500 text-lg">*</span>}
                 </label>

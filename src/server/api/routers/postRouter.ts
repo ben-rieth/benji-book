@@ -69,7 +69,7 @@ const postRouter = createTRPCRouter({
         }))
         .mutation(async ({ input, ctx }) => {
 
-            const { id } = await ctx.prisma.post.create({
+            const { id, createdAt } = await ctx.prisma.post.create({
                 data: {
                     authorId: ctx.session.user.id,
                     text: input.postText,
@@ -82,7 +82,8 @@ const postRouter = createTRPCRouter({
                     where: { id },
                     data: {
                         image: res.secure_url,
-                        placeholder: base64
+                        placeholder: base64,
+                        updatedAt: createdAt
                     }
                 });
             } catch (err) {

@@ -18,7 +18,7 @@ const AuthLayout: FC<AuthLayoutProps> = ({ children, description }) => {
                 <link rel="manifest" href="/site.webmanifest" />
             </Head>
 
-            <main className="bg-slate-100 w-screen">
+            <main className="bg-slate-100 w-screen px-2">
                 <div className="flex flex-col items-center justify-center gap-4 h-screen max-w-screen-xl mx-auto">
                     {children}
                 </div>
