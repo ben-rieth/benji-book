@@ -102,6 +102,12 @@ const postRouter = createTRPCRouter({
                 include: {
                     author: true,
                     likedBy: true,
+                    _count: {
+                        select: {
+                            likedBy: true,
+                            comments: true,
+                        }
+                    }
                 }
             });
 
