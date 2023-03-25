@@ -23,8 +23,6 @@ const UpdateAvatar: FC<UpdateAvatarProps> = ({ avatar, userId, trigger }) => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [initialImage, setInitialImage] = useState<File | null>(null);
 
-    let uploadImageToastId: string | undefined;
-
     useEffect(() => {
         if (avatar) {
             fetch(avatar)
@@ -38,12 +36,17 @@ const UpdateAvatar: FC<UpdateAvatarProps> = ({ avatar, userId, trigger }) => {
 
     const apiUtils = api.useContext();
     const { mutateAsync: updateAvatar } = api.users.updateAvatar.useMutation({
-        onError: () => {
-            toast.dismiss(uploadImageToastId);
+        onMutate: () => {
+            const toastId = toast.loading('Uploading new profile pic...');
+
+            return { toastId };
+        },
+        onError: (_err, _values, ctx) => {
+            if (ctx?.toastId) toast.dismiss(ctx.toastId);
             toast.error("Could not update profile picture")
         },
-        onSuccess: () =>{
-            toast.dismiss(uploadImageToastId);
+        onSuccess: (_data, _values, ctx) =>{
+            if (ctx?.toastId) toast.dismiss(ctx.toastId);
             toast.success("Profile picture updated!")
         },
         onSettled: () => apiUtils.users.getOneUser.invalidate({ userId }),
@@ -61,7 +64,6 @@ const UpdateAvatar: FC<UpdateAvatarProps> = ({ avatar, userId, trigger }) => {
                     image: initialImage
                 } as FormValues}
                 onSubmit={(values) => {
-                    uploadImageToastId = toast.loading("Uploading new profile pic...")
                     const reader = new FileReader();
 
                     if (!values.image) return;

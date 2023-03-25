@@ -4,8 +4,6 @@ import Button from "../general/Button";
 import { Form, Formik } from 'formik';
 import { MdOutlineMail } from 'react-icons/md';
 import { AiOutlineLoading } from 'react-icons/ai';
-// import { FcGoogle } from 'react-icons/fc';
-// import { FaFacebookF } from 'react-icons/fa';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import WhyNoPassword from './WhyNoPassword';
@@ -25,8 +23,9 @@ const SignInForm = () => {
             }}
             onSubmit={async (values) => {
                 const result = await signIn("email", { email: values.email, redirect: false });
-
+                
                 if (result && result.error) {
+                    console.log(result.error)
                     setError(result.error)
                     return;
                 }
@@ -74,22 +73,6 @@ const SignInForm = () => {
 
                         <WhyNoPassword />
 
-                        {/* <hr /> */}
-
-                        {/* <Button 
-                            variant="outline"
-                            type="button"
-                        >
-                            <FcGoogle />
-                            Sign in with Google
-                        </Button>
-                        <Button 
-                            variant='outline'
-                            type="button"
-                        >
-                            <FaFacebookF />
-                            Sign in with Facebook
-                        </Button> */}
                     </Form>
                 );
 

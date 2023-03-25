@@ -14,17 +14,21 @@ type FormValues = {
 
 const CreatePost = () => {
 
-    let toastId: string | undefined;
     const router = useRouter();
 
     const { mutate } = api.posts.createNewPost.useMutation({
-        onSuccess: async () => {
-            toast.dismiss(toastId)
+        onMutate: () => {
+            const toastId = toast.loading("Uploading new post...");
+
+            return { toastId };
+        },
+        onSuccess: async (_data, _values, ctx) => {
+            if (ctx?.toastId) toast.dismiss(ctx.toastId)
             toast.success("Successfully created post!");
             await router.push("/feed");
         },
-        onError: () => {
-            toast.dismiss(toastId)
+        onError: (_err, _values, ctx) => {
+            if (ctx?.toastId) toast.dismiss(ctx.toastId)
             toast.error("Post could not be created")
         },
     });
@@ -36,7 +40,6 @@ const CreatePost = () => {
                 postText: '',
             } as FormValues}
             onSubmit={(values) => {
-                toastId = toast.loading("Uploading post");
                 const reader = new FileReader();
 
                 if (!values.image) return;

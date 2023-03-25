@@ -64,8 +64,6 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
         }
     });
 
-    console.log(data);
-
     return (
         <MainLayout title="Feed" description="Posts from the people that you follow!">
             <div className="flex flex-col items-center relative px-5 w-full mt-10 ">
