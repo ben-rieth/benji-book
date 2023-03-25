@@ -41,15 +41,15 @@ const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user }) => {
                         currentUser={user}
                     />
                     
-                    <Tabs.Root className="flex flex-col w-full mx-auto px-5 flex-[2_2_0%] max-w-lg" defaultValue="comments">
+                    <Tabs.Root className="flex flex-col w-full mx-auto px-5 flex-[2_2_0%] max-w-lg mt-5" defaultValue="comments">
                         <Tabs.List className="shrink-0 flex gap-2 border-b border-black w-full px-2">
                             <Tabs.Trigger asChild value="comments">
-                                <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer  bg-white data-[state=active]:text-sky-500">
+                                <p className="text-sm lg:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer  bg-white data-[state=active]:text-sky-500">
                                     Comments ({post._count.comments})
                                 </p>
                             </Tabs.Trigger>
                             <Tabs.Trigger value="likes" asChild>
-                                <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer bg-white data-[state=active]:text-sky-500">
+                                <p className="text-sm lg:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer bg-white data-[state=active]:text-sky-500">
                                     Likes ({post._count.likedBy})
                                 </p>
                             </Tabs.Trigger>
