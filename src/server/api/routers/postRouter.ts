@@ -94,7 +94,7 @@ const postRouter = createTRPCRouter({
 
     getPost: protectedProcedure
         .input(z.object({
-            postId: z.string().cuid(),
+            postId: z.string().cuid()
         }))
         .query(async ({ input, ctx }) => {
             const post = await ctx.prisma.post.findUnique({
@@ -132,6 +132,66 @@ const postRouter = createTRPCRouter({
             return post;
         }
     ),
+
+    getPostLikes: protectedProcedure
+        .input(z.object({
+            postId: z.string().cuid()
+        }))
+        .query( async ({ input, ctx }) => {
+            const [post, likes] = await Promise.all([
+                ctx.prisma.post.findUnique({
+                    where: { id: input.postId }
+                }),
+                ctx.prisma.likes.findMany({
+                    where: {
+                        post: { id: input.postId }
+                    },
+                    include:  {
+                        user: {
+                            select: {
+                                id: true,
+                                firstName: true,
+                                lastName: true, 
+                                username: true,
+                                image: true,
+                                imagePlaceholder: true,
+                                followedBy: {
+                                    select: { status: true }
+                                }
+                            }
+                        }
+                    } 
+                }),
+            ]);
+
+            if (!post) {
+                throw new TRPCError({ code: "NOT_FOUND" });
+            }
+
+            if (post.authorId === ctx.session.user.id) {
+                return likes;
+            }
+
+            const relationship = await ctx.prisma.follows.findUnique({
+                where: {
+                    followerId_followingId: {
+                        followerId: ctx.session.user.id,
+                        followingId: post?.authorId,
+                    },
+                },
+                select: {
+                    status: true,
+                }
+            });
+
+            if (!relationship?.status || relationship.status !== RequestStatus.ACCEPTED) {
+                throw new TRPCError({ code: 'FORBIDDEN' })
+            }
+
+            return likes;
+
+
+        }),
 
     getPostWithComments: protectedProcedure
         .input(z.object({ 

@@ -40,7 +40,7 @@ const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
                 </div>
             </Link>
             {user.followedBy && (
-                <div className={classNames("flex items-center justify-center w-28", { "hidden": user.id === session?.user?.id})}>
+                <div className={classNames("flex items-center justify-center w-28", { "hidden": user.id === session?.user?.id || !!onFollowRequest})}>
                     {!followStatus && (
                         <Button variant="filled" onClick={onFollowRequest}>
                             Follow

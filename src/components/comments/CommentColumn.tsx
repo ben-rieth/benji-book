@@ -15,7 +15,7 @@ const CommentColumn: FC<CommentColumnProps> = ({ postId }) => {
     const [animateRef] = useAutoAnimate();
 
     return (
-        <div className="flex flex-col max-w-lg w-full gap-3 flex-[2_2_0%]" ref={animateRef}>
+        <div className="flex flex-col w-full gap-3 mt-2" ref={animateRef}>
             {isSuccess && (
                 <>
                     <p className="md:hidden">Comments</p>

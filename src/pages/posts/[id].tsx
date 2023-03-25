@@ -9,6 +9,8 @@ import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import Loader from "../../components/general/Loader/Loader";
+import * as Tabs from '@radix-ui/react-tabs';
+import LikesColumn from "../../components/posts/LikesColumn";
 
 type IndividualPostPageProps = {
     user: User;
@@ -38,10 +40,29 @@ const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user }) => {
                         containerClasses="w-full max-w-xl flex-[3_3_0%] md:sticky md:top-5"
                         currentUser={user}
                     />
-
-                    <hr className="my-3 h-0.5 w-full bg-slate-300 md:hidden"/>
                     
-                    <CommentColumn postId={post.id} />
+                    <Tabs.Root className="flex flex-col w-full mx-auto px-5 flex-[2_2_0%] max-w-lg" defaultValue="comments">
+                        <Tabs.List className="shrink-0 flex gap-2 border-b border-black w-full px-2">
+                            <Tabs.Trigger asChild value="comments">
+                                <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer  bg-white data-[state=active]:text-sky-500">
+                                    Comments
+                                </p>
+                            </Tabs.Trigger>
+                            <Tabs.Trigger value="likes" asChild>
+                                <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer bg-white data-[state=active]:text-sky-500">
+                                    Likes
+                                </p>
+                            </Tabs.Trigger>
+                        </Tabs.List>
+                        <Tabs.Content value="comments">
+                            <CommentColumn postId={post.id} />
+                        </Tabs.Content>
+                        <Tabs.Content value="likes">
+                            <LikesColumn postId={post.id} />
+                        </Tabs.Content>
+                    </Tabs.Root>
+
+                    
                 </div>
             </MainLayout>
         )
