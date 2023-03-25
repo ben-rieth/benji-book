@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 import Button from "../../../components/general/Button";
+import DangerButton from "../../../components/general/DangerButton";
 import Loader from "../../../components/general/Loader/Loader";
 import MainLayout from "../../../components/layouts/MainLayout";
 import PostThumbnail from "../../../components/posts/PostThumbnail";
@@ -40,8 +41,8 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
         onMutate: async () => {
             await apiUtils.users.getOneUser.cancel();
         },
-        onError: () => toast.error("Could not undo request at this time."),
-        onSuccess: () => toast.success("Follow request undone!"),
+        onError: () => toast.error("Could not remove request at this time."),
+        onSuccess: () => toast.success("Follow request removed!"),
         onSettled: async () => {
             await apiUtils.users.getOneUser.invalidate({ userId: id })
         },
@@ -69,9 +70,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                         )}
                     >
                         <div className="flex flex-col md:flex-row md:gap-5 items-center">
-                            <div className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32 relative group">
-                                <Avatar url={data.image} placeholder={data.imagePlaceholder} className="" />
-                            </div>
+                            <Avatar url={data.image} placeholder={data.imagePlaceholder} className="w-32 h-32 sm:w-48 sm:h-48 md:w-32 md:h-32 relative" />
                             <div className="flex flex-col items-center md:items-start relative group">
                                 <p className="text-slate-300 text-base -mb-1">@{data.username}</p>
                                 <h1 className="font-semibold text-4xl mb-2">{data.firstName} {data.lastName}</h1>
@@ -100,8 +99,17 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 )}
                             </div>
                         </div>
-
-                        
+                        <div className={classNames("absolute top-5 right-5", { "hidden": data.status !== "ACCEPTED" })}>
+                            <DangerButton
+                                alertTitle="Are you sure?"
+                                alertDescription="If you want to follow this person again in the future, you will have to send another request."
+                                alertActionLabel="Unfollow"
+                                variant="outline"
+                                onClick={() => removeFollowRequest({ followerId: currentUser.id, followingId: data.id })}
+                            >
+                                Unfollow
+                            </DangerButton>
+                        </div>
                     </header>
 
                     <div className="w-full px-5 max-w-screen-lg md:w-10/12">
@@ -136,7 +144,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                             </>
                         )}
                         {(data.status === RequestStatus.ACCEPTED || data.status === 'SELF') && (
-                            <section className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-auto gap-8 md:gap-4">
+                            <section className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-auto gap-8 md:gap-4">
                                 {data.posts.map(post => (
                                     <PostThumbnail post={post} key={post.id} />
                                 ))}
