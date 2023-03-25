@@ -1,8 +1,6 @@
-import type { Likes } from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
 import { type User, getServerSession } from "next-auth";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import Button from "../components/general/Button";
 import Loader from "../components/general/Loader/Loader";
 import MainLayout from "../components/layouts/MainLayout";
@@ -19,51 +17,6 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
         { limit: 10 }, { getNextPageParam: (lastPage) => lastPage.nextCursor}
     );
 
-    const apiUtils = api.useContext();
-    const { mutate } = api.posts.toggleLike.useMutation({
-        onMutate: async (values) => {
-            await apiUtils.posts.getAllPosts.cancel();
-
-            apiUtils.posts.getAllPosts.setInfiniteData(
-                { limit: 5 },
-                prev => {
-                    if (!prev) 
-                        return {
-                            pages: [],
-                            pageParams: [],
-                        };
-                    
-                    return {
-                        ...prev, 
-                        pages: prev.pages.map(page => ({
-                            ...page,
-                            posts: page.posts.map((item) => {
-                                if (item.id !== values.postId) return item;
-
-                                return { 
-                                    ...item,
-                                    likedBy: [
-                                        ...item.likedBy,
-                                        {
-                                            postId: values.postId,
-                                            userId: user.id,
-                                        } as Likes
-                                    ]
-                                }
-                            })
-                        }))
-                    }
-                }
-            )
-        },
-
-        onError: () => toast.error("Could not like post"),
-
-        onSettled: async () => {
-            await apiUtils.posts.getAllPosts.invalidate({ limit: 5 });
-        }
-    });
-
     return (
         <MainLayout title="Feed" description="Posts from the people that you follow!">
             <div className="flex flex-col items-center relative px-5 w-full mt-10 ">
@@ -76,8 +29,8 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
                                         key={post.id}
                                         post={post} 
                                         linkToPostPage
-                                        containerClasses="w-full max-w-xl" 
-                                        changeLike={(liked) => mutate({ postId: post.id, liked })}
+                                        containerClasses="w-full max-w-xl"
+                                        currentUser={user}
                                     />
                                 ))}
                             </>

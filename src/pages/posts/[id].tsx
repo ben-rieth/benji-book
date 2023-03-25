@@ -4,9 +4,8 @@ import MainLayout from "../../components/layouts/MainLayout";
 import Post from "../../components/posts/Post";
 import { Breadcrumbs, BreadcrumbsLink } from "../../components/navigation/Breadcrumbs";
 import CommentColumn from './../../components/comments/CommentColumn';
-import type { Likes, User } from "@prisma/client";
+import type { User } from "next-auth";
 import type { GetServerSideProps, NextPage } from "next";
-import toast from "react-hot-toast";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import Loader from "../../components/general/Loader/Loader";
@@ -22,36 +21,6 @@ const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user }) => {
 
     const { data: post, isLoading, isSuccess } = api.posts.getPost.useQuery({ postId });
 
-    const apiUtils = api.useContext();
-    const { mutate } = api.posts.toggleLike.useMutation({
-        onMutate: async (values) => {
-            await apiUtils.posts.getPost.cancel();
-
-            apiUtils.posts.getPost.setData(
-                { postId: values.postId }, 
-                prev => {
-                    if (!prev) return;
-                    return {
-                        ...prev, 
-                        likedBy: [
-                            ...prev.likedBy,
-                            {
-                                postId: values.postId,
-                                userId: user.id,
-                            } as Likes
-                        ]
-                    }
-                }
-            );
-        },
-
-        onError: () => toast.error("Could not like post"),
-
-        onSettled: async () => {
-            await apiUtils.posts.getPost.invalidate({ postId: post?.id });
-        }
-    });
-
     const username = post?.author?.username ? post.author.username : "";
 
     if (isSuccess && post) {
@@ -66,8 +35,8 @@ const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user }) => {
                 <div className="relative flex flex-col items-center w-11/12 mx-auto mt-5 md:flex-row md:gap-8 md:justify-center md:items-baseline">
                     <Post 
                         post={post} 
-                        containerClasses="w-full max-w-xl flex-[3_3_0%] md:sticky md:top-5" 
-                        changeLike={(liked) => mutate({ postId: post.id, liked })}
+                        containerClasses="w-full max-w-xl flex-[3_3_0%] md:sticky md:top-5"
+                        currentUser={user}
                     />
 
                     <hr className="my-3 h-0.5 w-full bg-slate-300 md:hidden"/>

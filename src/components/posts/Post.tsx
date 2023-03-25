@@ -1,10 +1,8 @@
 import type { User, Likes, Post as PostType } from "@prisma/client";
 import type { FC} from "react";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
 import Avatar from "../users/Avatar";
 import Image from 'next/image';
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { formatDistanceToNow } from "date-fns";
 import { DeleteIcon } from "../general/icons";
 import Alert from "../general/Alert";
@@ -13,20 +11,20 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import UpdatePost from "./UpdatePost";
 import classNames from "classnames";
+import LikeButton from "./LikeButton";
+import type { User as AuthUser } from 'next-auth';
 
 type PostProps = {
     post: PostType & {
         author: User;
         likedBy: Likes[] };
     containerClasses?: string;
-    changeLike: (liked: boolean) => void;
-    linkToPostPage?: boolean
+    linkToPostPage?: boolean;
+    currentUser: AuthUser;
 }
 
-const Post : FC<PostProps> = ({ post, containerClasses="", changeLike, linkToPostPage=false }) => {
+const Post : FC<PostProps> = ({ post, containerClasses="", linkToPostPage=false, currentUser }) => {
     
-    let deleteToastId : string | undefined;
-    const { data: session } = useSession();
     const router = useRouter();
 
     const apiUtils = api.useContext();
@@ -34,14 +32,18 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike, linkToPos
         onMutate: async () => {
             await apiUtils.posts.getPost.cancel();
             await apiUtils.posts.getAllPosts.cancel();
+
+            const toastId = toast.loading("Deleting post...");
+
+            return { toastId };
         },
-        onError: () => {
-            toast.dismiss(deleteToastId);
+        onError: (_err, _values, ctx) => {
+            if (ctx?.toastId) toast.dismiss(ctx?.toastId);
             toast.error("Could not delete post")
         },
-        onSuccess: async () =>{
+        onSuccess: async (_data, _err, ctx) =>{
             await router.push('/feed');
-            toast.dismiss(deleteToastId);
+            if (ctx?.toastId) toast.dismiss(ctx?.toastId);
             toast.success("Post deleted!")
         },
         onSettled: async () => {
@@ -60,17 +62,14 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike, linkToPos
                         <p className="text-lg">{post.author.firstName} {post.author.lastName}</p>
                     </div>
                 </Link>
-                { session?.user?.id === post.authorId && (
+                { currentUser.id === post.authorId && (
                     <div className="flex gap-3 absolute right-2 top-4">
                         <UpdatePost post={post} />
                         <Alert 
                             title="Are you sure?" 
                             description="This action cannot be undone. This post will be permanently deleted from our servers."
                             actionLabel="Delete Post"
-                            handleAction={() => {
-                                deleteToastId = toast.loading("Deleting post...")
-                                deletePost({ postId: post.id })
-                            }}
+                            handleAction={() => deletePost({ postId: post.id })}
                             trigger={<DeleteIcon />}
                         />
                     </div>)
@@ -106,17 +105,11 @@ const Post : FC<PostProps> = ({ post, containerClasses="", changeLike, linkToPos
                 )}
                 
                 <div className="absolute bg-white p-3 bottom-0 right-0 rounded-tl-xl">
-                    {!!post.likedBy.find(like => like.userId === session?.user?.id) ? (
-                        <BsHeartFill 
-                            className="w-9 h-9 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" 
-                            onClick={() => changeLike(false)}
-                        /> 
-                    ) : (
-                        <BsHeart 
-                            className="w-9 h-9 fill-rose-500 hover:fill-rose-600 hover:cursor-pointer" 
-                            onClick={() => changeLike(true)}
-                        /> 
-                    )}
+                    <LikeButton 
+                        postId={post.id} 
+                        currentUserId={currentUser.id} 
+                        postLikes={post.likedBy} 
+                    />
                 </div>
             </div>
             <div className="p-2 shadow-lg rounded-b-lg bg-white">
