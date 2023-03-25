@@ -5,6 +5,8 @@ import Link from "next/link";
 import { type FC } from "react";
 import Button from "../general/Button";
 import Avatar from "./Avatar";
+import { api } from "../../utils/api";
+import toast from "react-hot-toast";
 
 type UserCardProps = {
     user: {
@@ -18,10 +20,9 @@ type UserCardProps = {
             status: RequestStatus;
         }[];
     }
-    onFollowRequest?: () => void;
 }
 
-const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
+const UserCard:FC<UserCardProps> = ({ user }) => {
     let followStatus : RequestStatus | undefined;
     
     if (user.followedBy && user.followedBy.length === 1) {
@@ -29,6 +30,25 @@ const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
     }
 
     const { data: session } = useSession();
+
+    const apiUtils = api.useContext();
+    const { mutate } = api.follows.sendFollowRequest.useMutation({
+
+        onMutate: async () => {
+            await apiUtils.users.getAllUsers.cancel();
+            await apiUtils.users.getOneUser.cancel();
+        },
+
+        onError: () => {
+            toast.error("Could not send follow request.")
+        },
+
+        onSuccess: () => toast.success(`Sent Follow Request!`),
+        onSettled: async () => {
+            await apiUtils.users.getAllUsers.invalidate();
+            await apiUtils.users.getOneUser.invalidate({ userId: user.id })
+        },
+    });
 
     return (
         <article className="group bg-white shadow-md rounded-lg p-3 w-full flex flex-row items-center">
@@ -40,9 +60,9 @@ const UserCard:FC<UserCardProps> = ({ user, onFollowRequest }) => {
                 </div>
             </Link>
             {user.followedBy && (
-                <div className={classNames("flex items-center justify-center w-28", { "hidden": user.id === session?.user?.id || !!onFollowRequest})}>
+                <div className={classNames("flex items-center justify-center w-28", { "hidden": user.id === session?.user?.id || !!user.followedBy})}>
                     {!followStatus && (
-                        <Button variant="filled" onClick={onFollowRequest}>
+                        <Button variant="filled" onClick={() => mutate({ followingId: user.id })}>
                             Follow
                         </Button>
                     )}

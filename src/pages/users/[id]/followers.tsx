@@ -1,7 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
 import Loader from "../../../components/general/Loader/Loader";
 import RelationPageLayout from "../../../components/layouts/RelationPageLayout";
 import UserCard from "../../../components/users/UserCard";
@@ -14,22 +13,6 @@ const FollowersPage: NextPage = () => {
 
     const { data, isLoading } = api.follows.getFollowers.useQuery({ userId });
 
-    const apiUtils = api.useContext();
-    const { mutate: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({
-        
-        onMutate: async () => {
-            await apiUtils.follows.getFollowers.cancel();
-        },
-
-        onError: () => {
-
-            toast.error("Could not send follow request.")
-        },
-
-        onSuccess: () => toast.success(`Sent Follow Request!`),
-        onSettled: async () => await apiUtils.follows.getFollowers.invalidate({userId}),
-    });
-
     return (
         <RelationPageLayout>
             <>
@@ -40,7 +23,6 @@ const FollowersPage: NextPage = () => {
                             <UserCard 
                                 key={relation.follower.id}
                                 user={relation.follower} 
-                                onFollowRequest={() => sendFollowRequest({ followingId: relation.follower.id })} 
                             />
                         ))}
                     </>

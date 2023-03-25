@@ -9,7 +9,6 @@ import { BiSearchAlt } from 'react-icons/bi';
 import useDebounce from "../../hooks/useDebounce";
 import ErrorBox from "../../components/error/ErrorBox";
 import MainLayout from "../../components/layouts/MainLayout";
-import { toast } from "react-hot-toast";
 import Loader from "../../components/general/Loader/Loader";
 
 const SearchUsersPage: NextPage = () => {
@@ -18,21 +17,6 @@ const SearchUsersPage: NextPage = () => {
     const debouncedQuery = useDebounce<string>(query, 250);
 
     const { data, isSuccess, isLoading, isError } = api.users.getAllUsers.useQuery({ query: debouncedQuery });
-
-    const apiUtils = api.useContext();
-    const { mutate } = api.follows.sendFollowRequest.useMutation({
-
-        onMutate: async () => {
-            await apiUtils.users.getAllUsers.cancel();
-        },
-
-        onError: () => {
-            toast.error("Could not send follow request.")
-        },
-
-        onSuccess: () => toast.success(`Sent Follow Request!`),
-        onSettled: async () => await apiUtils.users.getAllUsers.invalidate({query: debouncedQuery}),
-    });
 
     return (
         <MainLayout title="Benji Book" description="Search for other users!">
@@ -54,7 +38,7 @@ const SearchUsersPage: NextPage = () => {
                 {isSuccess && data.length > 0 && (
                     <section className="flex flex-col gap-5 items-center w-full px-10">
                         {data.map(user => (
-                            <UserCard key={user.id} user={user} onFollowRequest={() => mutate({ followingId: user.id })} />
+                            <UserCard key={user.id} user={user} />
                         ))}
                     </section>
                 )}

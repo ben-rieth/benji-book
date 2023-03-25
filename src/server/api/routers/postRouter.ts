@@ -155,9 +155,6 @@ const postRouter = createTRPCRouter({
                                 username: true,
                                 image: true,
                                 imagePlaceholder: true,
-                                followedBy: {
-                                    select: { status: true }
-                                }
                             }
                         }
                     } 
