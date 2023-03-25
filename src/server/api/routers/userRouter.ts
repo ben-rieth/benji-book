@@ -111,6 +111,18 @@ const userRouter = createTRPCRouter({
                 }
             });
 
+            const viceVersa = await ctx.prisma.follows.findUnique({
+                where: {
+                    followerId_followingId: {
+                        followerId: input.userId,
+                        followingId: ctx.session.user.id
+                    }
+                },
+                select: {
+                    status: true,
+                }
+            })
+
             // return all info if the session user is following the searched for user
             if (relationship?.status && relationship.status === RequestStatus.ACCEPTED) {
                 const user = await ctx.prisma.user.findUnique({
@@ -139,7 +151,7 @@ const userRouter = createTRPCRouter({
                     }
                 });
 
-                return user ? { ...user, status: RequestStatus.ACCEPTED } : null;
+                return user ? { ...user, status: RequestStatus.ACCEPTED, followedByCurrent: viceVersa?.status === 'ACCEPTED' } : null;
             }
 
             // return limited info if users don't follow
@@ -174,14 +186,14 @@ const userRouter = createTRPCRouter({
 
             if (relationship?.status === RequestStatus.PENDING) 
                 return user ? 
-                    { ...user, status: RequestStatus.PENDING, statusUpdatedAt: relationship.updatedAt } 
+                    { ...user, status: RequestStatus.PENDING, statusUpdatedAt: relationship.updatedAt, followedByCurrent: viceVersa?.status === 'ACCEPTED' } 
                     : null;
             if (relationship?.status === RequestStatus.DENIED) 
                 return user ? 
-                    { ...user, status: RequestStatus.DENIED, statusUpdatedAt: relationship.updatedAt } 
+                    { ...user, status: RequestStatus.DENIED, statusUpdatedAt: relationship.updatedAt, followedByCurrent: viceVersa?.status === 'ACCEPTED' } 
                     : null;
             
-            return user ? { ...user, status: null, statusUpdatedAt: null } : null;
+            return user ? { ...user, status: null, statusUpdatedAt: null, followedByCurrent: viceVersa?.status === 'ACCEPTED' } : null;
         }
     ),
 

@@ -11,6 +11,7 @@ type DangerButtonProps = {
     alertTitle?: string;
     alertDescription?: string;
     alertActionLabel: string;
+    className?: string;
 }
 
 const DangerButton:FC<DangerButtonProps> = ({ 
@@ -22,13 +23,15 @@ const DangerButton:FC<DangerButtonProps> = ({
     variant="filled",
     alertTitle="Are you sure?",
     alertDescription="This action cannot be undone",
-    alertActionLabel
+    alertActionLabel,
+    className
 
 }) => {
     const buttonClasses = classNames(
         "py-2 px-2 w-full mx-auto",
         "flex flex-row items-center justify-center gap-2",
         "rounded-lg",
+        className,
         {
             "bg-red-500 text-white font-semibold": variant === 'filled',
             'text-red-500 border-2 border-red-500': variant === 'outline',

@@ -99,15 +99,26 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 )}
                             </div>
                         </div>
-                        <div className={classNames("absolute top-5 right-5", { "hidden": data.status !== "ACCEPTED" })}>
+                        <div className={classNames("absolute top-5 right-5")}>
                             <DangerButton
                                 alertTitle="Are you sure?"
                                 alertDescription="If you want to follow this person again in the future, you will have to send another request."
                                 alertActionLabel="Unfollow"
-                                variant="outline"
+                                variant="minimal"
                                 onClick={() => removeFollowRequest({ followerId: currentUser.id, followingId: data.id })}
+                                className={classNames({ "hidden": data.status !== "ACCEPTED" })}
                             >
                                 Unfollow
+                            </DangerButton>
+                            <DangerButton
+                                alertTitle="Are you sure?"
+                                alertDescription="This person will be able to send follow requests in the future."
+                                alertActionLabel="Remove Follower"
+                                variant="minimal"
+                                onClick={() => removeFollowRequest({ followerId: data.id, followingId: currentUser.id })}
+                                className={classNames({ "hidden": data.status === 'SELF' || !data.followedByCurrent })}
+                            >
+                                Remove Follower
                             </DangerButton>
                         </div>
                     </header>

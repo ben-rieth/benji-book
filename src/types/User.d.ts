@@ -18,6 +18,7 @@ type FollowCountSelf = {
 type FullUser = User & {
     status: "ACCEPTED";
     posts: (Post & {comments: Comment[], likedBy: Likes[] })[];
+    followedByCurrent: boolean;
 } & FollowCount;
 
 type Self = User & {
@@ -36,6 +37,7 @@ type PrivateUser = {
     image?: string | null;
     imagePlaceholder?: string | null;
     bio?: string | null;
+    followedByCurrent: boolean;
 } & FollowCount;
 
 export { FullUser, PrivateUser, Self }
