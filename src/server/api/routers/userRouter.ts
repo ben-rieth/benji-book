@@ -187,9 +187,25 @@ const userRouter = createTRPCRouter({
 
     deleteAccount: protectedProcedure
         .mutation(async ({ ctx }) => {
+
+            const posts = await ctx.prisma.post.findMany({
+                where: { 
+                    author: {
+                        id: ctx.session.user.id,    
+                    }
+                },
+                select: {
+                    id: true,
+                }
+            });
+
+            const postIds = posts.map(post => post.id);
+
             await ctx.prisma.user.delete({
                 where: { id: ctx.session.user.id }
             });
+
+            await cloudinary.api.delete_resources(postIds);
         }
     ),
 

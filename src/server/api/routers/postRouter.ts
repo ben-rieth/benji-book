@@ -88,8 +88,6 @@ const postRouter = createTRPCRouter({
             } catch (err) {
                 throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' });
             }
-
-
         }
     ),
 
