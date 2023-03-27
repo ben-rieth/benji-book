@@ -16,6 +16,8 @@ import PostThumbnail from "../../../components/posts/PostThumbnail";
 import Avatar from "../../../components/users/Avatar";
 import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { GoKebabVertical } from 'react-icons/go'
 
 type AccountPageProps = {
     currentUser: User;
@@ -99,27 +101,43 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 )}
                             </div>
                         </div>
-                        <div className={classNames("absolute top-5 right-5")}>
-                            <DangerButton
-                                alertTitle="Are you sure?"
-                                alertDescription="If you want to follow this person again in the future, you will have to send another request."
-                                alertActionLabel="Unfollow"
-                                variant="minimal"
-                                onClick={() => removeFollowRequest({ followerId: currentUser.id, followingId: data.id })}
-                                className={classNames({ "hidden": data.status !== "ACCEPTED" })}
-                            >
-                                Unfollow
-                            </DangerButton>
-                            <DangerButton
-                                alertTitle="Are you sure?"
-                                alertDescription="This person will be able to send follow requests in the future."
-                                alertActionLabel="Remove Follower"
-                                variant="minimal"
-                                onClick={() => removeFollowRequest({ followerId: data.id, followingId: currentUser.id })}
-                                className={classNames({ "hidden": data.status === 'SELF' || !data.followedByCurrent })}
-                            >
-                                Remove Follower
-                            </DangerButton>
+                        <div className={classNames("absolute top-5 right-5", { "hidden": data.status !== "ACCEPTED" && (data.status === 'SELF' || !data.followedByCurrent)})}>
+                            <DropdownMenu.Root>
+                                <DropdownMenu.Trigger>
+                                    <GoKebabVertical className="w-5 h-5" />
+                                </DropdownMenu.Trigger>
+
+                                <DropdownMenu.Portal>
+                                    <DropdownMenu.Content sideOffset={10} className="bg-white py-2 px-5 w-76 rounded-lg shadow-2xl flex flex-col">
+                                        <DropdownMenu.Arrow className="fill-white" />
+
+                                        <DropdownMenu.Item className={classNames({ "hidden": data.status !== "ACCEPTED" })}>
+                                            <DangerButton
+                                                alertTitle="Are you sure?"
+                                                alertDescription="If you want to follow this person again in the future, you will have to send another request."
+                                                alertActionLabel="Unfollow"
+                                                variant="minimal"
+                                                onClick={() => removeFollowRequest({ followerId: currentUser.id, followingId: data.id })}
+                                            >
+                                                Unfollow
+                                            </DangerButton>
+                                        </DropdownMenu.Item>
+
+                                        <DropdownMenu.Item className={classNames({ "hidden": data.status === 'SELF' || !data.followedByCurrent })}>
+                                            <DangerButton
+                                                alertTitle="Are you sure?"
+                                                alertDescription="This person will be able to send follow requests in the future."
+                                                alertActionLabel="Remove Follower"
+                                                variant="minimal"
+                                                onClick={() => removeFollowRequest({ followerId: data.id, followingId: currentUser.id })}
+                                            >
+                                                Remove Follower
+                                            </DangerButton>
+                                        </DropdownMenu.Item>
+
+                                    </DropdownMenu.Content>
+                                </DropdownMenu.Portal>
+                            </DropdownMenu.Root>
                         </div>
                     </header>
 
