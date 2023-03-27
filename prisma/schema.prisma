@@ -96,6 +96,32 @@ model User {
 
     followedBy       Follows[] @relation("following")
     following        Follows[] @relation("follower")
+
+    settings         Settings?
+}
+
+enum NotificationLocation {
+    TOPLEFT
+    TOPCENTER
+    TOPRIGHT
+    BOTTOMLEFT
+    BOTTOMCENTER
+    BOTTOMRIGHT
+}
+
+enum Theme {
+    DARK
+    LIGHT
+    SYSTEM
+}
+
+model Settings {
+    id                   String @id @default(cuid())
+    userId               String @unique
+    user                 User   @relation(fields: [userId], references: [id])
+
+    notificationLocation NotificationLocation @default(BOTTOMRIGHT)
+    theme                Theme                @default(SYSTEM)
 }
 
 model Account {

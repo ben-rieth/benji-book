@@ -2,6 +2,9 @@
     "cSpell.words": [
         "Authed",
         "benjibook",
+        "BOTTOMCENTER",
+        "BOTTOMLEFT",
+        "BOTTOMRIGHT",
         "CLOUDINARY",
         "falso",
         "hookform",
@@ -11,6 +14,9 @@
         "stylis",
         "superjson",
         "toastify",
+        "TOPCENTER",
+        "TOPLEFT",
+        "TOPRIGHT",
         "TRPC",
         "unliked"
     ]
