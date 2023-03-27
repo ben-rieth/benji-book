@@ -1,4 +1,3 @@
-import type { NotificationLocation } from "@prisma/client"
 import type { ToastPosition } from "react-hot-toast";
 
 const toastMap : Map<string, ToastPosition> = new Map([
