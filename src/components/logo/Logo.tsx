@@ -10,7 +10,7 @@ type LogoProps = {
 const Logo:FC<LogoProps> = ({ link=false }) => {
 
     const logoClasses = classNames(
-        "text-sky-500 font-bold text-3xl",
+        "text-sky-500 font-bold text-xl sm:text-3xl",
     )
 
     if (link) {

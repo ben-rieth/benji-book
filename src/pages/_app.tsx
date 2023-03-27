@@ -7,6 +7,9 @@ import "../styles/globals.css";
 import { Toaster } from "react-hot-toast";
 import NextProgress from "next-progress";
 import { allCapsToDash } from "../utils/toast";
+import localFont from 'next/font/local';
+
+const caveat = localFont({ src: './../../public/fonts/caveat.woff2', variable: '--font-caveat' });
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -17,7 +20,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
+      <div className={`${caveat.variable}`}>
         <Component {...pageProps} />
+      </div>
+        
         <Toaster 
           position={location ? allCapsToDash(location) : 'bottom-right'}
         />
