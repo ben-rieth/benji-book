@@ -110,7 +110,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                     value={props.values.notificationLocation as string}
                                 />
 
-                                <SelectInput
+                                {/* <SelectInput
                                     label="Theme"
                                     placeholder="Theme"
                                     name="theme"
@@ -125,7 +125,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                     value={props.values.theme as string}
                                 />
 
-                                <div className="h-5" />
+                                <div className="h-5" /> */}
 
                                 <Button>
                                     Update Appearance Preferences
