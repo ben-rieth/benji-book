@@ -10,7 +10,7 @@ const NotFoundPage = () => {
     if (session && session.user) {
         return (
             <MainLayout title="404" description="Could not find the page you were looking for.">
-                <h1 className="font-semibold text-2xl text-center">That page does not exist!</h1>
+                <h1 className="font-semibold text-2xl text-center mt-5">That page does not exist!</h1>
                 <Link href="/feed">
                     <Button variant="minimal">
                         Return to Feed
@@ -27,7 +27,7 @@ const NotFoundPage = () => {
 
     return (
         <AuthLayout description="Could not find the page you were looking for.">
-            <h1 className="font-semibold text-2xl text-center">That page does not exist!</h1>
+            <h1 className="font-semibold text-2xl text-center mt-5">That page does not exist!</h1>
                 <Link href="/">
                     <Button variant="minimal">
                         Sign In to Benjibook
