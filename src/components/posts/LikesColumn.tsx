@@ -21,6 +21,9 @@ const LikesColumn: FC<LikesColumnProps> = ({ postId }) => {
                     user={like.user}
                 />
             ))}
+            {isSuccess && data.length === 0 && (
+                <p className="text-center">No likes yet!</p>
+            )}
             {isLoading && (
                 <Loader text="Loading likes" />
             )}
