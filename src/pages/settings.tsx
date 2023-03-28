@@ -126,8 +126,9 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                 />
 
                                 <div className="h-5" /> */}
+                                <div className="h-5" />
 
-                                <Button>
+                                <Button type="submit">
                                     Update Appearance Preferences
                                 </Button>
                             </Form>
@@ -136,7 +137,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                 </section>
 
                 <section className="bg-white rounded-lg flex flex-col items-center  max-w-screen-md w-full p-3 shadow-md">
-                    <h2 className="font-semibold text-2xl text-red-500">Danger</h2>
+                    <h2 className="font-semibold text-2xl text-red-500 mb-5">Danger</h2>
                     <DangerButton
                         alertActionLabel="Delete Account"
                         alertTitle="Are you sure?"
