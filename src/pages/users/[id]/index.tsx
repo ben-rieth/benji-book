@@ -19,6 +19,7 @@ import { api } from "../../../utils/api";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { GoKebabVertical } from 'react-icons/go'
 import { prisma } from "../../../server/db";
+import { FiSettings } from 'react-icons/fi';
 
 type AccountPageProps = {
     currentUser: User;
@@ -50,12 +51,6 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
             await apiUtils.users.getOneUser.invalidate({ userId: id })
         },
     })
-
-    if (!data && isSuccess) {
-        return (
-            <p>User does not exist</p>
-        )
-    }
 
     return (
         <MainLayout title="Benji Book" description="A user page">
@@ -140,6 +135,11 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 </DropdownMenu.Portal>
                             </DropdownMenu.Root>
                         </div>
+                        {data.status === 'SELF' && (
+                            <Link href="/settings" className="absolute top-5 right-5">
+                                <FiSettings className="w-5 h-5 hover:scale-105 hover:fill-sky-500 active:fill-sky-600" />
+                            </Link>
+                        )}
                     </header>
 
                     <div className="w-full px-5 max-w-screen-lg md:w-10/12">
