@@ -1,10 +1,6 @@
 import type { GetServerSidePropsContext } from "next";
-import type {
-  User} from "next-auth";
-import {
-  getServerSession,
-  type NextAuthOptions,
-} from "next-auth";
+import type { User} from "next-auth";
+import { getServerSession, type NextAuthOptions, } from "next-auth";
 import EmailProvider, { type SendVerificationRequestParams } from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../env.mjs";

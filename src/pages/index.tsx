@@ -1,5 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import SignInForm from "../components/auth/SignInForm";
 import AuthLayout from "../components/layouts/AuthLayout";
 import Logo from "../components/logo/Logo";

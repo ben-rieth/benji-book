@@ -24,4 +24,5 @@ const config = {
     domains: ['i.pravatar.cc', 'placeimg.com', 'res.cloudinary.com'],
   }
 };
+
 export default config;
