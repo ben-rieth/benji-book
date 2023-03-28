@@ -1,12 +1,21 @@
 import type { GetServerSidePropsContext } from "next";
+import type {
+  User} from "next-auth";
 import {
   getServerSession,
   type NextAuthOptions,
 } from "next-auth";
-import EmailProvider from "next-auth/providers/email";
+import EmailProvider, { type SendVerificationRequestParams } from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../env.mjs";
 import { prisma } from "./db";
+
+import { readFileSync } from 'fs';
+import path from 'path';
+import Handlebars from "handlebars";
+import { createTransport } from 'nodemailer';
+import type { Options } from "nodemailer/lib/smtp-transport/index.js";
+import type SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
 
 /**
  * Module augmentation for `next-auth` types.
@@ -31,6 +40,56 @@ declare module "next-auth" {
     setData: boolean
   }
 }
+
+const emailsDir = path.resolve(process.cwd(), './src/emails');
+const transporter = createTransport({
+  host: env.EMAIL_SERVER,
+  port: env.EMAIL_PORT,
+  auth: {
+    user: env.EMAIL_USERNAME,
+    pass: env.EMAIL_PASSWORD,
+  },
+  secure: true,
+} as unknown as SMTPConnection.Options);
+
+const sendVerificationRequest = async ({ identifier, url } : SendVerificationRequestParams) => {
+  const emailFile = readFileSync(path.join(emailsDir, 'confirm-email.html'), {
+    encoding: 'utf8',
+  });
+  const emailTemplate = Handlebars.compile(emailFile);
+  await transporter.sendMail({
+    from: `"✨ Benjibook" ${env.EMAIL_FROM}`,
+    to: identifier,
+    subject: 'Your sign-in link for Benjibook',
+    html: emailTemplate({
+      base_url: env.NEXTAUTH_URL,
+      signin_url: url,
+      email: identifier,
+    }),
+  });
+}
+
+const sendWelcomeEmail = async ({ user } : { user: User }) => {
+  const { email } = user;
+
+  try {
+    const emailFile = readFileSync(path.join(emailsDir, 'welcome.html'), {
+      encoding: 'utf8',
+    });
+    const emailTemplate = Handlebars.compile(emailFile);
+    await transporter.sendMail({
+      from: `"✨ SupaVacation" ${env.EMAIL_FROM}`,
+      to: email,
+      subject: 'Welcome to SupaVacation! 🎉',
+      html: emailTemplate({
+        base_url: env.NEXTAUTH_URL,
+        support_email: 'benrieth3@gmail.com',
+      }),
+    });
+  } catch (error) {
+    console.log(`❌ Unable to send welcome email to user (${email as string})`);
+  }
+};
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks,
@@ -57,15 +116,17 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     EmailProvider({
-      server: {
-        host: env.EMAIL_SERVER,
-        port: env.EMAIL_PORT,
-        auth: {
-          user: env.EMAIL_USERNAME,
-          pass: env.EMAIL_PASSWORD,
-        }
-      },
-      from: env.EMAIL_FROM,
+      // server: {
+      //   host: env.EMAIL_SERVER,
+      //   port: env.EMAIL_PORT,
+      //   auth: {
+      //     user: env.EMAIL_USERNAME,
+      //     pass: env.EMAIL_PASSWORD,
+      //   }
+      // },
+      // from: env.EMAIL_FROM,
+      sendVerificationRequest,
+      maxAge: 10 * 60,
     })
   ],
   pages: {
@@ -74,6 +135,9 @@ export const authOptions: NextAuthOptions = {
     newUser: '/onboarding',
     verifyRequest: '/',
   },
+  events: { 
+    createUser: sendWelcomeEmail 
+  }
 };
 
 /**

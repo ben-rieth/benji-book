@@ -4,7 +4,6 @@ import * as yup from 'yup';
 import TextInput from "../inputs/TextInput";
 import Button from "../general/Button";
 import SelectInput from "../inputs/SelectInput";
-import 'node_modules/react-datepicker/dist/react-datepicker.min.css'
 import DateInput from "../inputs/DateInput";
 import { rand, randUser, randPastDate } from "@ngneat/falso";
 import { api } from "../../utils/api";
