@@ -238,6 +238,7 @@ const userRouter = createTRPCRouter({
             });
 
             await cloudinary.api.delete_resources(postIds);
+            await cloudinary.api.delete_resources([`${ctx.session.user.id}-avatar`]);
         }
     ),
 
