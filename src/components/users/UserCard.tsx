@@ -37,6 +37,8 @@ const UserCard:FC<UserCardProps> = ({ user }) => {
         onMutate: async () => {
             await apiUtils.users.getAllUsers.cancel();
             await apiUtils.users.getOneUser.cancel();
+            await apiUtils.follows.getFollowing.cancel();
+            await apiUtils.follows.getFollowers.cancel();
         },
 
         onError: () => {
@@ -47,6 +49,8 @@ const UserCard:FC<UserCardProps> = ({ user }) => {
         onSettled: async () => {
             await apiUtils.users.getAllUsers.invalidate();
             await apiUtils.users.getOneUser.invalidate({ userId: user.id })
+            await apiUtils.follows.getFollowers.invalidate({ userId: user.id });
+            await apiUtils.follows.getFollowing.invalidate({ userId: user.id });
         },
     });
 
