@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import type { GetServerSideProps, NextPage } from "next";
 import { type User, getServerSession } from "next-auth";
 import Link from "next/link";
@@ -20,9 +21,14 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
 
     return (
         <MainLayout title="Feed" description="Posts from the people that you follow!">
-            <div className="lg:grid grid-cols-[1fr_.75fr] relative px-5 w-full max-w-screen-xl mx-auto mt-10 gap-10">
+            <div className={classNames(
+                "relative px-5 w-full max-w-screen-xl mx-auto mt-10 gap-10",
+                {
+                    "lg:grid grid-cols-[1fr_.75fr]": data?.pages[0]?.posts.length !== 0
+                }
+            )}>
                 {isSuccess && (
-                    <section className="flex flex-col items-center gap-5 col-span-1">
+                    <section className="flex flex-col items-center gap-5">
                         {data.pages.map((group) => (
                             <>
                                 {group.posts.map(post => (
@@ -39,10 +45,15 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
                         {hasNextPage && <Button onClick={fetchNextPage}>Load More</Button>}
                         {data.pages[0]?.posts.length === 0 && (
                             <section className="flex flex-col items-center gap-5">
-                                <p>No posts! Click below to look for other users to follow!</p>
+                                <p className="text-center">No posts! Click below to look for other users to follow or create a new post yourself!</p>
                                 <Link href="/users">
                                     <Button variant="filled">
                                         Search Users
+                                    </Button>
+                                </Link>
+                                <Link href="/posts/create">
+                                    <Button variant="filled">
+                                        Create Post
                                     </Button>
                                 </Link>
                             </section>
@@ -50,7 +61,7 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
                     </section>
                 )}
                 {isLoading && <Loader text="Getting Your Feed" />}
-                <aside className="hidden lg:block sticky top-5 h-fit">
+                <aside className={classNames("hidden sticky top-5 h-fit", { "lg:block": data?.pages[0]?.posts.length !== 0})}>
                     <h2 className="font-semibold text-xl text-center">Recent Activity</h2>
                     <ActivityTabs defaultTab="likes" />
                 </aside>

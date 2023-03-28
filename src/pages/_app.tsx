@@ -16,7 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
 
-  const { data: location } = api.settings.getNotificationLocation.useQuery();
+  const { data: location } = api.settings.getNotificationLocation.useQuery(undefined, { enabled: !!session });
 
   return (
     <SessionProvider session={session}>
