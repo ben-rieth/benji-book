@@ -24,7 +24,7 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
             <div className={classNames(
                 "relative px-5 w-full max-w-screen-xl mx-auto mt-10 gap-10",
                 {
-                    "lg:grid grid-cols-[1fr_.75fr]": data?.pages[0]?.posts.length !== 0
+                    "lg:grid grid-cols-[1fr_.75fr]": data?.pages[0]?.posts.length !== 0 && !isLoading
                 }
             )}>
                 {isSuccess && (
@@ -61,7 +61,7 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
                     </section>
                 )}
                 {isLoading && <Loader text="Getting Your Feed" />}
-                <aside className={classNames("hidden sticky top-5 h-fit", { "lg:block": data?.pages[0]?.posts.length !== 0})}>
+                <aside className={classNames("hidden sticky top-5 h-fit", { "lg:block": data?.pages[0]?.posts.length !== 0 && !isLoading})}>
                     <h2 className="font-semibold text-xl text-center">Recent Activity</h2>
                     <ActivityTabs defaultTab="likes" />
                 </aside>
