@@ -14,7 +14,6 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import Handlebars from "handlebars";
 import { createTransport } from 'nodemailer';
-import type { Options } from "nodemailer/lib/smtp-transport/index.js";
 import type SMTPConnection from "nodemailer/lib/smtp-connection/index.js";
 
 /**

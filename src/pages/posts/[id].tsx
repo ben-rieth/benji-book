@@ -11,6 +11,7 @@ import { authOptions } from "../../server/auth";
 import Loader from "../../components/general/Loader/Loader";
 import * as Tabs from '@radix-ui/react-tabs';
 import LikesColumn from "../../components/posts/LikesColumn";
+import { prisma } from "../../server/db";
 
 type IndividualPostPageProps = {
     user: User;
@@ -77,7 +78,7 @@ const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user }) => {
     }
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
     const session = await getServerSession(req, res, authOptions);
 
     if (!session || !session.user) {
@@ -88,6 +89,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
             }
         }
     }
+
+    const post = await prisma.post.findUnique({
+        where: { id: params?.id as string }
+    });
+
+    if (!post) return { notFound: true }
 
     return {
         props: {

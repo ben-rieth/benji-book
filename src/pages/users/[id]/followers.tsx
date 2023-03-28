@@ -5,6 +5,7 @@ import Loader from "../../../components/general/Loader/Loader";
 import RelationPageLayout from "../../../components/layouts/RelationPageLayout";
 import UserCard from "../../../components/users/UserCard";
 import { authOptions } from "../../../server/auth";
+import { prisma } from "../../../server/db";
 import { api } from "../../../utils/api";
 
 const FollowersPage: NextPage = () => {
@@ -35,7 +36,7 @@ const FollowersPage: NextPage = () => {
     )
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
     const session = await getServerSession(req, res, authOptions);
 
     if (!session || !session.user) {
@@ -44,6 +45,16 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
                 destination: '/',
                 permanent: false,
             }
+        }
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id: params?.id as string }
+    });
+
+    if (!user) {
+        return {
+            notFound: true,
         }
     }
 

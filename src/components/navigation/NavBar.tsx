@@ -5,7 +5,7 @@ import {  AiOutlineMenu, AiFillNotification } from 'react-icons/ai';
 import { BsChevronDown } from "react-icons/bs";
 import classNames from "classnames";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import Button from "../general/Button";
 import { useRouter } from "next/router";
 
@@ -15,7 +15,6 @@ const NavBar = () => {
         "my-1 hover:text-sky-500",
     );
 
-    const { data } = useSession();
     const router = useRouter();
 
     const logOut = async () => {
@@ -61,7 +60,7 @@ const NavBar = () => {
                             </DropdownMenu.Item>
 
                             <DropdownMenu.Item className={itemClasses} asChild>
-                                <Link href={`/users/${data?.user?.id ?? ''}`}>
+                                <Link href={`/account`}>
                                     Account
                                 </Link>
                             </DropdownMenu.Item>
@@ -135,7 +134,7 @@ const NavBar = () => {
 
                                 <li>
                                     <NavigationMenu.Link asChild>
-                                        <Link href={`/users/${data?.user?.id ?? ''}`} className={itemClasses}>
+                                        <Link href={`/account`} className={itemClasses}>
                                             Account Page
                                         </Link>
                                     </NavigationMenu.Link>

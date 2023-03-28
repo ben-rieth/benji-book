@@ -56,7 +56,7 @@ const userRouter = createTRPCRouter({
         .input(z.object({
             userId: z.string().cuid(),
         }))
-        .query(async ({ input, ctx }) : Promise<FullUser | PrivateUser | Self | null> => {
+        .query(async ({ input, ctx }) : Promise<FullUser | PrivateUser | Self> => {
             // if user is getting their own info
             if (input.userId === ctx.session.user.id) {
                 const user = await ctx.prisma.user.findUnique({
@@ -87,7 +87,11 @@ const userRouter = createTRPCRouter({
                     })
                 ]);
 
-                return user ? { 
+                if (!user) {
+                    throw new TRPCError({ code: "NOT_FOUND"})
+                }
+
+                return { 
                     ...user, 
                     status: 'SELF',
                     _count: { 
@@ -95,7 +99,7 @@ const userRouter = createTRPCRouter({
                         following: followingCount, 
                         requests: requestCount,
                 }
-                } : null;
+                };
             }
                 // otherwise find relationship of two people
             const relationship = await ctx.prisma.follows.findUnique({
@@ -151,7 +155,9 @@ const userRouter = createTRPCRouter({
                     }
                 });
 
-                return user ? { ...user, status: RequestStatus.ACCEPTED, followedByCurrent: viceVersa?.status === 'ACCEPTED' } : null;
+                if (!user) throw new TRPCError({ code: "NOT_FOUND" })
+
+                return { ...user, status: RequestStatus.ACCEPTED, followedByCurrent: viceVersa?.status === 'ACCEPTED' };
             }
 
             // return limited info if users don't follow
@@ -184,16 +190,30 @@ const userRouter = createTRPCRouter({
                 }
             });
 
+            if (!user) throw new TRPCError({ code: "NOT_FOUND" })
+
             if (relationship?.status === RequestStatus.PENDING) 
-                return user ? 
-                    { ...user, status: RequestStatus.PENDING, statusUpdatedAt: relationship.updatedAt, followedByCurrent: viceVersa?.status === 'ACCEPTED' } 
-                    : null;
+                return  { 
+                    ...user, 
+                    status: RequestStatus.PENDING, 
+                    statusUpdatedAt: relationship.updatedAt, 
+                    followedByCurrent: viceVersa?.status === 'ACCEPTED' 
+                } 
+
             if (relationship?.status === RequestStatus.DENIED) 
-                return user ? 
-                    { ...user, status: RequestStatus.DENIED, statusUpdatedAt: relationship.updatedAt, followedByCurrent: viceVersa?.status === 'ACCEPTED' } 
-                    : null;
+                return { 
+                    ...user, 
+                    status: RequestStatus.DENIED,
+                    statusUpdatedAt: relationship.updatedAt, 
+                    followedByCurrent: viceVersa?.status === 'ACCEPTED' 
+                } 
             
-            return user ? { ...user, status: null, statusUpdatedAt: null, followedByCurrent: viceVersa?.status === 'ACCEPTED' } : null;
+            return { 
+                ...user, 
+                status: null, 
+                statusUpdatedAt: null, 
+                followedByCurrent: viceVersa?.status === 'ACCEPTED' 
+            };
         }
     ),
 

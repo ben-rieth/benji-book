@@ -6,6 +6,7 @@ import UserCard from "../../../components/users/UserCard";
 import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
 import Loader from "../../../components/general/Loader/Loader";
+import { prisma } from "../../../server/db";
 
 const FollowingPage: NextPage = () => {
     const router = useRouter();
@@ -35,7 +36,7 @@ const FollowingPage: NextPage = () => {
     )
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
     const session = await getServerSession(req, res, authOptions);
 
     if (!session || !session.user) {
@@ -44,6 +45,16 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
                 destination: '/',
                 permanent: false,
             }
+        }
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id: params?.id as string }
+    });
+
+    if (!user) {
+        return {
+            notFound: true,
         }
     }
 

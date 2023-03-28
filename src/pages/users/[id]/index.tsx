@@ -18,6 +18,7 @@ import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { GoKebabVertical } from 'react-icons/go'
+import { prisma } from "../../../server/db";
 
 type AccountPageProps = {
     currentUser: User;
@@ -30,7 +31,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
     const id = queries.id as string;
 
     const apiUtils = api.useContext();
-    const { data, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: id })
+    const { data, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: id });
 
     const { mutateAsync: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({ 
         onMutate: () => apiUtils.users.getOneUser.cancel(),
@@ -188,7 +189,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
 
 export default AccountPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
     const session = await getServerSession(req, res, authOptions);
 
     if (!session || !session.user) {
@@ -197,6 +198,16 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
                 destination: '/',
                 permanent: false,
             }
+        }
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id: params?.id as string }
+    });
+
+    if (!user) {
+        return {
+            notFound: true,
         }
     }
 
