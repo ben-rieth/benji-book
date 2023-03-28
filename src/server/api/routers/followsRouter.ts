@@ -236,13 +236,17 @@ const followsRouter = createTRPCRouter({
             }),
 
         getReceivedRequests: protectedProcedure
-            .query(({ ctx }) => {
-                return ctx.prisma.follows.findMany({
+            .query(async ({ ctx }) => {
+                const follows = await ctx.prisma.follows.findMany({
                     where: {
                         followingId: ctx.session.user.id,
-                        status: RequestStatus.PENDING,
+                        OR: [
+                            { status: RequestStatus.PENDING },
+                            { status: RequestStatus.ACCEPTED }
+                        ],
                     },
                     select: {
+                        status: true,
                         follower: {
                             select: {
                                 firstName: true,
@@ -251,10 +255,35 @@ const followsRouter = createTRPCRouter({
                                 image: true,
                                 imagePlaceholder: true,
                                 id: true,
+                                followedBy: {
+                                    where: {
+                                        followerId: ctx.session.user.id,
+                                    },
+                                    select: {
+                                        status: true,
+                                    }
+                                }
                             }
+                        }
+                    },
+                    orderBy: {
+                        updatedAt: 'desc'
+                    }
+                });
+
+                const withFollowBack = follows.map(relation => {
+                    const followedBack = relation.follower.followedBy.length !== 0
+
+                    return {
+                        ...relation,
+                        follower: {
+                            ...relation.follower,
+                            followedBack
                         }
                     }
                 });
+
+                return withFollowBack;
             })
 });
 

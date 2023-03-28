@@ -31,9 +31,9 @@ const ActivityTabs: FC<ActivityTabProps> = ({ defaultTab="requests" }) => {
                     </Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="requests">
-                    <section className="w-full mt-2 max-w-screen-sm mx-auto">
+                    <section className="w-full mt-2 max-w-screen-sm mx-auto flex flex-col gap-2">
                         {isRequestsSuccess && requestsData.map(item => (
-                            <RequestCard user={item.follower} key={item.follower.id}/>
+                            <RequestCard user={item.follower} status={item.status} key={item.follower.id}/>
                         ))}
                         {isRequestsSuccess && requestsData.length === 0 && (
                             <>
