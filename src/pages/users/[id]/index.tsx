@@ -77,7 +77,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                             <div className="flex flex-col items-center md:items-start relative group">
                                 <p className="text-slate-300 text-base -mb-1">@{data.username}</p>
                                 <h1 className="font-semibold text-4xl mb-2">{data.firstName} {data.lastName}</h1>
-                                {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 md:text-sm lg:text-base">{data.bio}</p>}
+                                {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 lg:text-lg">{data.bio}</p>}
 
                                 {(data.status === 'SELF' || data.status === RequestStatus.ACCEPTED) && (
                                     <div className="flex gap-5 w-fit -ml-2">
