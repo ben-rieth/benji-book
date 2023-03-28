@@ -4,14 +4,16 @@ import Button from "../general/Button";
 import classNames from "classnames";
 import { AiOutlineDownload } from "react-icons/ai";
 import Webcam from 'react-webcam';
+import toast from "react-hot-toast";
 
 type ImageUploadProps = {
     onChange: (file: File) => void;
     imageValue: File | null;
     rounded?: boolean;
+    sizeLimit?: number;
 }
 
-const ImageUpload: FC<ImageUploadProps> = ({ onChange, imageValue, rounded=false }) => {
+const ImageUpload: FC<ImageUploadProps> = ({ onChange, imageValue, rounded=false, sizeLimit=5*1024*1024 }) => {
     const [previewImage, setPreviewImage] = useState<string>(() => {
         if (imageValue) return URL.createObjectURL(imageValue as Blob);
         return ""
@@ -22,6 +24,11 @@ const ImageUpload: FC<ImageUploadProps> = ({ onChange, imageValue, rounded=false
     const webcamRef: MutableRefObject<Webcam | null> = useRef(null);
 
     const handleFile = (file: File) => {
+        if (file.size >= sizeLimit) {
+            toast.error("Image must be smaller than 5MB.");
+            return;
+        }
+
         onChange(file);
         setPreviewImage(URL.createObjectURL(file as Blob));
     }
