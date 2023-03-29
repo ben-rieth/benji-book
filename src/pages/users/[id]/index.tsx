@@ -4,40 +4,34 @@ import { addDays, formatDistance, isAfter } from "date-fns";
 import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession, type User } from "next-auth";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 import Button from "../../../components/general/Button";
-import DangerButton from "../../../components/general/DangerButton";
 import Loader from "../../../components/general/Loader/Loader";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Avatar from "../../../components/users/Avatar";
 import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { GoKebabVertical } from 'react-icons/go'
 import { prisma } from "../../../server/db";
 import { FiSettings } from 'react-icons/fi';
 import PostGrid from "../../../components/posts/PostGrid";
 import * as Tabs from "@radix-ui/react-tabs";
+import RelationsBar from "../../../components/users/RelationBar";
+import UserActionDropdown from "../../../components/users/UserActionsDropdown";
 
 type AccountPageProps = {
     currentUser: User;
+    pageUserId: string;
 }
 
-const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
-
-    const router = useRouter();
-    const queries = router.query;
-    const id = queries.id as string;
+const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) => {
 
     const apiUtils = api.useContext();
-    const { data, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: id });
-
+    const { data, isSuccess, isLoading } = api.users.getOneUser.useQuery({ userId: pageUserId });
     const { mutateAsync: sendFollowRequest } = api.follows.sendFollowRequest.useMutation({ 
         onMutate: () => apiUtils.users.getOneUser.cancel(),
         onSuccess: () => toast.success("Follow request sent!"),
         onError: () => toast.error("Cannot send follow request"),
-        onSettled: () => apiUtils.users.getOneUser.invalidate({ userId: id })
+        onSettled: () => apiUtils.users.getOneUser.invalidate({ userId: pageUserId })
     });
 
     const { mutate: removeFollowRequest } = api.follows.deleteFollowRequest.useMutation({
@@ -47,9 +41,9 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
         onError: () => toast.error("Could not remove request at this time."),
         onSuccess: () => toast.success("Follow request removed!"),
         onSettled: async () => {
-            await apiUtils.users.getOneUser.invalidate({ userId: id })
+            await apiUtils.users.getOneUser.invalidate({ userId: pageUserId })
         },
-    })
+    });
 
     return (
         <MainLayout title="Benji Book" description="A user page">
@@ -74,65 +68,22 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 {data.bio && <p className="text-center md:text-left leading-tight line-clamp-3 lg:text-lg">{data.bio}</p>}
 
                                 {(data.status === 'SELF' || data.status === RequestStatus.ACCEPTED) && (
-                                    <div className="flex gap-5 w-fit -ml-2">
-                                        <Link href={`/users/${data.id}/follows`}>
-                                            <Button variant="minimal" >
-                                                {data._count.following} Following
-                                            </Button>
-                                        </Link>
-                                        <Link href={`/users/${data.id}/followers`}>
-                                            <Button variant="minimal" >
-                                                {data._count.followedBy} Followers
-                                            </Button>
-                                        </Link>
-                                        {data.status === 'SELF' && (
-                                            <Link href={`/users/${data.id}/requests`}>
-                                                <Button variant="minimal" >
-                                                    {data._count.requests} Requests
-                                                </Button>
-                                            </Link>
-                                        )}
-                                    </div>
+                                    <RelationsBar
+                                        userId={pageUserId}
+                                        followerCount={data._count.followedBy}
+                                        followingCount={data._count.following}
+                                        requestCount={data.status === 'SELF' ? data._count.requests : null}
+                                    />
                                 )}
                             </div>
                         </div>
                         <div className={classNames("absolute top-5 right-5", { "hidden": data.status !== "ACCEPTED" && (data.status === 'SELF' || !data.followedByCurrent)})}>
-                            <DropdownMenu.Root>
-                                <DropdownMenu.Trigger>
-                                    <GoKebabVertical className="w-5 h-5" />
-                                </DropdownMenu.Trigger>
-
-                                <DropdownMenu.Portal>
-                                    <DropdownMenu.Content sideOffset={10} className="bg-white py-2 px-5 w-76 rounded-lg shadow-2xl flex flex-col">
-                                        <DropdownMenu.Arrow className="fill-white" />
-
-                                        <DropdownMenu.Item className={classNames({ "hidden": data.status !== "ACCEPTED" })}>
-                                            <DangerButton
-                                                alertTitle="Are you sure?"
-                                                alertDescription="If you want to follow this person again in the future, you will have to send another request."
-                                                alertActionLabel="Unfollow"
-                                                variant="minimal"
-                                                onClick={() => removeFollowRequest({ followerId: currentUser.id, followingId: data.id })}
-                                            >
-                                                Unfollow
-                                            </DangerButton>
-                                        </DropdownMenu.Item>
-
-                                        <DropdownMenu.Item className={classNames({ "hidden": data.status === 'SELF' || !data.followedByCurrent })}>
-                                            <DangerButton
-                                                alertTitle="Are you sure?"
-                                                alertDescription="This person will be able to send follow requests in the future."
-                                                alertActionLabel="Remove Follower"
-                                                variant="minimal"
-                                                onClick={() => removeFollowRequest({ followerId: data.id, followingId: currentUser.id })}
-                                            >
-                                                Remove Follower
-                                            </DangerButton>
-                                        </DropdownMenu.Item>
-
-                                    </DropdownMenu.Content>
-                                </DropdownMenu.Portal>
-                            </DropdownMenu.Root>
+                            <UserActionDropdown 
+                                pageUserId={pageUserId}
+                                currentUserId={currentUser.id}
+                                showRemoveFollower={data.status === 'SELF' || !data.followedByCurrent}
+                                showUnfollow={data.status !== "ACCEPTED"}
+                            />
                         </div>
                         {data.status === 'SELF' && (
                             <Link href="/settings" className="absolute top-5 right-5">
@@ -230,7 +181,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
 
     return {
         props: {
-            currentUser: session.user
+            currentUser: session.user,
+            pageUserId: user.id
         }
     }
 }

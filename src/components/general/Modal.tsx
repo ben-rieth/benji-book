@@ -24,7 +24,7 @@ const Modal: FC<ModalProps> = ({ children, trigger, title, open, onOpenChange })
                 <Dialog.Overlay className="bg-black/50 data-[state=open]:animate-overlayShow fixed inset-0" />
                 <Dialog.Content 
                     className={classNames(
-                        "data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[550px] translate-x-[-50%] translate-y-[-50%]",
+                        "data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] h-fit max-h-[85vh] w-[90vw] max-w-[550px] translate-x-[-50%] translate-y-[-50%]",
                         "bg-white rounded-lg shadow-lg focus:outline-none p-7 overflow-auto"
                     )
                 }>
