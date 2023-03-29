@@ -18,6 +18,7 @@
         "TOPLEFT",
         "TOPRIGHT",
         "TRPC",
+        "unarchived",
         "unliked"
     ]
 }

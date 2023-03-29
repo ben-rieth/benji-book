@@ -1,10 +1,8 @@
 import { RequestStatus } from "@prisma/client";
 import classNames from "classnames";
 import { addDays, formatDistance, isAfter } from "date-fns";
-import type { GetServerSideProps} from "next";
-import { type NextPage } from "next";
-import type { User } from "next-auth";
-import { getServerSession } from "next-auth";
+import type { GetServerSideProps, NextPage } from "next";
+import { getServerSession, type User } from "next-auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
@@ -12,7 +10,6 @@ import Button from "../../../components/general/Button";
 import DangerButton from "../../../components/general/DangerButton";
 import Loader from "../../../components/general/Loader/Loader";
 import MainLayout from "../../../components/layouts/MainLayout";
-import PostThumbnail from "../../../components/posts/PostThumbnail";
 import Avatar from "../../../components/users/Avatar";
 import { authOptions } from "../../../server/auth";
 import { api } from "../../../utils/api";
@@ -20,6 +17,8 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { GoKebabVertical } from 'react-icons/go'
 import { prisma } from "../../../server/db";
 import { FiSettings } from 'react-icons/fi';
+import PostGrid from "../../../components/posts/PostGrid";
+import * as Tabs from "@radix-ui/react-tabs";
 
 type AccountPageProps = {
     currentUser: User;
@@ -60,7 +59,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                 </div>
             )}
             {data && isSuccess && (
-                <div className="flex flex-col items-center gap-5">
+                <div className="flex flex-col items-center">
                     <header 
                         className={classNames(
                             "bg-white rounded-b-lg w-full flex flex-col gap-3 items-center md:items-start p-5 h-fit max-w-screen-lg shadow-lg relative",
@@ -137,7 +136,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                         </div>
                         {data.status === 'SELF' && (
                             <Link href="/settings" className="absolute top-5 right-5">
-                                <FiSettings className="w-5 h-5 hover:scale-105 hover:fill-sky-500 active:fill-sky-600" />
+                                <FiSettings className="w-7 h-7 hover:scale-110 hover:text-sky-500 active:text-sky-600" />
                             </Link>
                         )}
                     </header>
@@ -173,12 +172,30 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser }) => {
                                 <p className="text-center">You can send another request in {formatDistance(new Date(), addDays(data.statusUpdatedAt as Date, 7))}</p>
                             </>
                         )}
-                        {(data.status === RequestStatus.ACCEPTED || data.status === 'SELF') && (
-                            <section className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-auto gap-8 md:gap-4">
-                                {data.posts.map(post => (
-                                    <PostThumbnail post={post} key={post.id} />
-                                ))}
-                            </section>
+                        {(data.status === RequestStatus.ACCEPTED) && (
+                            <PostGrid posts={data.posts} />
+                        )}
+                        {(data.status === 'SELF') && (
+                            <Tabs.Root className="flex flex-col mx-auto px-5" defaultValue="posts">
+                                <Tabs.List className="shrink-0 mt-5 flex gap-2 border-b border-black w-full px-2">
+                                    <Tabs.Trigger asChild value="posts">
+                                        <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer  bg-white data-[state=active]:text-sky-500">
+                                            Posts
+                                        </p>
+                                    </Tabs.Trigger>
+                                    <Tabs.Trigger value="archive" asChild>
+                                        <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer bg-white data-[state=active]:text-sky-500">
+                                            Archive
+                                        </p>
+                                    </Tabs.Trigger>
+                                </Tabs.List>
+                                <Tabs.Content value="posts">
+                                    <PostGrid posts={data.posts.filter(post => !post.archived)} />
+                                </Tabs.Content>
+                                <Tabs.Content value="archive">
+                                    <PostGrid posts={data.posts.filter(post => post.archived)} archive={true} />
+                                </Tabs.Content>
+                            </Tabs.Root>
                         )}
                     </div>
                 </div>

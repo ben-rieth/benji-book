@@ -59,23 +59,22 @@ const userRouter = createTRPCRouter({
         .query(async ({ input, ctx }) : Promise<FullUser | PrivateUser | Self> => {
             // if user is getting their own info
             if (input.userId === ctx.session.user.id) {
-                const user = await ctx.prisma.user.findUnique({
-                    where: { id: input.userId },
-                    include: {
-                        posts: {
-                            include: {
-                                comments: true,
-                                likedBy: true,
+                const [user, followedByCount, followingCount, requestCount] = await Promise.all([
+                    ctx.prisma.user.findUnique({
+                        where: { id: input.userId },
+                        include: {
+                            posts: {
+                                include: {
+                                    comments: true,
+                                    likedBy: true,
+                                },
+                                orderBy: {
+                                    createdAt: 'desc',
+                                },
                             },
-                            orderBy: {
-                                createdAt: 'desc',
-                            },
-                        },
-                        likes: true,
-                    }
-                });
-
-                const [followedByCount, followingCount, requestCount] = await Promise.all([
+                            likes: true,
+                        }
+                    }),
                     ctx.prisma.follows.count({
                         where: { followingId: input.userId, status: RequestStatus.ACCEPTED }
                     }),
@@ -101,31 +100,32 @@ const userRouter = createTRPCRouter({
                 }
                 };
             }
-                // otherwise find relationship of two people
-            const relationship = await ctx.prisma.follows.findUnique({
-                where: {
-                    followerId_followingId: {
-                        followerId: ctx.session.user.id,
-                        followingId: input.userId
-                    }
-                },
-                select: {
-                    status: true,
-                    updatedAt: true,
-                }
-            });
 
-            const viceVersa = await ctx.prisma.follows.findUnique({
-                where: {
-                    followerId_followingId: {
-                        followerId: input.userId,
-                        followingId: ctx.session.user.id
+            const [relationship, viceVersa] = await Promise.all([
+                ctx.prisma.follows.findUnique({
+                    where: {
+                        followerId_followingId: {
+                            followerId: ctx.session.user.id,
+                            followingId: input.userId
+                        }
+                    },
+                    select: {
+                        status: true,
+                        updatedAt: true,
                     }
-                },
-                select: {
-                    status: true,
-                }
-            })
+                }),
+                ctx.prisma.follows.findUnique({
+                    where: {
+                        followerId_followingId: {
+                            followerId: input.userId,
+                            followingId: ctx.session.user.id
+                        }
+                    },
+                    select: {
+                        status: true,
+                    }
+                })
+            ]);
 
             // return all info if the session user is following the searched for user
             if (relationship?.status && relationship.status === RequestStatus.ACCEPTED) {
@@ -133,6 +133,7 @@ const userRouter = createTRPCRouter({
                     where: { id: input.userId },
                     include: {
                         posts: {
+                            where: { archived: false },
                             include: {
                                 comments: true,
                                 likedBy: true,

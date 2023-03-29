@@ -3,7 +3,7 @@
 
 generator client {
     provider = "prisma-client-js"
-    previewFeatures = ["filteredRelationCount"]
+    previewFeatures = ["filteredRelationCount", "extendedWhereUnique"]
 }
 
 datasource db {
@@ -12,19 +12,20 @@ datasource db {
 }
 
 model Post {
-    id        String @id @default(cuid())
-    text      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    image     String?
+    id          String @id @default(cuid())
+    text        String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    image       String?
     placeholder String?
+    archived    Boolean @default(false)
     
-    author    User @relation("createdPosts", fields: [authorId], references: [id], onDelete: Cascade)
-    authorId  String
+    author      User @relation("createdPosts", fields: [authorId], references: [id], onDelete: Cascade)
+    authorId    String
 
-    likedBy   Likes[]
+    likedBy     Likes[]
 
-    comments Comment[]
+    comments    Comment[]
 
     @@unique([id, authorId])
 }

@@ -28,6 +28,7 @@ const postRouter = createTRPCRouter({
                 take: limit + 1,
                 cursor: input.cursor ? { id: input.cursor } : undefined,
                 where: {
+                    archived: false,
                     author: {
                         OR: [
                             {followedBy: {
@@ -117,6 +118,11 @@ const postRouter = createTRPCRouter({
 
             if (post.authorId === ctx.session.user.id) {
                 return post;
+            } 
+            
+            // if the post author is not the session user and the post is archived, access is not allowed
+            if (post.archived) {
+                throw new TRPCError({ code: "FORBIDDEN" })
             }
 
             const relationship = await ctx.prisma.follows.findUnique({
@@ -175,6 +181,10 @@ const postRouter = createTRPCRouter({
                 return likes;
             }
 
+            if (post.archived) {
+                throw new TRPCError({ code: "FORBIDDEN" })
+            }
+
             const relationship = await ctx.prisma.follows.findUnique({
                 where: {
                     followerId_followingId: {
@@ -220,6 +230,10 @@ const postRouter = createTRPCRouter({
 
             if (!post) {
                 throw new TRPCError({ code: "NOT_FOUND" });
+            }
+
+            if (post.archived) {
+                throw new TRPCError({ code: "FORBIDDEN"})
             }
 
             const relationship = await ctx.prisma.follows.findUnique({
@@ -314,6 +328,23 @@ const postRouter = createTRPCRouter({
             return input.postId;
         }
     ),
+
+    toggleArchiveStatus: protectedProcedure
+        .input(z.object({
+            postId: z.string().cuid(),
+            status: z.boolean()
+        }))
+        .mutation(async ({ ctx, input }) => {
+            await ctx.prisma.post.update({
+                where: {
+                    id: input.postId,
+                    authorId: ctx.session.user.id,
+                },
+                data: {
+                    archived: input.status
+                }
+            });
+        })
 });
 
 export default postRouter;

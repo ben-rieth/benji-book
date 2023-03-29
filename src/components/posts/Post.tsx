@@ -13,6 +13,8 @@ import UpdatePost from "./UpdatePost";
 import classNames from "classnames";
 import LikeButton from "./LikeButton";
 import type { User as AuthUser } from 'next-auth';
+import { BsArchive } from "react-icons/bs";
+import { TiArrowBack } from 'react-icons/ti';
 
 type PostProps = {
     post: PostType & {
@@ -47,9 +49,31 @@ const Post : FC<PostProps> = ({ post, containerClasses="", linkToPostPage=false,
             toast.success("Post deleted!")
         },
         onSettled: async () => {
+            await apiUtils.posts.getPost.invalidate({ postId: post.id })
             await apiUtils.posts.getAllPosts.invalidate()
         }
 
+    });
+
+    const { mutate: archivePost } = api.posts.toggleArchiveStatus.useMutation({
+        onMutate: async () => {
+            await apiUtils.posts.getPost.cancel();
+            await apiUtils.posts.getAllPosts.cancel();
+        },
+        onError: (_err, values) => {
+            if (values.status)
+                toast.error("Could not archive post");
+            else toast.error("Could not unarchive post");
+        },
+        onSuccess: (_data, values) =>{
+            if (values.status)
+                toast.success("Post archived!")
+            else toast.success("Post unarchived!")
+        },
+        onSettled: async () => {
+            await apiUtils.posts.getPost.invalidate({ postId: post.id })
+            await apiUtils.posts.getAllPosts.invalidate()
+        }
     });
     
     return (
@@ -63,8 +87,20 @@ const Post : FC<PostProps> = ({ post, containerClasses="", linkToPostPage=false,
                     </div>
                 </Link>
                 { currentUser.id === post.authorId && (
-                    <div className="flex gap-3 absolute right-2 top-4">
+                    <div className="flex gap-3 absolute right-2 top-4 bg-white">
                         <UpdatePost post={post} />
+                        {post.archived ? (
+                            <TiArrowBack 
+                                className="fill-emerald-500 w-6 h-6 cursor-pointer hover:scale-100 hover:fill-emerald-600"
+                                onClick={() => archivePost({ postId: post.id, status: false })}
+                            />
+                        ) : (
+                            <BsArchive 
+                                className="fill-emerald-500 w-6 h-6 cursor-pointer hover:scale-100 hover:fill-emerald-600"
+                                onClick={() => archivePost({ postId: post.id, status: true })}
+                            />
+                        )}
+                        
                         <Alert 
                             title="Are you sure?" 
                             description="This action cannot be undone. This post will be permanently deleted from our servers."
