@@ -16,7 +16,7 @@ type RequestCardProps = {
         username: string | null;
         image: string | null;
         imagePlaceholder: string | null;
-        followedBack: boolean;
+        followedBackStatus: RequestStatus | null;
     }
     status: RequestStatus
 }
@@ -79,10 +79,22 @@ const RequestCard: FC<RequestCardProps> = ({ user, status }) => {
                         </DangerButton>
                     </>
                 )}
-                {status === "ACCEPTED" && user.followedBack && (
-                    <p className="text-sm">Sent request back!</p>
+                {status === "ACCEPTED" && user.followedBackStatus === "PENDING" && (
+                    <Button variant="outline" disabled>
+                        Pending
+                    </Button>
                 )}
-                {status === "ACCEPTED" && !user.followedBack && (
+                {status === "ACCEPTED" && user.followedBackStatus === "ACCEPTED" && (
+                    <Button variant="outline" disabled>
+                        Following
+                    </Button>
+                )}
+                {status === "ACCEPTED" && user.followedBackStatus === "DENIED" && (
+                    <Button variant="outline" disabled>
+                        Denied
+                    </Button>
+                )}
+                {status === "ACCEPTED" && !user.followedBackStatus && (
                     <Button
                         variant="filled"
                         onClick={() => sendFollowRequest({ followingId: user.id })}

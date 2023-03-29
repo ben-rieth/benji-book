@@ -272,13 +272,13 @@ const followsRouter = createTRPCRouter({
                 });
 
                 const withFollowBack = follows.map(relation => {
-                    const followedBack = relation.follower.followedBy.length !== 0
+                    const followedBackStatus = relation.follower.followedBy[0]?.status;
 
                     return {
                         ...relation,
                         follower: {
                             ...relation.follower,
-                            followedBack
+                            followedBackStatus
                         }
                     }
                 });
