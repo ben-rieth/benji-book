@@ -5,18 +5,18 @@ import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession, type User } from "next-auth";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
-import Button from "../../../components/general/Button";
-import Loader from "../../../components/general/Loader/Loader";
-import MainLayout from "../../../components/layouts/MainLayout";
-import Avatar from "../../../components/users/Avatar";
-import { authOptions } from "../../../server/auth";
-import { api } from "../../../utils/api";
-import { prisma } from "../../../server/db";
+import Button from "../../components/general/Button";
+import Loader from "../../components/general/Loader/Loader";
+import MainLayout from "../../components/layouts/MainLayout";
+import Avatar from "../../components/users/Avatar";
+import { authOptions } from "../../server/auth";
+import { api } from "../../utils/api";
+import { prisma } from "../../server/db";
 import { FiSettings } from 'react-icons/fi';
-import PostGrid from "../../../components/posts/PostGrid";
+import PostGrid from "../../components/posts/PostGrid";
 import * as Tabs from "@radix-ui/react-tabs";
-import RelationsBar from "../../../components/users/RelationBar";
-import UserActionDropdown from "../../../components/users/UserActionsDropdown";
+import RelationsBar from "../../components/users/RelationBar";
+import UserActionDropdown from "../../components/users/UserActionsDropdown";
 
 type AccountPageProps = {
     currentUser: User;
