@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { api } from "../../utils/api";
 import MainLayout from "../../components/layouts/MainLayout";
 import Post from "../../components/posts/Post";
@@ -16,12 +15,10 @@ import ErrorBox from "../../components/error/ErrorBox";
 
 type IndividualPostPageProps = {
     user: User;
+    postId: string;
 }
 
-const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user }) => {
-    
-    const router = useRouter();
-    const postId = router.query.id as string;
+const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user, postId }) => {
 
     const { data: post, isLoading, isSuccess, error } = api.posts.getPost.useQuery({ postId });
 
@@ -100,6 +97,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
     return {
         props: {
             user: session.user,
+            postId: post.id,
         }
     }
 }
