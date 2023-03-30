@@ -2,6 +2,7 @@ import classNames from "classnames";
 import type { GetServerSideProps, NextPage } from "next";
 import { type User, getServerSession } from "next-auth";
 import Link from "next/link";
+import { Fragment } from "react";
 import Button from "../components/general/Button";
 import Loader from "../components/general/Loader/Loader";
 import MainLayout from "../components/layouts/MainLayout";
@@ -30,7 +31,7 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
                 {isSuccess && (
                     <section className="flex flex-col items-center gap-5">
                         {data.pages.map((group) => (
-                            <>
+                            <Fragment key={`${group.posts[0]?.id as string}-${group.posts[group.posts.length-1]?.id as string}`}>
                                 {group.posts.map(post => (
                                     <Post 
                                         key={post.id}
@@ -40,7 +41,7 @@ const FeedPage: NextPage<FeedPageProps>  = ({ user }) => {
                                         currentUser={user}
                                     />
                                 ))}
-                            </>
+                            </Fragment>
                         ))}
                         {hasNextPage && <Button onClick={fetchNextPage}>Load More</Button>}
                         {data.pages[0]?.posts.length === 0 && (
