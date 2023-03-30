@@ -6,18 +6,19 @@ import { AiOutlineClose } from 'react-icons/ai';
 type ModalProps = {
     children: ReactNode;
     trigger: ReactNode;
+    triggerAsChild?: boolean;
     title: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-const Modal: FC<ModalProps> = ({ children, trigger, title, open, onOpenChange }) => {
+const Modal: FC<ModalProps> = ({ children, trigger, title, open, triggerAsChild, onOpenChange }) => {
     return (
         <Dialog.Root
             open={open} 
             onOpenChange={onOpenChange}
         >
-            <Dialog.Trigger>
+            <Dialog.Trigger asChild={triggerAsChild}>
                 {trigger}
             </Dialog.Trigger>
             <Dialog.Portal>

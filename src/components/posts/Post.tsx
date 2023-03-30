@@ -78,7 +78,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="", linkToPostPage=false,
     
     return (
         <article className={containerClasses}>
-            <div className="w-full bg-white rounded-t-lg px-2 py-1 relative">
+            <div className="w-full bg-white rounded-t-lg px-2 py-3 relative">
                 <Link href={`/users/${post.authorId}`} className="flex flex-row gap-2 w-fit">
                     <Avatar url={post.author.image} placeholder={post.author.imagePlaceholder} className="w-10 h-10" />
                     <div className="flex flex-col justify-center">

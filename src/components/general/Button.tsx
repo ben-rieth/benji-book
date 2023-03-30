@@ -20,7 +20,7 @@ const Button: FC<ButtonProps> = ({ onClick, children, type, disabled, variant="f
             className={classNames(
                 "py-2 px-2 w-full mx-auto max-w-md",
                 "flex flex-row items-center justify-center gap-2",
-                "rounded-lg",
+                "rounded-lg whitespace-nowrap",
                 {
                     "bg-sky-500 text-white font-semibold": variant === 'filled',
                     'text-sky-500 border-2 border-sky-500': variant === 'outline',

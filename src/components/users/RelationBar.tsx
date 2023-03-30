@@ -24,13 +24,14 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
     const { data: requests } = api.follows.getRequests.useQuery({ userId }, { enabled: !!requestCount && requestsOpen });
 
     return (
-        <div className="flex gap-5 w-fit -ml-2">
+        <div className="flex gap-5 w-full -ml-2">
             <Modal
                 trigger={(
                     <Button variant="minimal" >
                         {followingCount} Following
                     </Button>
                 )}
+                triggerAsChild
                 title={`Following`}
                 open={followingOpen}
                 onOpenChange={setFollowingOpen}
@@ -52,6 +53,7 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
                         {followerCount} Following
                     </Button>
                 )}
+                triggerAsChild
                 title={`Followers`}
                 open={followersOpen}
                 onOpenChange={setFollowersOpen}
@@ -76,6 +78,7 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
                             {requestCount} Requests
                         </Button>
                     )}
+                    triggerAsChild
                     title={`Outstanding Requests`}
                     open={requestsOpen}
                     onOpenChange={setRequestsOpen}

@@ -132,7 +132,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) =>
                                 <Tabs.List className="shrink-0 mt-5 flex gap-2 border-b border-black w-full px-2">
                                     <Tabs.Trigger asChild value="posts">
                                         <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
-                                            <BsImages className="w-8 h-8 sm:w-5 sm:h-5"/>
+                                            <BsImages className="w-7 h-7 sm:w-5 sm:h-5"/>
                                             <span className="text-base hidden sm:block">
                                                 Posts
                                             </span>
@@ -140,7 +140,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) =>
                                     </Tabs.Trigger>
                                     <Tabs.Trigger value="archive" asChild>
                                         <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
-                                            <BsArchiveFill className="w-8 h-8 sm:w-5 sm:h-5" />
+                                            <BsArchiveFill className="w-7 h-7 sm:w-5 sm:h-5" />
                                             <span className="text-base hidden sm:block">
                                                 Archive
                                             </span>

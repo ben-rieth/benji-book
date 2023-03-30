@@ -23,7 +23,7 @@ const ActivityTabs: FC<ActivityTabProps> = ({ defaultTab="requests" }) => {
                 <Tabs.List className="shrink-0 mt-5 flex gap-2 border-b border-black w-full px-2">
                     <Tabs.Trigger asChild value="requests">
                         <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
-                            <AiOutlineUserAdd className="w-8 h-8 sm:w-5 sm:h-5"/>
+                            <AiOutlineUserAdd className="w-7 h-7 sm:w-5 sm:h-5"/>
                             <span className="text-base hidden sm:block">
                                 Requests
                             </span>
@@ -31,7 +31,7 @@ const ActivityTabs: FC<ActivityTabProps> = ({ defaultTab="requests" }) => {
                     </Tabs.Trigger>
                     <Tabs.Trigger value="likes" asChild>
                         <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
-                            <BsHeart className="w-8 h-8 sm:w-5 sm:h-5" />
+                            <BsHeart className="w-7 h-7 sm:w-5 sm:h-5" />
                             <span className="text-base hidden sm:block">
                                 Likes
                             </span>
