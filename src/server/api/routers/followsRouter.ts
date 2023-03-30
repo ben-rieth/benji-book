@@ -242,7 +242,9 @@ const followsRouter = createTRPCRouter({
                         followingId: ctx.session.user.id,
                         OR: [
                             { status: RequestStatus.PENDING },
-                            { status: RequestStatus.ACCEPTED }
+                            { 
+                                status: RequestStatus.ACCEPTED,
+                            }
                         ],
                     },
                     select: {

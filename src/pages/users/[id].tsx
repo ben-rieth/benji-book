@@ -17,6 +17,7 @@ import PostGrid from "../../components/posts/PostGrid";
 import * as Tabs from "@radix-ui/react-tabs";
 import RelationsBar from "../../components/users/RelationBar";
 import UserActionDropdown from "../../components/users/UserActionsDropdown";
+import { BsImages, BsArchiveFill } from 'react-icons/bs';
 
 type AccountPageProps = {
     currentUser: User;
@@ -130,14 +131,20 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) =>
                             <Tabs.Root className="flex flex-col mx-auto px-5" defaultValue="posts">
                                 <Tabs.List className="shrink-0 mt-5 flex gap-2 border-b border-black w-full px-2">
                                     <Tabs.Trigger asChild value="posts">
-                                        <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer  bg-white data-[state=active]:text-sky-500">
-                                            Posts
-                                        </p>
+                                        <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
+                                            <BsImages className="w-8 h-8 sm:w-5 sm:h-5"/>
+                                            <span className="text-base hidden sm:block">
+                                                Posts
+                                            </span>
+                                        </div>
                                     </Tabs.Trigger>
                                     <Tabs.Trigger value="archive" asChild>
-                                        <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer bg-white data-[state=active]:text-sky-500">
-                                            Archive
-                                        </p>
+                                        <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
+                                            <BsArchiveFill className="w-8 h-8 sm:w-5 sm:h-5" />
+                                            <span className="text-base hidden sm:block">
+                                                Archive
+                                            </span>
+                                        </div>
                                     </Tabs.Trigger>
                                 </Tabs.List>
                                 <Tabs.Content value="posts">

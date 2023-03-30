@@ -10,12 +10,12 @@ type PostThumbnailProps = {
 const PostThumbnail:FC<PostThumbnailProps> = ({ post }) => {
     return (
         <Link href={`/posts/${post.id}`}>
-            <article className="aspect-square w-full relative cursor-pointer hover:scale-105 overflow-hidden">
+            <article className="aspect-square w-full relative cursor-pointer md:hover:scale-105 overflow-hidden">
                 <Image 
                     src={post.image as string}
                     alt="Post Image"
                     fill
-                    className="object-cover"
+                    className="object-cover rounded"
                 />
             </article>
         </Link>

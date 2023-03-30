@@ -6,6 +6,8 @@ import Button from '../general/Button';
 import Loader from '../general/Loader/Loader';
 import LikeCard from '../posts/LikeCard';
 import RequestCard from './RequestCard';
+import { AiOutlineUserAdd } from 'react-icons/ai';
+import { BsHeart } from "react-icons/bs";
 
 type ActivityTabProps = {
     defaultTab?: "requests" | "likes";
@@ -20,14 +22,20 @@ const ActivityTabs: FC<ActivityTabProps> = ({ defaultTab="requests" }) => {
         <Tabs.Root className="flex flex-col mx-auto px-5" defaultValue={defaultTab}>
                 <Tabs.List className="shrink-0 mt-5 flex gap-2 border-b border-black w-full px-2">
                     <Tabs.Trigger asChild value="requests">
-                        <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer  bg-white data-[state=active]:text-sky-500">
-                            Requests
-                        </p>
+                        <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
+                            <AiOutlineUserAdd className="w-8 h-8 sm:w-5 sm:h-5"/>
+                            <span className="text-base hidden sm:block">
+                                Requests
+                            </span>
+                        </div>
                     </Tabs.Trigger>
                     <Tabs.Trigger value="likes" asChild>
-                        <p className="text-sm sm:text-base px-5 py-2 rounded-t-lg w-fit text-center cursor-pointer bg-white data-[state=active]:text-sky-500">
-                            Likes
-                        </p>
+                        <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
+                            <BsHeart className="w-8 h-8 sm:w-5 sm:h-5" />
+                            <span className="text-base hidden sm:block">
+                                Likes
+                            </span>
+                        </div>
                     </Tabs.Trigger>
                 </Tabs.List>
                 <Tabs.Content value="requests">
