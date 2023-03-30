@@ -1,27 +1,24 @@
 import Link from "next/link";
-import { type FC } from "react";
+import type { Key } from "react";
+import { type FC, Fragment } from "react";
 
 type BreadcrumbLinkProps = {
     title: string;
-    href?: string | undefined;
-    last?: boolean;
+    href?: string;
 }
 
-const BreadcrumbsLink:FC<BreadcrumbLinkProps> = ({ title, href, last }) => {
+const BreadcrumbsLink:FC<BreadcrumbLinkProps> = ({ title, href }) => {
     return (
-        <li className="dark:text-slate-400 text-slate-600 text-lg">
+        <li className="dark:text-slate-400 text-slate-600 text-lg" key={title.toLowerCase()}>
             {href ? (
-                <p>
-                    <Link 
-                        href={href} 
-                        className="hover:underline"
-                    >
-                        {title}
-                    </Link>
-                    {!last && <span>&nbsp;&nbsp;&gt;&nbsp;&nbsp;</span>}
-                </p>
+                <Link 
+                    href={href} 
+                    className="hover:underline"
+                >
+                    {title}
+                </Link>
             ) : (
-                <p>{title}</p>
+                <span>{title}</span>
             )}
         </li>
     )
@@ -32,14 +29,25 @@ type BreadcrumbProps = {
 }
 
 const Breadcrumbs:FC<BreadcrumbProps> = ({ children }) => {
+
     return (
-        <ul className="flex">
-            {children}
-        </ul>
+        <ul className="flex gap-2">
+            {children.map((link, index) => {
+                if (index === 0) return link;
+
+                return (
+                    <Fragment key={`id-${link.key as Key}`}>
+                        <span>&gt;</span>
+                        {link}
+                    </Fragment>
+                )
+
+            })}
+        </ul>   
     )
 }
 
 export {
-    Breadcrumbs,
-    BreadcrumbsLink
+    Breadcrumbs as Root,
+    BreadcrumbsLink as Link
 }
