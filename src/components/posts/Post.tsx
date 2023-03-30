@@ -13,7 +13,7 @@ import UpdatePost from "./UpdatePost";
 import classNames from "classnames";
 import LikeButton from "./LikeButton";
 import type { User as AuthUser } from 'next-auth';
-import { BsArchive } from "react-icons/bs";
+import { BsArchiveFill } from "react-icons/bs";
 import { TiArrowBack } from 'react-icons/ti';
 
 type PostProps = {
@@ -91,12 +91,12 @@ const Post : FC<PostProps> = ({ post, containerClasses="", linkToPostPage=false,
                         <UpdatePost post={post} />
                         {post.archived ? (
                             <TiArrowBack 
-                                className="fill-emerald-500 w-6 h-6 cursor-pointer hover:scale-100 hover:fill-emerald-600"
+                                className="fill-yellow-500 w-6 h-6 cursor-pointer hover:scale-110 hover:fill-yellow-600"
                                 onClick={() => archivePost({ postId: post.id, status: false })}
                             />
                         ) : (
-                            <BsArchive 
-                                className="fill-emerald-500 w-6 h-6 cursor-pointer hover:scale-100 hover:fill-emerald-600"
+                            <BsArchiveFill 
+                                className="fill-yellow-500 w-6 h-6 cursor-pointer hover:scale-110 hover:fill-yellow-600"
                                 onClick={() => archivePost({ postId: post.id, status: true })}
                             />
                         )}
