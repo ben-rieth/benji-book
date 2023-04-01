@@ -12,14 +12,6 @@ cloudinary.config({
 const ARRAY_CHUNK_SIZE = 98;
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    // const auth = req.query.key as string;
-
-    // if (auth !== env.CRON_KEY) {
-    //     return res.status(403).json({
-    //         message: "Not authorized to run this function."
-    //     });
-    // }
-
     let users, posts;
 
     try {
