@@ -27,11 +27,10 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
         <div className="flex gap-5 w-full -ml-2">
             <Modal
                 trigger={(
-                    <Button variant="minimal" >
+                    <Button variant="minimal" as="div">
                         {followingCount} Following
                     </Button>
                 )}
-                triggerAsChild
                 title={`Following`}
                 open={followingOpen}
                 onOpenChange={setFollowingOpen}
@@ -49,11 +48,10 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
             </Modal>
             <Modal
                 trigger={(
-                    <Button variant="minimal" >
-                        {followerCount} Following
+                    <Button variant="minimal" as="div">
+                        {followerCount} Followers
                     </Button>
                 )}
-                triggerAsChild
                 title={`Followers`}
                 open={followersOpen}
                 onOpenChange={setFollowersOpen}
@@ -74,11 +72,10 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
             {!!requestCount && (
                 <Modal
                     trigger={(
-                        <Button variant="minimal" >
+                        <Button variant="minimal" as="div">
                             {requestCount} Requests
                         </Button>
                     )}
-                    triggerAsChild
                     title={`Outstanding Requests`}
                     open={requestsOpen}
                     onOpenChange={setRequestsOpen}

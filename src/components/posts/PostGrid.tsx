@@ -6,16 +6,17 @@ import PostThumbnail from "./PostThumbnail";
 
 type PostGridProps = {
     posts: (Post & { comments: Comment[], likedBy: Likes[] })[];
+    self: boolean;
     archive?: boolean;
 }
 
-const PostGrid: FC<PostGridProps> = ({ posts, archive=false }) => {
+const PostGrid: FC<PostGridProps> = ({ posts, self, archive=false }) => {
 
     if (posts.length === 0) {
         return (
             <section className="w-full aspect-square flex flex-col items-center mt-5 gap-3">
                 <p className="text-center">Nothing here!</p>
-                {!archive && (
+                {!archive && self && (
                     <Link href="/posts/create">
                         <Button variant="filled">
                             Create a Post

@@ -87,7 +87,7 @@ const Post : FC<PostProps> = ({ post, containerClasses="", linkToPostPage=false,
                     </div>
                 </Link>
                 { currentUser.id === post.authorId && (
-                    <div className="flex gap-3 absolute right-2 top-4 bg-white">
+                    <div className="flex gap-3 absolute right-2 top-4 bg-white items-center">
                         <UpdatePost post={post} />
                         {post.archived ? (
                             <TiArrowBack 

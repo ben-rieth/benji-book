@@ -18,7 +18,6 @@ const CommentColumn: FC<CommentColumnProps> = ({ postId }) => {
         <div className="flex flex-col w-full gap-3 mt-2" ref={animateRef}>
             {isSuccess && (
                 <>
-                    <p className="md:hidden">Comments</p>
                     <AddComment />
                     {data.comments.map((comment) => (
                         <CommentCard comment={comment} key={comment.id} postAuthor={data.postAuthor} />

@@ -125,7 +125,7 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) =>
                             </>
                         )}
                         {(data.status === RequestStatus.ACCEPTED) && (
-                            <PostGrid posts={data.posts} />
+                            <PostGrid posts={data.posts} self={false} />
                         )}
                         {(data.status === 'SELF') && (
                             <Tabs.Root className="flex flex-col mx-auto px-5" defaultValue="posts">
@@ -148,10 +148,10 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) =>
                                     </Tabs.Trigger>
                                 </Tabs.List>
                                 <Tabs.Content value="posts">
-                                    <PostGrid posts={data.posts.filter(post => !post.archived)} />
+                                    <PostGrid posts={data.posts.filter(post => !post.archived)} self={true} />
                                 </Tabs.Content>
                                 <Tabs.Content value="archive">
-                                    <PostGrid posts={data.posts.filter(post => post.archived)} archive={true} />
+                                    <PostGrid posts={data.posts.filter(post => post.archived)} archive={true} self={true} />
                                 </Tabs.Content>
                             </Tabs.Root>
                         )}

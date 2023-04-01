@@ -36,7 +36,7 @@ const UpdatePost: FC<UpdatePostProps> = ({ post }) => {
 
     return (
         <Modal
-            title="Update Comment"
+            title="Update Post"
             open={open}
             onOpenChange={(open) => setOpen(open)}
             trigger={<EditIcon />}

@@ -55,7 +55,7 @@ const UserCard:FC<UserCardProps> = ({ user }) => {
     });
 
     return (
-        <article className="group bg-white shadow-md rounded-lg p-3 w-full flex flex-row items-center">
+        <article className="group bg-white shadow-md rounded-lg p-3 w-full flex flex-col gap-2 items-start sm:flex-row sm:items-center">
             <Link href={`/users/${user.id}`} className="flex flex-row gap-4 items-center flex-grow">
                 <Avatar url={user.image} placeholder={user.imagePlaceholder} className="w-16 h-16" />
                 <div className="flex flex-col">
@@ -64,7 +64,7 @@ const UserCard:FC<UserCardProps> = ({ user }) => {
                 </div>
             </Link>
             {user.followedBy && (
-                <div className={classNames("flex items-center justify-center w-28", { "hidden": user.id === session?.user?.id || !user.followedBy})}>
+                <div className={classNames("flex items-center justify-center w-full", { "hidden": user.id === session?.user?.id || !user.followedBy})}>
                     {!followStatus && (
                         <Button variant="filled" onClick={() => mutate({ followingId: user.id })}>
                             Follow
