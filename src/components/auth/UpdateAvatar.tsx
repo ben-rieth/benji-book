@@ -96,7 +96,7 @@ const UpdateAvatar: FC<UpdateAvatarProps> = ({ avatar, userId, trigger }) => {
                         
                         <hr className="my-5" />
                         
-                        <Button type="submit">
+                        <Button type="submit" onClick={() => props.submitForm()}>
                             Update Avatar
                         </Button>
                     </Form>

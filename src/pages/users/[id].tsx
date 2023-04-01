@@ -130,17 +130,19 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) =>
                         )}
                         {(data.status === 'SELF') && (
                             <>
-                                {!data.image && (
-                                    <UpdateAvatar 
-                                        avatar={data.image} 
-                                        userId={data.id}
-                                        trigger={(
-                                            <Button>
-                                                Add a Profile Picture!
-                                            </Button>
-                                        )}
-                                    />
-                                )}
+                                <div className="flex flex-col items-center mt-5">
+                                    {!data.image && (
+                                        <UpdateAvatar 
+                                            avatar={data.image} 
+                                            userId={data.id}
+                                            trigger={(
+                                                <Button>
+                                                    Add a Profile Picture!
+                                                </Button>
+                                            )}
+                                        />
+                                    )}
+                                </div>
                                 <Tabs.Root className="flex flex-col mx-auto px-5" defaultValue="posts">
                                     <Tabs.List className="shrink-0 mt-5 flex gap-2 border-b border-black w-full px-2">
                                         <Tabs.Trigger asChild value="posts">
