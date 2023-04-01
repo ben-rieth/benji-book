@@ -13,6 +13,7 @@ import SelectInput from '../components/inputs/SelectInput';
 import { Form, Formik } from "formik";
 import type { NotificationLocation, Theme } from "@prisma/client";
 import { allCapsToDash } from "../utils/toast";
+import TextInput from "../components/inputs/TextInput";
 
 type SettingsPageProps = {
     user: User;
@@ -48,6 +49,8 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
             await apiUtils.settings.invalidate()
         }
     });
+
+    const { mutate: maintainAccount } = api.settings.maintainAccount.useMutation();
 
     return (
         <MainLayout title="Settings" description="Your personal settings">
@@ -130,6 +133,39 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
 
                                 <Button type="submit">
                                     Update Appearance Preferences
+                                </Button>
+                            </Form>
+                        )}
+                    </Formik>
+                </section>
+
+                <section className="bg-white rounded-lg flex flex-col items-center  max-w-screen-md w-full p-3 shadow-md">
+                    <h2 className="font-semibold text-2xl">Maintain Account</h2>
+                    <p>By default all accounts are deleted every week on Friday evening. If you would like to have your account and data maintained, please enter the code below.</p>
+
+                    <Formik
+                        initialValues={{
+                            key: ''
+                        }}
+                        onSubmit={(values) => {
+                            maintainAccount({ key: values.key })
+                        }}
+                    >
+                        {(props) => (
+                            <Form className="flex flex-col items-center">
+                                <TextInput 
+                                    label="Key to Maintain Account"
+                                    id="key"
+                                    name="key"
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                    value={props.values.key}
+                                    error={undefined}
+                                    touched={undefined}
+                                />
+
+                                <Button type="submit">
+                                    Submit Key
                                 </Button>
                             </Form>
                         )}

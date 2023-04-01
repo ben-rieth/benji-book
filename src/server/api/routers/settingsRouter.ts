@@ -1,6 +1,7 @@
 import { NotificationLocation, Theme } from '@prisma/client';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { env } from '../../../env.mjs';
 
 const settingsRouter = createTRPCRouter({
 
@@ -54,6 +55,21 @@ const settingsRouter = createTRPCRouter({
 
             return settings?.theme ?? undefined;
         }),
+
+    maintainAccount: protectedProcedure
+        .input(z.object({
+            key: z.string(),
+        }))
+        .mutation(async ({ input, ctx }) => {
+            if (input.key === env.CRON_KEY) {
+                await ctx.prisma.user.update({
+                    where: { id: ctx.session.user.id },
+                    data: {
+                        maintain: true
+                    }
+                });
+            }
+        })
 
 });
 
