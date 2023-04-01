@@ -181,7 +181,12 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) =>
 export default AccountPage;
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
-    const session = await getServerSession(req, res, authOptions);
+    const [session, user] = await Promise.all([
+        getServerSession(req, res, authOptions),
+        prisma.user.findUnique({
+            where: { id: params?.id as string }
+        })
+    ])
 
     if (!session || !session.user) {
         return {
@@ -191,10 +196,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
             }
         }
     }
-
-    const user = await prisma.user.findUnique({
-        where: { id: params?.id as string }
-    });
 
     if (!user) {
         return {

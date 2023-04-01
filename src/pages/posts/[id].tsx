@@ -77,7 +77,12 @@ const IndividualPostPage: NextPage<IndividualPostPageProps> = ({ user, postId })
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res, params }) => {
-    const session = await getServerSession(req, res, authOptions);
+    const [session, post] = await Promise.all([
+        getServerSession(req, res, authOptions),
+        prisma.post.findUnique({
+            where: { id: params?.id as string }
+        })
+    ]);
 
     if (!session || !session.user) {
         return {
@@ -87,10 +92,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
             }
         }
     }
-
-    const post = await prisma.post.findUnique({
-        where: { id: params?.id as string }
-    });
 
     if (!post) return { notFound: true }
 
