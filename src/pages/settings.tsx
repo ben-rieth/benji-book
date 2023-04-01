@@ -144,7 +144,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
 
                 <section className="bg-white rounded-lg flex flex-col items-center  max-w-screen-md w-full p-3 shadow-md">
                     <h2 className="font-semibold text-2xl">Maintain Account</h2>
-                    <p>By default all accounts are deleted on the first day of every month in the evening. If you would like to have your account and data maintained, please enter the maintain account code.</p>
+                    <p className="text-sm text-center md:px-10">By default all accounts are deleted on the first day of every month in the evening. If you would like to have your account and data maintained, please enter the maintain account code.</p>
 
                     <Formik
                         initialValues={{
@@ -155,7 +155,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                         }}
                     >
                         {(props) => (
-                            <Form className="flex flex-col items-center">
+                            <Form className="flex flex-col items-center gap-2">
                                 <TextInput 
                                     label="Key to Maintain Account"
                                     id="key"
