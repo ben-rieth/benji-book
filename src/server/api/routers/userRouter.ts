@@ -26,6 +26,7 @@ const userRouter = createTRPCRouter({
             return ctx.prisma.user.findMany({
                 where: { 
                     id: { not: ctx.session.user.id },
+                    setData: true,
                     OR: [
                         { firstName: { contains: input.query }},
                         { lastName: { contains: input.query }},

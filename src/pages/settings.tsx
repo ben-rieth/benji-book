@@ -9,10 +9,10 @@ import type { GetServerSideProps, NextPage } from "next";
 import { getServerSession, type User } from "next-auth";
 import { authOptions } from "../server/auth";
 import UpdateProfileForm from "../components/auth/UpdateProfileForm";
-import SelectInput from '../components/inputs/SelectInput';
+// import SelectInput from '../components/inputs/SelectInput';
 import { Form, Formik } from "formik";
-import type { NotificationLocation, Theme } from "@prisma/client";
-import { allCapsToDash } from "../utils/toast";
+// import type { NotificationLocation, Theme } from "@prisma/client";
+// import { allCapsToDash } from "../utils/toast";
 import TextInput from "../components/inputs/TextInput";
 import classNames from "classnames";
 
@@ -20,25 +20,30 @@ type SettingsPageProps = {
     user: User;
 }
 
-type AppearanceFormValues = {
-    notificationLocation: NotificationLocation,
-    theme: Theme
-}
+// type AppearanceFormValues = {
+//     notificationLocation: NotificationLocation,
+//     theme: Theme
+// }
 
 const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
     const router = useRouter();
 
-    const apiUtils = api.useContext();
+    // const apiUtils = api.useContext();
     const { mutate: deleteAccount } = api.users.deleteAccount.useMutation({
         onMutate: () => {
-            const id = toast.loading('Deleting your data data...');
+            const id = toast.loading('Deleting your use data...');
             return { id }
         },
 
         onSuccess: async (_data, _variables, ctx) => {
             if (ctx?.id) toast.dismiss(ctx.id);
             await router.push("/");
-        }
+        },
+
+        onError: (_data, _values, ctx) => {
+            if (ctx?.id) toast.dismiss(ctx.id);
+            toast.error("Could not delete account. Try again later.")
+        },
     });
 
     const { data: fullUserData, isSuccess: isFullDataSuccess } = api.users.getOneUser.useQuery({ userId: user.id });
