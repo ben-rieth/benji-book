@@ -18,6 +18,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import RelationsBar from "../../components/users/RelationBar";
 import UserActionDropdown from "../../components/users/UserActionsDropdown";
 import { BsImages, BsArchiveFill } from 'react-icons/bs';
+import UpdateAvatar from "../../components/auth/UpdateAvatar";
 
 type AccountPageProps = {
     currentUser: User;
@@ -128,32 +129,45 @@ const AccountPage: NextPage<AccountPageProps> = ({ currentUser, pageUserId }) =>
                             <PostGrid posts={data.posts} self={false} />
                         )}
                         {(data.status === 'SELF') && (
-                            <Tabs.Root className="flex flex-col mx-auto px-5" defaultValue="posts">
-                                <Tabs.List className="shrink-0 mt-5 flex gap-2 border-b border-black w-full px-2">
-                                    <Tabs.Trigger asChild value="posts">
-                                        <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
-                                            <BsImages className="w-7 h-7 sm:w-5 sm:h-5"/>
-                                            <span className="text-base hidden sm:block">
-                                                Posts
-                                            </span>
-                                        </div>
-                                    </Tabs.Trigger>
-                                    <Tabs.Trigger value="archive" asChild>
-                                        <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
-                                            <BsArchiveFill className="w-7 h-7 sm:w-5 sm:h-5" />
-                                            <span className="text-base hidden sm:block">
-                                                Archive
-                                            </span>
-                                        </div>
-                                    </Tabs.Trigger>
-                                </Tabs.List>
-                                <Tabs.Content value="posts">
-                                    <PostGrid posts={data.posts.filter(post => !post.archived)} self={true} />
-                                </Tabs.Content>
-                                <Tabs.Content value="archive">
-                                    <PostGrid posts={data.posts.filter(post => post.archived)} archive={true} self={true} />
-                                </Tabs.Content>
-                            </Tabs.Root>
+                            <>
+                                {!data.image && (
+                                    <UpdateAvatar 
+                                        avatar={data.image} 
+                                        userId={data.id}
+                                        trigger={(
+                                            <Button>
+                                                Add a Profile Picture!
+                                            </Button>
+                                        )}
+                                    />
+                                )}
+                                <Tabs.Root className="flex flex-col mx-auto px-5" defaultValue="posts">
+                                    <Tabs.List className="shrink-0 mt-5 flex gap-2 border-b border-black w-full px-2">
+                                        <Tabs.Trigger asChild value="posts">
+                                            <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
+                                                <BsImages className="w-7 h-7 sm:w-5 sm:h-5"/>
+                                                <span className="text-base hidden sm:block">
+                                                    Posts
+                                                </span>
+                                            </div>
+                                        </Tabs.Trigger>
+                                        <Tabs.Trigger value="archive" asChild>
+                                            <div className="flex gap-2 items-center justify-content w-fit bg-white rounded-t-lg px-5 py-2 cursor-pointer data-[state=active]:text-sky-500 data-[state=active]:fill-sky-500">
+                                                <BsArchiveFill className="w-7 h-7 sm:w-5 sm:h-5" />
+                                                <span className="text-base hidden sm:block">
+                                                    Archive
+                                                </span>
+                                            </div>
+                                        </Tabs.Trigger>
+                                    </Tabs.List>
+                                    <Tabs.Content value="posts">
+                                        <PostGrid posts={data.posts.filter(post => !post.archived)} self={true} />
+                                    </Tabs.Content>
+                                    <Tabs.Content value="archive">
+                                        <PostGrid posts={data.posts.filter(post => post.archived)} archive={true} self={true} />
+                                    </Tabs.Content>
+                                </Tabs.Root>
+                            </>
                         )}
                     </div>
                 </div>
