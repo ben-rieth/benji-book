@@ -25,7 +25,8 @@ const server = z.object({
   EMAIL_FROM: z.string().email(),
   CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_API_KEY: z.string(),
-  CLOUDINARY_API_SECRET: z.string()
+  CLOUDINARY_API_SECRET: z.string(),
+  CRON_KEY: z.string(),
 });
 
 /**
@@ -56,6 +57,7 @@ const processEnv = {
   CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+  CRON_KEY: process.env.CRON_KEY,
 };
 
 // Don't touch the part below

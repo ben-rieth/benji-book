@@ -88,6 +88,7 @@ model User {
     imagePlaceholder String?
     bio              String?
 
+    maintain         Boolean @default(false)
     setData          Boolean @default(false)
 
     posts            Post[]    @relation("createdPosts")
