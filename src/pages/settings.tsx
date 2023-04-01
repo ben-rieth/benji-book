@@ -134,7 +134,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                 <div className="h-5" /> */}
                                 <div className="h-5" />
 
-                                <Button type="submit">
+                                <Button>
                                     Update Appearance Preferences
                                 </Button>
                             </Form>
@@ -157,7 +157,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                         {(props) => (
                             <Form className="flex flex-col items-center gap-2">
                                 <TextInput 
-                                    label="Key to Maintain Account"
+                                    label="Key"
                                     id="key"
                                     name="key"
                                     onChange={props.handleChange}
@@ -167,7 +167,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                     touched={undefined}
                                 />
 
-                                <Button type="submit">
+                                <Button>
                                     Submit Key
                                 </Button>
                             </Form>
