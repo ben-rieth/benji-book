@@ -14,6 +14,7 @@ import { Form, Formik } from "formik";
 import type { NotificationLocation, Theme } from "@prisma/client";
 import { allCapsToDash } from "../utils/toast";
 import TextInput from "../components/inputs/TextInput";
+import classNames from "classnames";
 
 type SettingsPageProps = {
     user: User;
@@ -43,10 +44,33 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
     const { data: fullUserData, isSuccess: isFullDataSuccess } = api.users.getOneUser.useQuery({ userId: user.id });
 
     const { mutate } = api.settings.updateSettings.useMutation({
+        onMutate: async (values) => {
+            await apiUtils.settings.getNotificationLocation.cancel();
+            await apiUtils.settings.getTheme.cancel();
+
+            const prevData = apiUtils.settings.getNotificationLocation.getData();
+
+            apiUtils.settings.getNotificationLocation.setData(
+                undefined,
+                prev => {
+                    if (!prev) return;
+                    return values.notificationLocation
+                }
+            )
+            
+            return {
+                prevData
+            }
+        },
         onSuccess: () => toast.success("Appearance preferences updated!"),
-        onError: () => toast.error("Could not update preferences."),
+        onError: (_err, _values, ctx) => {
+            toast.error("Could not update preferences.")
+            if (ctx)
+                apiUtils.settings.getNotificationLocation.setData(undefined, ctx?.prevData);
+        },
         onSettled: async () => {
-            await apiUtils.settings.invalidate()
+            await apiUtils.settings.getNotificationLocation.invalidate();
+            await apiUtils.settings.getTheme.invalidate();
         }
     });
 
@@ -92,7 +116,10 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                             theme: 'SYSTEM'
                         } as AppearanceFormValues}
                         onSubmit={(values) => {
-                            mutate({...values})
+                            mutate({
+                                notificationLocation: values.notificationLocation,
+                                theme: values.theme
+                            })
                         }}
                     >
                         {(props) => (
@@ -142,7 +169,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                     </Formik>
                 </section>
 
-                <section className="bg-white rounded-lg flex flex-col items-center  max-w-screen-md w-full p-3 shadow-md">
+                <section className={classNames("bg-white rounded-lg flex flex-col items-center  max-w-screen-md w-full p-3 shadow-md")}>
                     <h2 className="font-semibold text-2xl">Maintain Account</h2>
                     <p className="text-sm text-center md:px-10">By default all accounts are deleted on the first day of every month in the evening. If you would like to have your account and data maintained, please enter the maintain account code.</p>
 
