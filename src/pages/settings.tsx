@@ -43,36 +43,36 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
 
     const { data: fullUserData, isSuccess: isFullDataSuccess } = api.users.getOneUser.useQuery({ userId: user.id });
 
-    const { mutate } = api.settings.updateSettings.useMutation({
-        onMutate: async (values) => {
-            await apiUtils.settings.getNotificationLocation.cancel();
-            await apiUtils.settings.getTheme.cancel();
+    // const { mutate } = api.settings.updateSettings.useMutation({
+    //     onMutate: async (values) => {
+    //         await apiUtils.settings.getNotificationLocation.cancel();
+    //         await apiUtils.settings.getTheme.cancel();
 
-            const prevData = apiUtils.settings.getNotificationLocation.getData();
+    //         const prevData = apiUtils.settings.getNotificationLocation.getData();
 
-            apiUtils.settings.getNotificationLocation.setData(
-                undefined,
-                prev => {
-                    if (!prev) return;
-                    return values.notificationLocation
-                }
-            )
+    //         apiUtils.settings.getNotificationLocation.setData(
+    //             undefined,
+    //             prev => {
+    //                 if (!prev) return;
+    //                 return values.notificationLocation
+    //             }
+    //         )
             
-            return {
-                prevData
-            }
-        },
-        onSuccess: () => toast.success("Appearance preferences updated!"),
-        onError: (_err, _values, ctx) => {
-            toast.error("Could not update preferences.")
-            if (ctx)
-                apiUtils.settings.getNotificationLocation.setData(undefined, ctx?.prevData);
-        },
-        onSettled: async () => {
-            await apiUtils.settings.getNotificationLocation.invalidate();
-            await apiUtils.settings.getTheme.invalidate();
-        }
-    });
+    //         return {
+    //             prevData
+    //         }
+    //     },
+    //     onSuccess: () => toast.success("Appearance preferences updated!"),
+    //     onError: (_err, _values, ctx) => {
+    //         toast.error("Could not update preferences.")
+    //         if (ctx)
+    //             apiUtils.settings.getNotificationLocation.setData(undefined, ctx?.prevData);
+    //     },
+    //     onSettled: async () => {
+    //         await apiUtils.settings.getNotificationLocation.invalidate();
+    //         await apiUtils.settings.getTheme.invalidate();
+    //     }
+    // });
 
     const { mutate: maintainAccount } = api.settings.maintainAccount.useMutation({
         onSuccess: () => toast.success("Your account's data will be maintained!"),
@@ -107,7 +107,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                     )}
                 </section>
                 
-                <section className="bg-white rounded-lg flex flex-col items-center  max-w-screen-md w-full p-3 gap-3 shadow-md">
+                {/* <section className="bg-white rounded-lg flex flex-col items-center  max-w-screen-md w-full p-3 gap-3 shadow-md">
                     <h2 className="font-semibold text-2xl">Appearance</h2>
 
                     <Formik
@@ -143,7 +143,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                     value={props.values.notificationLocation as string}
                                 />
 
-                                {/* <SelectInput
+                                <SelectInput
                                     label="Theme"
                                     placeholder="Theme"
                                     name="theme"
@@ -158,7 +158,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                     value={props.values.theme as string}
                                 />
 
-                                <div className="h-5" /> */}
+                                <div className="h-5" /> 
                                 <div className="h-5" />
 
                                 <Button onClick={props.submitForm}>
@@ -167,7 +167,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                             </Form>
                         )}
                     </Formik>
-                </section>
+                </section> */}
 
                 <section className={classNames("bg-white rounded-lg flex flex-col items-center  max-w-screen-md w-full p-3 shadow-md")}>
                     <h2 className="font-semibold text-2xl">Maintain Account</h2>

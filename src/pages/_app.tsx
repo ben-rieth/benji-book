@@ -16,7 +16,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
 
-  const { data: location } = api.settings.getNotificationLocation.useQuery(undefined, { enabled: !!session });
+  // const { data: location } = api.settings.getNotificationLocation.useQuery(undefined, { enabled: !!session });
 
   return (
     <SessionProvider session={session}>
@@ -25,7 +25,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       </div>
         
         <Toaster 
-          position={location ? allCapsToDash(location) : 'bottom-right'}
+          // position={location ? allCapsToDash(location) : 'bottom-right'}
         />
         <NextProgress delay={300} options={{ showSpinner: false }} />
     </SessionProvider>
