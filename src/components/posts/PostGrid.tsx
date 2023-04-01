@@ -14,7 +14,7 @@ const PostGrid: FC<PostGridProps> = ({ posts, self, archive=false }) => {
 
     if (posts.length === 0) {
         return (
-            <section className="w-full aspect-square flex flex-col items-center mt-5 gap-3">
+            <section className="w-full aspect-square md:aspect-auto flex flex-col items-center mt-5 gap-3">
                 <p className="text-center">Nothing here!</p>
                 {!archive && self && (
                     <Link href="/posts/create">

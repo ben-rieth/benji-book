@@ -24,7 +24,7 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
     const { data: requests } = api.follows.getRequests.useQuery({ userId }, { enabled: !!requestCount && requestsOpen });
 
     return (
-        <div className="flex gap-5 w-full -ml-2">
+        <div className="flex justify-center md:justify-start gap-5 w-full -ml-2">
             <Modal
                 trigger={(
                     <Button variant="minimal" as="div">
@@ -35,12 +35,16 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
                 open={followingOpen}
                 onOpenChange={setFollowingOpen}
             >
-                <div className="h-3/4 overflow-y-auto">
+                <div className="flex flex-col gap-2 h-3/4 overflow-y-auto">
                     {!!following ? following.map(relation => (
-                        <UserCard 
-                            key={relation.following.id}
-                            user={relation.following}
-                        />
+                        <>
+                            <UserCard 
+                                key={relation.following.id}
+                                user={relation.following}
+                            />
+
+                            <hr />
+                        </>
                     )) : (
                         <Loader />
                     )}
@@ -56,13 +60,17 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
                 open={followersOpen}
                 onOpenChange={setFollowersOpen}
             >
-                <div className="h-3/4 overflow-y-auto">
+                <div className="flex flex-col gap-2 h-3/4 overflow-y-auto">
                     {!!followers ? (
                         followers.map(relation => (
-                            <UserCard 
-                                key={relation.follower.id}
-                                user={relation.follower}
-                            />
+                            <>
+                                <UserCard 
+                                    key={relation.follower.id}
+                                    user={relation.follower}
+                                />
+                                <hr />
+                            </>
+                            
                         ))
                     ) : (
                         <Loader />
@@ -80,12 +88,15 @@ const RelationsBar: FC<RelationsBarProps> = ({ userId, followingCount, followerC
                     open={requestsOpen}
                     onOpenChange={setRequestsOpen}
                 >
-                    <div className="h-3/4 overflow-y-auto">
+                    <div className="flex flex-col gap-2 h-3/4 overflow-y-auto">
                         {!!requests ? requests.map(relation => (
-                            <UserCard 
-                                key={relation.following.id}
-                                user={relation.following}
-                            />
+                            <>
+                                <UserCard 
+                                    key={relation.following.id}
+                                    user={relation.following}
+                                />
+                                <hr />
+                            </>
                         )) : (
                             <Loader />
                         )}
