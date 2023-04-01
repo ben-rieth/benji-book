@@ -84,7 +84,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
         })
     ]);
 
-    if (!session || !session.user) {
+    if (!session || !session.user || !session.user.setData) {
         return {
             redirect: {
                 destination: '/',

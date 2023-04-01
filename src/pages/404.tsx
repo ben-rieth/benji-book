@@ -7,7 +7,7 @@ import AuthLayout from "../components/layouts/AuthLayout";
 const NotFoundPage = () => {
     const { data: session } = useSession();
 
-    if (session && session.user) {
+    if (session && session.user && session.user.setData) {
         return (
             <MainLayout title="404" description="Could not find the page you were looking for.">
                 <h1 className="font-semibold text-2xl text-center mt-5">That page does not exist!</h1>

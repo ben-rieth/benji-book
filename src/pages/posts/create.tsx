@@ -17,7 +17,7 @@ const CreatePostPage: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     const session = await getServerSession(req, res, authOptions);
 
-    if (!session || !session.user) {
+    if (!session || !session.user || !session.user.setData) {
         return {
             redirect: {
                 destination: '/',

@@ -188,7 +188,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
         })
     ])
 
-    if (!session || !session.user) {
+    if (!session || !session.user || !session.user.setData) {
         return {
             redirect: {
                 destination: '/',
@@ -197,7 +197,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params 
         }
     }
 
-    if (!user) {
+    if (!user || !user.setData) {
         return {
             notFound: true,
         }
