@@ -134,7 +134,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                 <div className="h-5" /> */}
                                 <div className="h-5" />
 
-                                <Button>
+                                <Button onClick={props.submitForm}>
                                     Update Appearance Preferences
                                 </Button>
                             </Form>
@@ -167,7 +167,7 @@ const SettingsPage: NextPage<SettingsPageProps> = ({ user }) => {
                                     touched={undefined}
                                 />
 
-                                <Button>
+                                <Button onClick={props.submitForm}>
                                     Submit Key
                                 </Button>
                             </Form>

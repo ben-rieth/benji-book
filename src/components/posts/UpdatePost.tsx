@@ -71,7 +71,7 @@ const UpdatePost: FC<UpdatePostProps> = ({ post }) => {
                             placeholder="Update Post Text"
                         />
 
-                        <Button variant="filled" type="submit" >
+                        <Button variant="filled" onClick={props.submitForm} >
                             Update Post Text
                         </Button>
                     </Form>

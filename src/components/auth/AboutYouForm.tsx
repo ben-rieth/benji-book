@@ -145,7 +145,7 @@ const AboutYouForm = () => {
                         dateValue={props.values.birthday}
                     />
 
-                    <Button variant="filled" type="submit">
+                    <Button variant="filled" onClick={props.submitForm}>
                         {props.isSubmitting ? (
                             <AiOutlineLoading className="animate-spin" />     
                         ) : (

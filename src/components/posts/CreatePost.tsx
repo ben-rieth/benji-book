@@ -78,7 +78,7 @@ const CreatePost = () => {
                         label="Post Text"
                         placeholder="Tell Your Story"
                     />
-                    <Button variant="filled" type="submit" >
+                    <Button variant="filled" onClick={props.submitForm} >
                         Post
                     </Button>
                 </Form>

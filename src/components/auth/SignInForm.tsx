@@ -61,7 +61,7 @@ const SignInForm = () => {
                         />
                         <div className="h-4"/>
 
-                        <Button type="submit" variant="filled">
+                        <Button onClick={props.submitForm} variant="filled">
                             {props.isSubmitting ? (
                                 <AiOutlineLoading className="animate-spin" />     
                             ) : (

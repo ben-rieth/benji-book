@@ -179,7 +179,7 @@ const UpdateProfileForm:FC<UpdateProfileFormProps> = ({ user, trigger }) => {
                             touched={props.touched.bio}
                         />
                         
-                        <Button variant="filled" type="submit">
+                        <Button variant="filled" onClick={props.submitForm}>
                             {props.isSubmitting ? (
                                 <AiOutlineLoading className="animate-spin" />     
                             ) : (

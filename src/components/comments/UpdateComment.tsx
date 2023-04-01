@@ -64,7 +64,7 @@ const UpdateComment: FC<UpdateCommentProps> = ({ comment }) => {
                             placeholder="Update Comment"
                         />
 
-                        <Button variant="filled" type="submit" >
+                        <Button variant="filled" onClick={props.submitForm} >
                             Update Comment
                         </Button>
                     </Form>
